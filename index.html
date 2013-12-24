@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>LTTRS</title>
+<style>
+    body {
+        font-family:Menlo, Monaco, Consolas, "Courier New", monospace;
+        font-size:11px;
+    }
+</style>
+</head>
+<body>
+<script>
+  function Letters (name) {
+      this.name = name;
+      this.base = ['A','B','C','E','H','K','M','O','P','T','X','Y'];
+      this[0]=['A','B','C','E','H','K','M','O','P','T','X','Y'];
+      this.chosen =[];
+      this.choose = function (word){
+          if (typeof word == 'string'){
+              word.toUpperCase();
+              var bits=word.length-1;
+              for (var i=0; i<Math.pow(12,(bits+1)); i++) {
+                  if (word==this[bits][i]) {
+                      this.chosen.push(word);
+                      this[bits][i]='-';
+                      }
+                   }
+              }
+          }
+/*  this.getBitLetters = function(bit) {
+          if (typeof bit == 'number') {
+              var result=[];
+              var order=0;
+              var amount=0;
+              var currentLttr=this.base;
+              for (var i=1; i<bit+1; i++) {
+                  amount=Math.pow(12,i);
+                  for (var j=0; j<amount; j++) {
+                      currentLttr=
+                  }
+              }
+          }
+      }
+ */
+      this.getBitsNumber = function() {
+          var i=0;
+          while (typeof this[i] != "undefined") {
+              i++;
+          }
+          return i;
+      };
+      this.addBits = function (num) {
+          var bit = this.getBitsNumber();
+          var k=1;
+          if (typeof num == 'number' && num>=bit && num>=0 && num<13) {
+              bit=num;
+              for (var i=0;i<=bit;i++) {
+                  if (!this[i].hasOwnProperty('toString')) {
+                      k++;
+                  }
+              }
+          }
+          this[bit]=[];
+          var result = [];
+          var order=0;
+          var currentLttr=this.base;
+          for (var k=1; k<bit+1;k++){
+             var amount = Math.pow(12,k);
+             for (var i=0; i<amount; i++) {
+                currentLttr=this[bit-1][i];
+                for (var j= 0;j<12;j++) {
+                  result[order]=currentLttr+this.base[j];
+                  order++;
+                }
+             }
+          }
+          this[bit]=result;
+      };
+      this.showLetters = function (bits) {
+          var actualBit=this.getBitsNumber()-1;
+          if (typeof bits == 'number' && bits<=actualBit && bits>=0) {
+              bit=bits;
+          } else {
+              bit = actualBit;
+              document.write('There is no '+bits+'th bit, showing '+bit+'th bit.<br>')
+          }
+          document.write(bit+": <br><table><tr>")
+          for (var i=0; i<this[bit].length; i++){
+              if (i%12==0) {document.write('</tr><tr>')}
+              document.write('<td>|'+this[bit][i]+'|</td>');
+          }
+          document.write('</tr></table>')
+
+      }
+      this.count = function() {
+          var bits=this.getBitsNumber();
+          var count=0;
+          for (var i=0; i<bits; i++){
+              count+=this[i].length;
+          }
+          return count;
+      }
+  }
+
+
+  var lttrs1 = new Letters('lttrs');
+
+
+  document.write(lttrs1.count()+' <br>');
+  lttrs1.addBits();
+  document.write(lttrs1.count()+' <br>');
+  lttrs1.addBits();
+  document.write(lttrs1.count()+' <br>');
+  lttrs1.addBits();
+  document.write(lttrs1.count()+' <br>');
+  lttrs1.choose('A');
+ // lttrs1.choose('AAAA');
+  lttrs1.showLetters(3);
+  lttrs1.showLetters(2);
+
+
+
+    function alertObj(obj) {
+        var str = "";
+        for(k in obj) {
+            str += k+": "+ obj[k]+"<br>";
+        }
+        document.write('<hr>'+ str + '<hr>');
+    }
+
+</script>
+</body>
+</html>
