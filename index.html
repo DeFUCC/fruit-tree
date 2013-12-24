@@ -13,8 +13,8 @@
 <script>
   function Letters (name) {
       this.name = name;
-      this.base = ['A','B','C','E','H','K','M','O','P','T','X','Y'];
-      this[0]=['A','B','C','E','H','K','M','O','P','T','X','Y'];
+      var base = ['A','B','C','E','H','K','M','O','P','T','X','Y'];
+      this[0]= base;
       this.chosen =[];
       this.choose = function (word){
           if (typeof word == 'string'){
@@ -33,7 +33,7 @@
               var result=[];
               var order=0;
               var amount=0;
-              var currentLttr=this.base;
+              var currentLttr=base;
               for (var i=1; i<bit+1; i++) {
                   amount=Math.pow(12,i);
                   for (var j=0; j<amount; j++) {
@@ -64,19 +64,22 @@
           this[bit]=[];
           var result = [];
           var order=0;
-          var currentLttr=this.base;
+          var currentLttr=base;
           for (var k=1; k<bit+1;k++){
              var amount = Math.pow(12,k);
              for (var i=0; i<amount; i++) {
                 currentLttr=this[bit-1][i];
                 for (var j= 0;j<12;j++) {
-                  result[order]=currentLttr+this.base[j];
+                  result[order]=currentLttr+base[j];
                   order++;
                 }
              }
           }
           this[bit]=result;
       };
+
+      // showLetters works incorrect now, showing first round twice
+
       this.showLetters = function (bits) {
           var actualBit=this.getBitsNumber()-1;
           if (typeof bits == 'number' && bits<=actualBit && bits>=0) {
@@ -118,6 +121,7 @@
  // lttrs1.choose('AAAA');
   lttrs1.showLetters(3);
   lttrs1.showLetters(2);
+  alertObj(lttrs1);
 
 
 
