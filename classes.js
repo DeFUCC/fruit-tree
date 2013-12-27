@@ -41,7 +41,7 @@ function Letters (name) {
     //When the letters end, new ones do not appear as expected due to noEmpyBit()
 
     function noEmptyBit() {
-        if (currentLetters.length==0) {
+        if (currentLetters.length == 0) {
             bit++;
             currentLetters=fullBit();
         }

@@ -1,56 +1,25 @@
 <!DOCTYPE html>
-<html>
+<html ng-app>
 <head>
-    <title>LTTRS</title>
-<style>
-    body {
-        font-family:Menlo, Monaco, Consolas, "Courier New", monospace;
-        font-size:11px;
-    }
-</style>
-<script type="application/javascript" src="classes.js"></script>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+    <title>Letters</title>
+<script type="application/javascript" src="angular.js"></script>
+<link rel="stylesheet" href="bootstrap.css">
+<script type="application/javascript" src="angular-letters.js"></script>
 </head>
 <body>
-<script>
-
-
-
-  var lttrs1 = new Letters('lttrs');
-  document.write(lttrs1.pickLetters('E')+'<br>');
-  document.write(lttrs1.autoPick()+', ');
-  document.write(lttrs1.autoPick()+', ');
-  document.write(lttrs1.autoPick()+', ');
-  document.write(lttrs1.autoPick()+', ');
-  document.write(lttrs1.autoPick()+', ');
-  document.write(lttrs1.autoPick()+', ');
-
-  document.write(lttrs1.autoPick()+', ');
-  document.write(lttrs1.autoPick()+', ');
-  document.write(lttrs1.autoPick()+', ');
-  document.write(lttrs1.autoPick()+', ');
-  document.write(lttrs1.autoPick()+', ');
-
-  document.write(lttrs1.autoPick()+', ');
-  document.write(lttrs1.autoPick()+', ');
-  document.write("<br>"+lttrs1.showCurrent+ "<br>");
-  document.write(lttrs1.autoPick()+', ');
-  document.write(lttrs1.autoPick()+', ');
-  document.write(lttrs1.autoPick()+', ');
-
-  document.write(lttrs1.getLetters(5));
-
-  alertObj(lttrs1);
-
-
-
-    function alertObj(obj) {
-        var str = "";
-        for(k in obj) {
-            str += k+": "+ obj[k]+"<br>";
-        }
-        document.write('<hr>'+ str + '<hr>');
-    }
-
-</script>
+<div class="container" ng-controller="LettersCtrl">
+<div class="panel-heading"><h2>Take an order!</h2></div>
+    <div class="row">
+    <div class="col-sm-1 btn btn-lg btn-default" ng-repeat="letter in showLetters" ng-click="takeLetter(letter)">{{letter}}</div>
+</div>
+    <div class="row">
+    <div ng-if="currentLetters.length==0" class="col-sm-12 btn btn-warning btn-lg" ng-click="refillLetters()">Add letters!</div>
+    </div>
+    <div class="row">
+        <h3>You took {{myLetters.length}} orders and {{currentLetters.length}} {{bit}}-letters long orders are available.</h3><h3>Your orders:</h3><button class="btn-xs btn btn-success" ng-repeat="letters in myLetters">{{letters}}</button><br>
+    </div>
+</div>
 </body>
 </html>
