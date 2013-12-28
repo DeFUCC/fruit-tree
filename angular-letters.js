@@ -8,17 +8,26 @@ function LettersCtrl($scope) {
     $scope.currentLetters = baseLetters.concat();
     $scope.showLetters = shuffle($scope.currentLetters).slice(0,12);
     $scope.myLetters = [];
+
     $scope.takeLetter = function(letter) {
         var place = $scope.currentLetters.indexOf(letter);
         if (place >= 0) {
-            $scope.myLetters.push(letter);
+            $scope.myLetters.push({letter: letter, text: $scope.linkedText});
             $scope.currentLetters.splice(place,1);
+            $scope.linkedText = '';
             $scope.showLetters = shuffle($scope.currentLetters).slice(0,12);
         }
     };
+    $scope.getButtonStatus = function (obj){
+        if (obj.text) {return 'btn-success'} else {return 'btn-default'}
+    };
+
+    $scope.selectOrder = function (obj) {
+        $scope.selectedOrder = obj;
+    };
 
     $scope.refillLetters = function () {
-        var current, result=baseLetters.concat(), order=0;
+        var current, result=baseLetters.concat(), order;
 
         for (var b=0;b<$scope.bit; b++) {
             current = result.slice(0);
