@@ -10,27 +10,32 @@
 </head>
 <body>
 <div class="container" ng-controller="LettersCtrl">
-<div class="panel-heading"><h2>Take a {{bit}}-letter long order. </h2></div>
+<div class="panel-heading" ng-init="loadFromLocalStorage()"><h2>Take a {{bit}}-letter long order.</h2></div>
 
         <form class="form-horizontal" role="form">
             <div class="form-group ">
                 <label for="usertext">Enter your text...</label>
-                <textarea required autofocus id="usertext" ng-model="linkedText" ng-model-instant class="form-control" rows="2"></textarea></div>
+                <textarea autofocus id="usertext" ng-model="linkedText" ng-model-instant class="form-control" rows="2"></textarea></div>
 
     <label>...and choose letters. <span class="label label-info">{{currentLetters.length}}</span> orders now available!</label>
-    <div class="row">
-    <button type="button" class="col-sm-1 btn btn-lg btn-default" ng-repeat="letter in showLetters" ng-click="takeLetter(letter)">{{letter}}</button>
+
+            <div class="row">
+    <button type="button" onclick="document.getElementById('usertext').focus()" class="col-sm-1 btn btn-lg btn-default" ng-repeat="letter in showLetters" ng-click="takeLetter(letter)">{{letter}}</button>
 </div>
         </form>
+
     <div class="row">
     <div ng-if="currentLetters.length==0" class="col-sm-12 btn btn-warning btn-lg" ng-click="refillLetters()">Add letters!</div>
     </div>
 
         <h5>You have <span class="label label-primary">{{myLetters.length}}</span>  orders.</h5>
     <h3>Your orders:</h3>
+    <div class="panel row btn-toolbar">
+        <button onclick="document.getElementById('usertext').focus()" class="btn btn-default" ng-click="restart()">Restart</button>
+    </div>
     <div class="row">
     <div class="btn-toolbar col-md-7">
-        <button ng-repeat="obj in myLetters" class="btn-xs btn {{getButtonStatus(obj)}}" ng-click="selectOrder(obj)" >{{obj.letter}}</button>
+        <button ng-repeat="obj in myLetters track by obj.letter" class="btn-xs btn {{getButtonStatus(obj)}}" ng-click="selectOrder(obj)" >{{obj.letter}}</button>
     </div>
     <div class="col-md-5 well" ng-if="selectedOrder"><button class="btn-lg btn {{getButtonStatus(selectedOrder)}}">{{selectedOrder.letter}}</button> {{selectedOrder.text}}</div>
 </div>

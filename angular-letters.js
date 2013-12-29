@@ -2,6 +2,7 @@
  * Created by starov on 26.12.13.
  */
 
+
 function LettersCtrl($scope) {
     var baseLetters = ['A','B','C','E','H','K','M','O','P','T','X','Y'];
     $scope.bit = 1;
@@ -15,6 +16,7 @@ function LettersCtrl($scope) {
             $scope.myLetters.push({letter: letter, text: $scope.linkedText});
             $scope.currentLetters.splice(place,1);
             $scope.linkedText = '';
+            $scope.saveToLocalStorage();
             $scope.showLetters = shuffle($scope.currentLetters).slice(0,12);
         }
     };
@@ -24,6 +26,31 @@ function LettersCtrl($scope) {
 
     $scope.selectOrder = function (obj) {
         $scope.selectedOrder = obj;
+    };
+
+    $scope.storageStatus = function() { return localStorage.length};
+
+    $scope.loadFromLocalStorage = function () {
+       if (localStorage.length > 0) {
+       $scope.currentLetters=JSON.parse(localStorage["currentLetters"]);
+       $scope.myLetters=JSON.parse(localStorage["myLetters"]);
+       $scope.bit=localStorage["bit"];
+       $scope.showLetters = shuffle($scope.currentLetters).slice(0,12);
+       }
+    };
+
+    $scope.restart = function(){
+        localStorage.clear();
+        $scope.bit = 1;
+        $scope.currentLetters = baseLetters.concat();
+        $scope.showLetters = shuffle($scope.currentLetters).slice(0,12);
+        $scope.myLetters = [];
+    };
+
+    $scope.saveToLocalStorage = function () {
+            localStorage["myLetters"] = JSON.stringify($scope.myLetters);
+            localStorage["currentLetters"] = JSON.stringify($scope.currentLetters);
+            localStorage["bit"] = $scope.bit;
     };
 
     $scope.refillLetters = function () {
@@ -44,6 +71,8 @@ function LettersCtrl($scope) {
         $scope.currentLetters = result;
         $scope.showLetters = shuffle($scope.currentLetters).slice(0,12);
     };
+
+    $scope.focus = function () {document.getElementById('usertext').focus()};
 
     function shuffle(massive) {
         arr = massive.concat();
