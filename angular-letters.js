@@ -45,6 +45,7 @@ function LettersCtrl($scope) {
         $scope.currentLetters = baseLetters.concat();
         $scope.showLetters = shuffle($scope.currentLetters).slice(0,12);
         $scope.myLetters = [];
+        $scope.selectedOrder=false;
     };
 
     $scope.saveToLocalStorage = function () {
@@ -71,8 +72,6 @@ function LettersCtrl($scope) {
         $scope.currentLetters = result;
         $scope.showLetters = shuffle($scope.currentLetters).slice(0,12);
     };
-
-    $scope.focus = function () {document.getElementById('usertext').focus()};
 
     function shuffle(massive) {
         arr = massive.concat();
