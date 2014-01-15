@@ -10,22 +10,36 @@
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <script type="application/javascript" src="js/angular-letters.js"></script>
 </head>
-<body>
-<div class="container" data-ng-controller="lettersCtrl">
+<body >
+<div class="container" data-ng-controller="lettersCtrl" data-ng-init="loadFromLocalStorage();shuffleLetters()">
     <div class="navbar navbar-fixed-top row">
-        <div class="col-md-offset-4 col-md-4">
+        <div class="col-md-offset-2 col-md-8">
+            Total <span class="label label-primary">{{myLetters.length}}</span> sayings.
         <div class="btn-group">
             <button type="button" class="btn btn-sm btn-success" data-ng-click="saveToFireBase()">Save to database</button>
             <button type="button" class="btn btn-sm btn-warning" data-ng-click="loadFromFireBase()">Load from database</button>
+            <button onclick="document.getElementById('usertext').focus()" class="btn btn-sm btn-danger" data-ng-click="restart()">Restart</button>
         </div>
         </div>
     </div>
 
-    <div class="panel-heading" data-ng-init="loadFromLocalStorage()">
-        <h2>Take a {{bit}}-letter long order.</h2>
+    <h3>Sayings:</h3>
+
+    <div class="row">
+        <div class="col-md-7">
+            <dl class="dl-horizontal">
+                <dt data-ng-repeat-start="why in myLetters track by why.letter"><span class="label label-{{getButtonStatus(why)}}">{{why.letter}}</span></dt>
+                <dd data-ng-repeat-end=""> {{why.text}}</dd>
+
+            </dl>
+        </div>
     </div>
 
-    <form class="form-horizontal">
+    <div class="panel-heading" >
+        <h3>Say something!</h3>
+    </div>
+
+    <form class="form-horizontal" data-ng-submit="takeLetter(popLetter)">
         <div class="form-group ">
             <label for="usertext">Enter your text...</label>
             <textarea autofocus id="usertext" data-ng-model="linkedText" data-ng-model-instant class="form-control"
@@ -36,9 +50,16 @@
             available!</label>
 
         <div class="row">
+            <button type="submit" onclick="document.getElementById('usertext').focus()"
+                    class="col-sm-1 btn btn-lg btn-default"
+                    data-ng-click="takeLetter(popLetter)"
+                    data-ng-disabled="!linkedText">{{popLetter}}
+            </button>
             <button type="button" onclick="document.getElementById('usertext').focus()"
-                    class="col-sm-1 btn btn-lg btn-default" data-ng-repeat="letter in showLetters"
-                    data-ng-click="takeLetter(letter)">{{letter}}
+                    class="col-sm-1 btn btn-lg btn-default"
+                    data-ng-repeat="letter in showLetters"
+                    data-ng-click="takeLetter(letter)"
+                    data-ng-disabled="!linkedText">{{letter}}
             </button>
         </div>
     </form>
@@ -49,26 +70,7 @@
         </div>
     </div>
 
-    <h5>You have <span class="label label-primary">{{myLetters.length}}</span> orders.</h5>
 
-    <h3>Your orders:</h3>
-
-    <div class="panel row btn-toolbar">
-        <button onclick="document.getElementById('usertext').focus()" class="btn btn-default" data-ng-click="restart()">
-            Restart
-        </button>
-    </div>
-    <div class="row">
-        <div class="btn-toolbar col-md-7">
-            <button data-ng-repeat="obj in myLetters track by obj.letter" class="btn-xs btn {{getButtonStatus(obj)}}"
-                    data-ng-click="selectOrder(obj)">{{obj.letter}}
-            </button>
-        </div>
-        <div class="col-md-5 well" data-ng-if="selectedOrder">
-            <button class="btn-lg btn {{getButtonStatus(selectedOrder)}}">{{selectedOrder.letter}}</button>
-            {{selectedOrder.text}}
-        </div>
-    </div>
 
 </div>
 </body>
