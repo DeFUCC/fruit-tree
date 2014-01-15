@@ -10,6 +10,7 @@ controllers.lettersCtrl = function ($scope,$firebase) {
     $scope.bit = 1;
     $scope.currentLetters = baseLetters.concat();
     $scope.showLetters = shuffle($scope.currentLetters).slice(0,12);
+    $scope.popLetter = $scope.showLetters.pop();
     $scope.myLetters = [];
     $scope.fireLetters = $firebase(new Firebase('http://fruit-tree.firebaseio.com')); //creating a firebase object
     $scope.fireLetters.$bind($scope, "remoteLetters"); //bind a $scope.remoteLetters object for saving
@@ -24,7 +25,7 @@ controllers.lettersCtrl = function ($scope,$firebase) {
         $scope.myLetters = data.myLetters;
         $scope.currentLetters = data.currentLetters;
         $scope.bit = data.bit;
-        $scope.showLetters = shuffle($scope.currentLetters).slice(0,12);
+        $scope.shuffleLetters();
     };
     $scope.takeLetter = function(letter) {
         var place = $scope.currentLetters.indexOf(letter);
@@ -33,11 +34,14 @@ controllers.lettersCtrl = function ($scope,$firebase) {
             $scope.currentLetters.splice(place,1);
             $scope.linkedText = '';
             $scope.saveToLocalStorage();
-            $scope.showLetters = shuffle($scope.currentLetters).slice(0,12);
+            $scope.shuffleLetters();
         }
     };
     $scope.getButtonStatus = function (obj){
-        if (obj.text) {return 'btn-success'} else {return 'btn-default'}
+        if (obj.text) {return 'success'} else {return 'default'}
+    };
+    $scope.getLetterButtonStatus = function (){
+        if ($scope.linkedText) {return ''} else {return 'disabled="disabled"'}
     };
 
     $scope.selectOrder = function (obj) {
@@ -51,7 +55,7 @@ controllers.lettersCtrl = function ($scope,$firebase) {
        $scope.currentLetters=JSON.parse(localStorage["currentLetters"]);
        $scope.myLetters=JSON.parse(localStorage["myLetters"]);
        $scope.bit=localStorage["bit"];
-       $scope.showLetters = shuffle($scope.currentLetters).slice(0,12);
+       $scope.shuffleLetters();
        }
     };
 
@@ -59,7 +63,7 @@ controllers.lettersCtrl = function ($scope,$firebase) {
         localStorage.clear();
         $scope.bit = 1;
         $scope.currentLetters = baseLetters.concat();
-        $scope.showLetters = shuffle($scope.currentLetters).slice(0,12);
+        $scope.shuffleLetters();
         $scope.myLetters = [];
         $scope.selectedOrder=false;
     };
@@ -86,7 +90,13 @@ controllers.lettersCtrl = function ($scope,$firebase) {
         }
         $scope.bit++;
         $scope.currentLetters = result;
+        $scope.shuffleLetters();
+    };
+
+    $scope.shuffleLetters = function (){
+
         $scope.showLetters = shuffle($scope.currentLetters).slice(0,12);
+        $scope.popLetter = $scope.showLetters.shift();
     };
 
     function shuffle(massive) {
