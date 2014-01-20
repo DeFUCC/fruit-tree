@@ -1,7 +1,7 @@
 /**
  * Created by starov on 26.12.13.
  */
-var fruitTree = angular.module('fruitTree',['firebase']);
+var fruitTree = angular.module('fruitTree',['firebase', 'akoenig.deckgrid']);
 var controllers = {};
 fruitTree.controller(controllers);
 
