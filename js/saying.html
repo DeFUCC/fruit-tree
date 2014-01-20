@@ -1,0 +1,6 @@
+<div class="box">
+    <span class="label label-{{mother.getButtonStatus(card)}}">{{card.letter}}</span>
+    {{card.text.substring(0,140)}}
+    <span data-ng-if="card.text.length > 140 && !card.more"><button class="btn btn-xs" data-ng-click="card.more = card.text.substring(140)">Show more</button></span>
+    <span data-ng-if="card.more">{{card.more}}<br><button class="btn btn-xs" data-ng-click="card.more = undefined">Hide</button></span>
+</div>
