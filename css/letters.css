@@ -1,0 +1,38 @@
+.deckgrid[deckgrid]::before {
+    /* Defines that the grid should have 3 columns. Each column will have the classes 'column' and 'column-1-4' */
+    content: '4 .column.column-1-4';
+    display:none;
+}
+
+.deckgrid .column {
+    float: left;
+}
+
+.deckgrid .column-1-4 {
+    width: 25%;
+}
+.box {
+    padding:6px;
+    border: solid 1px #ccc;
+    margin: 10px 5px;
+}
+
+@media screen and (min-width: 481px) and (max-width: 640px){
+    .deckgrid[deckgrid]::before {
+        content: '2 .column.column-1-2';
+    }
+
+    .deckgrid .column-1-2 {
+        width: 50%;
+    }
+}
+
+@media screen and (max-width: 480px){
+    .deckgrid[deckgrid]::before {
+        content: '1 .column.column-1-1';
+    }
+
+    .deckgrid .column-1-1 {
+        width: 100%;
+    }
+}
