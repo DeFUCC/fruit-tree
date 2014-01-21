@@ -106,7 +106,6 @@ controllers.lettersCtrl = function ($scope,$firebase) {
                 return $scope.colors[i].color;
             }
         }
-        console.log('works');
         var color = 'c';
         if ($scope.availableColors.length == 0) {$scope.availableColors = baseColors.concat();}
         color = $scope.availableColors.shift();

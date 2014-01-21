@@ -11,9 +11,24 @@
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <link href="css/letters.css" rel="stylesheet">
     <script src="js/angular-deckgrid.js"></script>
+ <!-- Masonry script seemed a little bit difficult because of a need to re-layout on element add.
+
+   <script src="js/masonry.pkgd.min.js"></script>
+    <script>
+        docReady( function() {
+
+            var container = document.querySelector('#sayings-container');
+            var msnry = new Masonry( container, {
+                columnWidth: 200
+            });
+            msnry.layout();
+        });
+
+    </script>
+    -->
 
 </head>
-<body >
+<body>
 <div class="container" data-ng-controller="lettersCtrl" data-ng-init="loadFromLocalStorage();shuffleLetters()">
     <div class="navbar navbar-fixed-top row">
         <div class="col-md-offset-2 col-md-8">
@@ -27,15 +42,58 @@
     </div>
 
     <h3>Sayings:</h3>
+<!-- Columns layout made with CSS columns ONLY! For further analysis.
 
-    <div class="row">
+    <div class="row sayings">
+        <div class="col-md-10 col-md-offset-1 row" >
+        <div id="sayings-container">
+            <div data-ng-repeat="saying in myLetters track by $id(saying)" class="square border-color-{{armColor(saying.letter)}}">
+                <span class="label color-{{armColor(saying.letter)}}">{{saying.letter}}</span>
+                {{saying.text}}
+
+            </div>
+        </div>
+        </div>
+    </div>
+
+HERE IS THE CSS
+<style>
+#sayings-container {
+    -moz-column-count: 3;
+    -moz-column-gap: 10px;
+    -webkit-column-count: 3;
+    -webkit-column-gap: 10px;
+    column-count: 3;
+    column-gap: 10px;
+    display:block;
+    clear:both;
+    width:100%;
+
+}
+
+.sayings {
+    margin-bottom: 300px;
+}
+.square {
+    display:inline-block;
+    width:99%%;
+    padding:6px;
+    border: solid 6px #ccc;
+    margin: 4px 4px;
+    overflow: hidden;
+</style>
+
+-->
+
+    <div class="row sayings">
         <div class="col-md-10 col-md-offset-1" id="sayings-container">
 
             <div deckgrid source="myLetters" cardTemplate="js/saying.html" class="deckgrid"></div>
 
          </div>
     </div>
-<!--
+
+<!-- Just a description list as the first version.
     <div class="row">
         <div class="col-md-7">
             <dl class="dl-horizontal">
@@ -46,11 +104,12 @@
         </div>
     </div>
 -->
-    <div class="panel-heading" >
-        <h3>Say something!</h3>
-    </div>
 
-    <form class="form-horizontal" data-ng-submit="takeLetter(popLetter)">
+    <div data-ng-init="hidden=true" class="navbar-fixed-bottom panel panel-footer saypanel">
+        <button data-ng-show="hidden" data-ng-click="hidden=false" class="handle btn btn-success">+</button>
+        <button data-ng-hide="hidden" data-ng-click="hidden=true" class="handle btn btn-warning">-</button>
+    <div data-ng-hide="hidden">
+        <form class="form-horizontal" data-ng-submit="takeLetter(popLetter)">
         <div class="form-group ">
             <label for="usertext">Enter your text... <span class="label label-info">{{140 - linkedText.length}}</span> symbols to be shown, the least to be hidden. </label>
             <textarea autofocus id="usertext" data-ng-model="linkedText" class="form-control"
@@ -81,8 +140,8 @@
              data-ng-click="refillLetters()">Add letters!
         </div>
     </div>
-
-
+    </div>
+</div>
 
 </div>
 </body>

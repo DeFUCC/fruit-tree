@@ -9,7 +9,10 @@
 }
 
 .deckgrid .column-1-4 {
-    width: 25%;
+    width: 24%;
+}
+.sayings {
+    margin-bottom: 300px;
 }
 .box {
     padding:6px;
@@ -18,14 +21,22 @@
     overflow: hidden;
 }
 .rating {
-    width:100%;
-    margin-bottom: 0;
+    float:right;
 }
 .marker {
     float:right;
     color:white;
 }
-
+.saypanel {
+    padding:10px 50px;
+    overflow: visible;
+}
+.handle {
+    position: relative;
+    left:50%;
+    color:#FFF;
+    background-color: #CCC;
+}
 .pane {
     display: block;
     position: relative;
