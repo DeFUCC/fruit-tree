@@ -7,11 +7,14 @@ fruitTree.controller(controllers);
 
 controllers.lettersCtrl = function ($scope,$firebase) {
     var baseLetters = ['A','B','C','E','H','K','M','O','P','T','X','Y'];
+    var baseColors = ['c', 'cd', 'd','dd','e','f','fd','g','gd','a','ad','b'];
+    $scope.availableColors = baseColors.concat();
     $scope.bit = 1;
     $scope.currentLetters = baseLetters.concat();
     $scope.showLetters = shuffle($scope.currentLetters).slice(0,12);
     $scope.popLetter = $scope.showLetters.pop();
     $scope.myLetters = [];
+    $scope.colors = [];
     $scope.fireLetters = $firebase(new Firebase('http://fruit-tree.firebaseio.com')); //creating a firebase object
     $scope.fireLetters.$bind($scope, "remoteLetters"); //bind a $scope.remoteLetters object for saving
     $scope.saveToFireBase = function () {
@@ -19,12 +22,14 @@ controllers.lettersCtrl = function ($scope,$firebase) {
         remote.myLetters = $scope.myLetters;
         remote.currentLetters = $scope.currentLetters;
         remote.bit = $scope.bit;
+        remote.colors = $scope.colors;
     };
     $scope.loadFromFireBase = function () {
         var data = $scope.remoteLetters;
         $scope.myLetters = data.myLetters;
         $scope.currentLetters = data.currentLetters;
         $scope.bit = data.bit;
+        $scope.colors = data.colors;
         $scope.shuffleLetters();
     };
     $scope.takeLetter = function(letter) {
@@ -36,12 +41,6 @@ controllers.lettersCtrl = function ($scope,$firebase) {
             $scope.saveToLocalStorage();
             $scope.shuffleLetters();
         }
-    };
-    $scope.getButtonStatus = function (obj){
-        if (obj.text) {return 'success'} else {return 'default'}
-    };
-    $scope.getLetterButtonStatus = function (){
-        if ($scope.linkedText) {return ''} else {return 'disabled="disabled"'}
     };
 
     $scope.selectOrder = function (obj) {
@@ -55,6 +54,7 @@ controllers.lettersCtrl = function ($scope,$firebase) {
        $scope.currentLetters=JSON.parse(localStorage["currentLetters"]);
        $scope.myLetters=JSON.parse(localStorage["myLetters"]);
        $scope.bit=localStorage["bit"];
+       $scope.colors=JSON.parse(localStorage["colors"]);
        $scope.shuffleLetters();
        }
     };
@@ -65,13 +65,15 @@ controllers.lettersCtrl = function ($scope,$firebase) {
         $scope.currentLetters = baseLetters.concat();
         $scope.shuffleLetters();
         $scope.myLetters = [];
+        $scope.colors = [];
         $scope.selectedOrder=false;
     };
 
     $scope.saveToLocalStorage = function () {
-            localStorage["myLetters"] = JSON.stringify($scope.myLetters);
-            localStorage["currentLetters"] = JSON.stringify($scope.currentLetters);
-            localStorage["bit"] = $scope.bit;
+        localStorage["myLetters"] = JSON.stringify($scope.myLetters);
+        localStorage["currentLetters"] = JSON.stringify($scope.currentLetters);
+        localStorage["bit"] = $scope.bit;
+        localStorage["colors"] = JSON.stringify($scope.colors);
     };
 
     $scope.refillLetters = function () {
@@ -94,9 +96,22 @@ controllers.lettersCtrl = function ($scope,$firebase) {
     };
 
     $scope.shuffleLetters = function (){
-
         $scope.showLetters = shuffle($scope.currentLetters).slice(0,12);
         $scope.popLetter = $scope.showLetters.shift();
+    };
+
+    $scope.armColor = function(letter){
+        for (var i=0; i<$scope.colors.length; i++) {
+            if (letter == $scope.colors[i].letter) {
+                return $scope.colors[i].color;
+            }
+        }
+        console.log('works');
+        var color = 'c';
+        if ($scope.availableColors.length == 0) {$scope.availableColors = baseColors.concat();}
+        color = $scope.availableColors.shift();
+        $scope.colors.push({letter:letter, color:color});
+        return color;
     };
 
     function shuffle(massive) {

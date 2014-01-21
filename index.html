@@ -53,7 +53,7 @@
     <form class="form-horizontal" data-ng-submit="takeLetter(popLetter)">
         <div class="form-group ">
             <label for="usertext">Enter your text... <span class="label label-info">{{140 - linkedText.length}}</span> symbols to be shown, the least to be hidden. </label>
-            <textarea autofocus id="usertext" data-ng-model="linkedText" data-ng-model-instant class="form-control"
+            <textarea autofocus id="usertext" data-ng-model="linkedText" class="form-control"
                       rows="2"></textarea>
         </div>
 
@@ -62,12 +62,13 @@
 
         <div class="row">
             <button type="submit" onclick="document.getElementById('usertext').focus()"
-                    class="col-sm-1 btn btn-lg btn-default"
+                    class="col-sm-1 btn btn-lg  color-{{armColor(popLetter)}}"
+                    data-ng-if="currentLetters.length!=0"
                     data-ng-click="takeLetter(popLetter)"
                     data-ng-disabled="!linkedText">{{popLetter}}
             </button>
             <button type="button" onclick="document.getElementById('usertext').focus()"
-                    class="col-sm-1 btn btn-lg btn-default"
+                    class="col-sm-1 btn btn-lg  color-{{armColor(letter)}}"
                     data-ng-repeat="letter in showLetters"
                     data-ng-click="takeLetter(letter)"
                     data-ng-disabled="!linkedText">{{letter}}
