@@ -27,14 +27,9 @@ body {
     border: solid 6px #ccc;
     margin: 4px 2px;
     overflow: hidden;
-    border-radius: 6px;
+    display: block;
 }
-.side-panel {
-    float:left;
-    height:100%;
-    margin:0;
-    padding:3px;
-}
+
 
 .marker {
     float:right;
@@ -52,12 +47,13 @@ body {
 }
 .pane {
     display: block;
+    float:left;
     width: 100%;
+    height:0;
     margin:0;
     padding: 0;
     clear:both;
-    top: 0;
-    background-color: #ccc;
+    border-bottom: solid 1px #000;
 
 }
 .pane div {
@@ -65,46 +61,52 @@ body {
     font-size: 12px;
 }
 .pane-label {
+    display: block;
     float:left;
     padding: 2px 5px 2px 5px;
+    margin:0;
     font-weight: bold;
+    font-size: 10px;
     color: #fff;
-    border-bottom-right-radius: 6px;
+    box-sizing: border-box;
 }
 .pane-rating {
     float:right;
-    width:80%;
-    border-bottom: solid 1px #ccc;
+    width:75%;
+    font-size: 12px;
 }
 .minus {
-    float:left;
-    width: 20%;
+    background-color: #888;
 }
 .zero {
-    display: inline-block;
+    background-color: #aaa;
 }
 .plus {
-     float:right;
-     width: 20%;
+    background-color: #ccc;
  }
 .rating {
-    background-color: #eee;
+    display: block;
+    float:right;
+    font-size: 12px;
 }
 .minus:hover {
     cursor: pointer;
-    background-color: red;
 }
 .plus:hover {
     cursor: pointer;
-    background-color: green;
 }
 .zero:hover {
     cursor: pointer;
-    background-color: dimgray;
 }
 .saying-text {
     float:left;
     padding:6px;
+}
+.more {
+    position: relative;
+    bottom: 5px;
+    width:20px;
+    height: 20px;
 }
 
 /* bg-color-hover */

@@ -15,7 +15,7 @@ controllers.lettersCtrl = function ($scope,$firebase) {
     $scope.popLetter = $scope.showLetters.pop();
     $scope.myLetters = [];
     $scope.colors = [];
-    $scope.rating = [{letter:'A',pluses:20,minuses:2,zeros:60}];
+    $scope.rating = [{letter:'P',pluses:20,minuses:2,zeros:60}];
     $scope.fireLetters = $firebase(new Firebase('http://fruit-tree.firebaseio.com')); //creating a firebase object
     $scope.fireLetters.$bind($scope, "remoteLetters"); //bind a $scope.remoteLetters object for saving
     $scope.saveToFireBase = function () {
@@ -148,12 +148,31 @@ controllers.lettersCtrl = function ($scope,$firebase) {
       getTotal: function (letter) {
           for (var i=0; i<$scope.rating.length; i++) {
               if (letter == $scope.rating[i].letter) {
-                  var rating = $scope.rating[i].pluses + $scope.rating[i].minuses + $scope.rating[i].zeros;
+                  var total = $scope.rating[i].pluses + $scope.rating[i].minuses + $scope.rating[i].zeros;
+                  return total;
+              }
+          }
+      },
+      getRating: function (letter) {
+          for (var i=0; i<$scope.rating.length; i++) {
+              if (letter == $scope.rating[i].letter) {
+                  var rating = $scope.rating[i].pluses - $scope.rating[i].minuses;
                   return rating;
               }
           }
       }
-    }
+    };
+
+    $scope.sortByRating = function (card) {
+            for (var i=0; i<$scope.rating.length; i++) {
+                if (card.letter == $scope.rating[i].letter) {
+                    var have = true;
+                    console.log('works');
+                    return $scope.rating[i].pluses - $scope.rating[i].minuses;
+                }
+            }
+        if (!have) {return 0}
+    };
 
     function shuffle(massive) {
         arr = massive.concat();

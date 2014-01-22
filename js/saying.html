@@ -1,22 +1,19 @@
 <div class="box border-color-{{mother.armColor(card.letter)}}">
 
-    <div class="pane">
+
         <div class="pane-label color-{{mother.armColor(card.letter)}}">
             {{card.letter}}
         </div>
-        <div class="pane-rating ">
-            <div class="minus" data-ng-click="mother.rate.minus(card.letter)">
-                -
+
+            <div class="rating">
+                <span data-ng-show="mother.rate.getRating(card.letter)<0" data-ng-click="mother.rate.minus(card.letter)" class="label label-danger">{{mother.rate.getRating(card.letter)}}</span>
+                <span data-ng-hide="mother.rate.getRating(card.letter)<0" data-ng-click="mother.rate.minus(card.letter)" class="minus label label-danger">-</span>
+                <span data-ng-click="mother.rate.zero(card.letter)" class="zero label label-default">{{mother.rate.getTotal(card.letter) || 0}}</span>
+                <span data-ng-show="mother.rate.getRating(card.letter)>0" data-ng-click="mother.rate.plus(card.letter)" class="label label-success">+{{mother.rate.getRating(card.letter)}}</span>
+                <span data-ng-hide="mother.rate.getRating(card.letter)>0" data-ng-click="mother.rate.plus(card.letter)" class="plus label label-success">+</span>
             </div>
 
-            <div class="zero" data-ng-click="mother.rate.zero(card.letter)">
-                {{mother.rate.getTotal(card.letter)}}
-            </div>
-            <div class="plus" data-ng-click="mother.rate.plus(card.letter)">
-            +
-            </div>
-        </div>
-    </div>
+
 
     <div class="saying-text">
         {{card.text.substring(0,140)}}<span data-ng-if="card.text.length > 140 && !card.more">...<button class="btn btn-xs marker color-{{mother.armColor(card.letter)}}" data-ng-click="card.more = card.text.substring(140)">...</button></span><span data-ng-if="card.more">{{card.more}}<br><button class="btn btn-xs marker color-{{mother.armColor(card.letter)}}" data-ng-click="card.more = undefined">^</button></span>
