@@ -1,5 +1,26 @@
 <div class="box border-color-{{mother.armColor(card.letter)}}">
-    <span class="label color-{{mother.armColor(card.letter)}}">{{card.letter}}</span>
-    {{card.text.substring(0,140)}}<span data-ng-if="card.text.length > 140 && !card.more">...<button class="btn btn-xs marker color-{{mother.armColor(card.letter)}}" data-ng-click="card.more = card.text.substring(140)">...</button></span><span data-ng-if="card.more">{{card.more}}<br><button class="btn btn-xs marker color-{{mother.armColor(card.letter)}}" data-ng-click="card.more = undefined">^</button></span>
+
+    <div class="pane">
+        <div class="pane-label color-{{mother.armColor(card.letter)}}">
+            {{card.letter}}
+        </div>
+        <div class="pane-rating ">
+            <div class="minus" data-ng-click="mother.rate.minus(card.letter)">
+                -
+            </div>
+
+            <div class="zero" data-ng-click="mother.rate.zero(card.letter)">
+                {{mother.rate.getTotal(card.letter)}}
+            </div>
+            <div class="plus" data-ng-click="mother.rate.plus(card.letter)">
+            +
+            </div>
+        </div>
+    </div>
+
+    <div class="saying-text">
+        {{card.text.substring(0,140)}}<span data-ng-if="card.text.length > 140 && !card.more">...<button class="btn btn-xs marker color-{{mother.armColor(card.letter)}}" data-ng-click="card.more = card.text.substring(140)">...</button></span><span data-ng-if="card.more">{{card.more}}<br><button class="btn btn-xs marker color-{{mother.armColor(card.letter)}}" data-ng-click="card.more = undefined">^</button></span>
+    </div>
+
 
 </div>

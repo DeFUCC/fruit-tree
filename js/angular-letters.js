@@ -15,6 +15,7 @@ controllers.lettersCtrl = function ($scope,$firebase) {
     $scope.popLetter = $scope.showLetters.pop();
     $scope.myLetters = [];
     $scope.colors = [];
+    $scope.rating = [{letter:'A',pluses:20,minuses:2,zeros:60}];
     $scope.fireLetters = $firebase(new Firebase('http://fruit-tree.firebaseio.com')); //creating a firebase object
     $scope.fireLetters.$bind($scope, "remoteLetters"); //bind a $scope.remoteLetters object for saving
     $scope.saveToFireBase = function () {
@@ -112,6 +113,47 @@ controllers.lettersCtrl = function ($scope,$firebase) {
         $scope.colors.push({letter:letter, color:color});
         return color;
     };
+
+    $scope.rate = {
+      plus: function (letter){
+          var have = false;
+          for (var i=0; i<$scope.rating.length; i++) {
+              if (letter == $scope.rating[i].letter) {
+                  ++$scope.rating[i].pluses;
+                  have=true;
+              }
+          }
+          if (!have) {$scope.rating.push({letter:letter, pluses:1, minuses:0, zeros:0})}
+      },
+      zero:function (letter){
+          var have = false;
+          for (var i=0; i<$scope.rating.length; i++) {
+              if (letter == $scope.rating[i].letter) {
+                  ++$scope.rating[i].zeros;
+                  have=true;
+              }
+          }
+          if (!have) {$scope.rating.push({letter:letter, pluses:0, minuses:0, zeros:1})}
+      },
+      minus: function (letter){
+          var have = false;
+          for (var i=0; i<$scope.rating.length; i++) {
+              if (letter == $scope.rating[i].letter) {
+                  ++$scope.rating[i].minuses;
+                  have=true;
+              }
+          }
+          if (!have) {$scope.rating.push({letter:letter, pluses:0, minuses:1, zeros:0})}
+      },
+      getTotal: function (letter) {
+          for (var i=0; i<$scope.rating.length; i++) {
+              if (letter == $scope.rating[i].letter) {
+                  var rating = $scope.rating[i].pluses + $scope.rating[i].minuses + $scope.rating[i].zeros;
+                  return rating;
+              }
+          }
+      }
+    }
 
     function shuffle(massive) {
         arr = massive.concat();
