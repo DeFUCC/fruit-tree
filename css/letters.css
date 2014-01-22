@@ -14,15 +14,28 @@
 .sayings {
     margin-bottom: 300px;
 }
+.saying-letter {
+
+}
+div {
+    box-sizing:border-box;
+}
+body {
+    background: #fff;
+}
 .box {
-    padding:6px;
     border: solid 6px #ccc;
     margin: 4px 2px;
     overflow: hidden;
+    border-radius: 6px;
 }
-.rating {
-    float:right;
+.side-panel {
+    float:left;
+    height:100%;
+    margin:0;
+    padding:3px;
 }
+
 .marker {
     float:right;
     color:white;
@@ -39,30 +52,68 @@
 }
 .pane {
     display: block;
-    position: relative;
-
-    bottom: 0;
+    width: 100%;
+    margin:0;
+    padding: 0;
+    clear:both;
+    top: 0;
     background-color: #ccc;
-}
 
+}
+.pane div {
+    text-align: center;
+    font-size: 12px;
+}
+.pane-label {
+    float:left;
+    padding: 2px 5px 2px 5px;
+    font-weight: bold;
+    color: #fff;
+    border-bottom-right-radius: 6px;
+}
+.pane-rating {
+    float:right;
+    width:80%;
+    border-bottom: solid 1px #ccc;
+}
 .minus {
-    position: absolute;
-    left:10px;
+    float:left;
+    width: 20%;
 }
-
+.zero {
+    display: inline-block;
+}
 .plus {
-    position: absolute;
-    right:10px;
+     float:right;
+     width: 20%;
+ }
+.rating {
+    background-color: #eee;
+}
+.minus:hover {
+    cursor: pointer;
+    background-color: red;
+}
+.plus:hover {
+    cursor: pointer;
+    background-color: green;
+}
+.zero:hover {
+    cursor: pointer;
+    background-color: dimgray;
+}
+.saying-text {
+    float:left;
+    padding:6px;
 }
 
+/* bg-color-hover */
 .border-color-c:hover {
     border-color: #eb3f5b;
 }
-
 .border-color-cd:hover {
     border-color: #febd8a;
 }
-
 .border-color-d:hover {
     border-color: #fcb73d;
 }
@@ -93,15 +144,13 @@
 .border-color-b:hover {
     border-color: #af0fc8;
 }
-
+/*background-color */
 .color-c {
     background-color: #eb3f5b;
 }
-
 .color-cd {
     background-color: #febd8a;
 }
-
 .color-d {
     background-color: #fcb73d;
 }
@@ -132,8 +181,44 @@
 .color-b {
     background-color: #af0fc8;
 }
-
-
+/* hover classes */
+.hover-back-c:hover {
+    background-color: #eb3f5b;
+}
+.hover-back-cd:hover {
+    background-color: #febd8a;
+}
+.hover-back-d:hover {
+    background-color: #fcb73d;
+}
+.hover-back-dd:hover {
+    background-color: #ffec8e;
+}
+.hover-back-e:hover {
+    background-color: #f5f94d;
+}
+.hover-back-f:hover {
+    background-color: #0ef367;
+}
+.hover-back-fd:hover {
+    background-color: #7ef8a6;
+}
+.hover-back-g:hover {
+    background-color: #0ef2dd;
+}
+.hover-back-gd:hover {
+    background-color: #78e7e5;
+}
+.hover-back-a:hover {
+    background-color: #4c64d3;
+}
+.hover-back-ad:hover {
+    background-color: #a598df;
+}
+.hover-back-b:hover {
+    background-color: #af0fc8;
+}
+/* responsiveness */
 @media screen and (min-width: 481px) and (max-width: 640px){
     .deckgrid[deckgrid]::before {
         content: '3 .column.column-1-3';
