@@ -21,21 +21,51 @@ div {
     box-sizing:border-box;
 }
 body {
-    background: #fff;
+    background: #000 url('noise.png') fixed;
+    color:#ccc;
 }
-.box {
-    border: solid 6px #ccc;
+.deckgrid-box {
+    border: solid 4px #333;
     margin: 4px 2px;
     overflow: hidden;
     display: block;
+    transition: all 1000ms linear;
 }
+.deckgrid-box:hover .pane-label {
+     border-bottom-right-radius: 5px;
+ }
 
+.box:hover .pane-label {
+    border-bottom-right-radius: 5px;
+}
+.box {
+    border: solid 4px #333;
+    width: 180px;
+    height:180px;
+    float:left;
+    margin: 4px 2px;
+    overflow: hidden;
+    display: block;
+    transition: all 400ms linear;
 
+}
+.corner {
+    position: absolute;
+    bottom:0;
+    right:0;
+}
+.saying-text {
+   margin:25px 0 0 0;
+    padding: 4px;
+}
 .marker {
     float:right;
     color:white;
+    background-color: #333;
+    transition: all 400ms linear;
 }
 .saypanel {
+    background: #262626 url('noise-gray.png');
     padding:10px 50px;
     overflow: visible;
 }
@@ -61,6 +91,7 @@ body {
     font-size: 12px;
 }
 .pane-label {
+    background-color: #333;
     display: block;
     float:left;
     padding: 2px 5px 2px 5px;
@@ -69,6 +100,10 @@ body {
     font-size: 10px;
     color: #fff;
     box-sizing: border-box;
+    transition: all 400ms linear;
+}
+.pane-label:hover {
+    cursor: pointer;
 }
 .pane-rating {
     float:right;
@@ -76,13 +111,13 @@ body {
     font-size: 12px;
 }
 .minus {
-    background-color: #888;
+    background-color: #333;
 }
 .zero {
-    background-color: #aaa;
+    background-color: #555;
 }
 .plus {
-    background-color: #ccc;
+    background-color: #999;
  }
 .rating {
     display: block;
@@ -98,10 +133,7 @@ body {
 .zero:hover {
     cursor: pointer;
 }
-.saying-text {
-    float:left;
-    padding:6px;
-}
+
 .more {
     position: relative;
     bottom: 5px;
@@ -153,13 +185,13 @@ body {
 .color-cd {
     background-color: #febd8a;
 }
-.color-d {
+.color-d{
     background-color: #fcb73d;
 }
 .color-dd {
     background-color: #ffec8e;
 }
-.color-e {
+.color-e{
     background-color: #f5f94d;
 }
 .color-f {
@@ -174,7 +206,7 @@ body {
 .color-gd {
     background-color: #78e7e5;
 }
-.color-a {
+.color-a{
     background-color: #4c64d3;
 }
 .color-ad {
