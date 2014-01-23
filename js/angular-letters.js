@@ -24,19 +24,22 @@ controllers.lettersCtrl = function ($scope,$firebase) {
         remote.currentLetters = $scope.currentLetters;
         remote.bit = $scope.bit;
         remote.colors = $scope.colors;
+        remote.rating = $scope.rating;
     };
     $scope.loadFromFireBase = function () {
-        var data = $scope.remoteLetters;
-        $scope.myLetters = data.myLetters;
-        $scope.currentLetters = data.currentLetters;
-        $scope.bit = data.bit;
-        $scope.colors = data.colors;
+        var remote = $scope.remoteLetters;
+        $scope.myLetters = remote.myLetters;
+        $scope.currentLetters = remote.currentLetters;
+        $scope.bit = remote.bit;
+        $scope.colors = remote.colors;
+        $scope.rating = remote.rating;
         $scope.shuffleLetters();
     };
     $scope.takeLetter = function(letter) {
         var place = $scope.currentLetters.indexOf(letter);
         if (place >= 0) {
             $scope.myLetters.push({letter: letter, text: $scope.linkedText});
+            $scope.rating.push({letter:letter, pluses:0,minuses:0,zeros:0});
             $scope.currentLetters.splice(place,1);
             $scope.linkedText = '';
             $scope.saveToLocalStorage();
@@ -56,6 +59,7 @@ controllers.lettersCtrl = function ($scope,$firebase) {
        $scope.myLetters=JSON.parse(localStorage["myLetters"]);
        $scope.bit=localStorage["bit"];
        $scope.colors=JSON.parse(localStorage["colors"]);
+       $scope.rating=JSON.parse(localStorage["rating"]);
        $scope.shuffleLetters();
        }
     };
@@ -67,6 +71,7 @@ controllers.lettersCtrl = function ($scope,$firebase) {
         $scope.shuffleLetters();
         $scope.myLetters = [];
         $scope.colors = [];
+        $scope.rating = [];
         $scope.selectedOrder=false;
     };
 
@@ -75,6 +80,7 @@ controllers.lettersCtrl = function ($scope,$firebase) {
         localStorage["currentLetters"] = JSON.stringify($scope.currentLetters);
         localStorage["bit"] = $scope.bit;
         localStorage["colors"] = JSON.stringify($scope.colors);
+        localStorage["rating"] = JSON.stringify($scope.rating);
     };
 
     $scope.refillLetters = function () {
@@ -124,6 +130,7 @@ controllers.lettersCtrl = function ($scope,$firebase) {
               }
           }
           if (!have) {$scope.rating.push({letter:letter, pluses:1, minuses:0, zeros:0})}
+          $scope.saveToLocalStorage();
       },
       zero:function (letter){
           var have = false;
@@ -134,6 +141,7 @@ controllers.lettersCtrl = function ($scope,$firebase) {
               }
           }
           if (!have) {$scope.rating.push({letter:letter, pluses:0, minuses:0, zeros:1})}
+          $scope.saveToLocalStorage();
       },
       minus: function (letter){
           var have = false;
@@ -144,6 +152,7 @@ controllers.lettersCtrl = function ($scope,$firebase) {
               }
           }
           if (!have) {$scope.rating.push({letter:letter, pluses:0, minuses:1, zeros:0})}
+          $scope.saveToLocalStorage();
       },
       getTotal: function (letter) {
           for (var i=0; i<$scope.rating.length; i++) {
@@ -166,12 +175,11 @@ controllers.lettersCtrl = function ($scope,$firebase) {
     $scope.sortByRating = function (card) {
             for (var i=0; i<$scope.rating.length; i++) {
                 if (card.letter == $scope.rating[i].letter) {
-                    var have = true;
                     console.log('works');
-                    return $scope.rating[i].pluses - $scope.rating[i].minuses;
+                    return $scope.rating[i].minuses - $scope.rating[i].pluses;
                 }
             }
-        if (!have) {return 0}
+            return 0;
     };
 
     function shuffle(massive) {
