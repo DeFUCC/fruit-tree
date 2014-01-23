@@ -164,14 +164,14 @@ controllers.lettersCtrl = function ($scope,$firebase) {
     };
 
     $scope.sortByRating = function (card) {
+        console.log('works');
             for (var i=0; i<$scope.rating.length; i++) {
                 if (card.letter == $scope.rating[i].letter) {
-                    var have = true;
-                    console.log('works');
+
                     return $scope.rating[i].pluses - $scope.rating[i].minuses;
                 }
             }
-        if (!have) {return 0}
+        return 0;
     };
 
     function shuffle(massive) {

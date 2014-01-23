@@ -55,7 +55,7 @@ angular.module('akoenig.deckgrid').factory('DeckgridDescriptor', [
             this.restrict = 'AE';
 
             this.template = '<div data-ng-repeat="column in columns track by $id(column)" class="{{layout.classList}}">' +
-                                '<div data-ng-repeat="card in column track by $id(card)" data-ng-include="cardTemplate"></div>' +
+                                '<div data-ng-repeat="card in column track by $id(card) | orderBy:sortByRating" data-ng-include="cardTemplate"></div>' +
                             '</div>';
 
             this.scope = {
@@ -329,10 +329,18 @@ angular.module('akoenig.deckgrid').factory('Deckgrid', [
          *
          */
         Deckgrid.prototype.$$onModelChange = function $$onModelChange (oldModel, newModel) {
-            var self = this;
+            var self = this,i;
 
             if (oldModel.length !== newModel.length) {
                 self.$$createColumns();
+            } else {
+                i = newModel.length - 1;
+                for (i; i >= 0; i = i - 1) {
+                if (oldModel[i] !== newModel[i]) {
+                self.$$createColumns();
+                break;
+                }
+                }
             }
         };
 
