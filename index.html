@@ -35,7 +35,7 @@
             Total <span class="label label-primary">{{myLetters.length}}</span> sayings.
         <div class="btn-group">
             <button type="button" class="btn btn-sm btn-success" data-ng-click="saveToFireBase()">Save to database</button>
-            <button type="button" class="btn btn-sm btn-warning" data-ng-click="loadFromFireBase()">Load from database</button>
+            <button type="button" class="btn btn-sm btn-warning" data-ng-click="loadFromFireBase();saveToLocalStorage();">Load from database</button>
             <button onclick="document.getElementById('usertext').focus()" class="btn btn-sm btn-danger" data-ng-click="restart()">Restart</button>
         </div>
         </div>
@@ -85,6 +85,8 @@ HERE IS THE CSS
 
 -->
 
+
+
     <div class="row sayings">
         <div class="col-md-10 col-md-offset-1" id="sayings-container">
 
@@ -105,6 +107,34 @@ HERE IS THE CSS
     </div>
 -->
 
+    <!-- DECKGRID!
+    <div class="row sayings">
+        <div class="col-md-10 col-md-offset-1" id="sayings-container">
+        <div data-ng-repeat="card in myLetters | orderBy:sortByRating" class="box border-color-{{armColor(card.letter)}}">
+
+        <div class="pane-label hover-back-{{armColor(card.letter)}}">
+            {{card.letter}}
+        </div>
+
+        <div class="rating">
+            <span data-ng-show="rate.getRating(card.letter)<0" data-ng-click="rate.minus(card.letter)" class="label label-danger">{{rate.getRating(card.letter)}}</span>
+            <span data-ng-hide="rate.getRating(card.letter)<0" data-ng-click="rate.minus(card.letter)" class="minus label label-danger">-</span>
+            <span data-ng-click="rate.zero(card.letter)" class="zero label label-default">{{rate.getTotal(card.letter) || 0}}</span>
+            <span data-ng-show="rate.getRating(card.letter)>0" data-ng-click="rate.plus(card.letter)" class="label label-success">+{{rate.getRating(card.letter)}}</span>
+            <span data-ng-hide="rate.getRating(card.letter)>0" data-ng-click="rate.plus(card.letter)" class="plus label label-success">+</span>
+        </div>
+
+
+
+        <div class="saying-text">
+            {{card.text.substring(0,140)}}<span data-ng-if="card.text.length > 140 && !card.more">...<button class="btn btn-xs marker hover-back-{{armColor(card.letter)}}" data-ng-click="card.more = card.text.substring(140)">...</button></span><span data-ng-if="card.more">{{card.more}}<br><button class="btn btn-xs marker hover-back-{{armColor(card.letter)}}" data-ng-click="card.more = undefined">^</button></span>
+        </div>
+
+
+        </div>
+        </div>
+    </div>
+-->
     <div data-ng-init="hidden=true" class="navbar-fixed-bottom panel panel-footer saypanel">
         <button data-ng-show="hidden" data-ng-click="hidden=false" class="handle btn btn-success">+</button>
         <button data-ng-hide="hidden" data-ng-click="hidden=true" class="handle btn btn-warning">-</button>

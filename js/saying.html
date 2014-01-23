@@ -1,7 +1,7 @@
-<div class="box border-color-{{mother.armColor(card.letter)}}">
+<div class="deckgrid-box border-color-{{mother.armColor(card.letter)}}">
 
 
-        <div class="pane-label color-{{mother.armColor(card.letter)}}">
+        <div class="pane-label hover-back-{{mother.armColor(card.letter)}}">
             {{card.letter}}
         </div>
 
@@ -16,7 +16,7 @@
 
 
     <div class="saying-text">
-        {{card.text.substring(0,140)}}<span data-ng-if="card.text.length > 140 && !card.more">...<button class="btn btn-xs marker color-{{mother.armColor(card.letter)}}" data-ng-click="card.more = card.text.substring(140)">...</button></span><span data-ng-if="card.more">{{card.more}}<br><button class="btn btn-xs marker color-{{mother.armColor(card.letter)}}" data-ng-click="card.more = undefined">^</button></span>
+        {{card.text.substring(0,140)}}<span data-ng-if="card.text.length > 140 && !card.more">...<button class="btn btn-xs marker hover-back-{{mother.armColor(card.letter)}}" data-ng-click="card.more = card.text.substring(140)">...</button></span><span data-ng-if="card.more">{{card.more}}<br><button class="btn btn-xs marker hover-back-{{mother.armColor(card.letter)}}" data-ng-click="card.more = undefined">^</button></span>
     </div>
 
 
