@@ -15,7 +15,7 @@ controllers.lettersCtrl = function ($scope,$firebase) {
     $scope.popLetter = $scope.showLetters.pop();
     $scope.myLetters = [];
     $scope.colors = [];
-    $scope.rating = [{letter:'P',pluses:20,minuses:2,zeros:60}];
+    $scope.rating = [];
     $scope.fireLetters = $firebase(new Firebase('http://fruit-tree.firebaseio.com')); //creating a firebase object
     $scope.fireLetters.$bind($scope, "remoteLetters"); //bind a $scope.remoteLetters object for saving
     $scope.saveToFireBase = function () {
@@ -167,6 +167,7 @@ controllers.lettersCtrl = function ($scope,$firebase) {
                   return total;
               }
           }
+          return 0;
       },
       getRating: function (letter) {
           for (var i=0; i<$scope.rating.length; i++) {
@@ -175,6 +176,7 @@ controllers.lettersCtrl = function ($scope,$firebase) {
                   return rating;
               }
           }
+          return 0;
       }
     };
 
