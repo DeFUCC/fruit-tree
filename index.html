@@ -107,10 +107,10 @@ HERE IS THE CSS
     </div>
 -->
 
-    <!-- DECKGRID!
+<!-- HTML boxes
     <div class="row sayings">
         <div class="col-md-10 col-md-offset-1" id="sayings-container">
-        <div data-ng-repeat="card in myLetters | orderBy:sortByRating" class="box border-color-{{armColor(card.letter)}}">
+        <div data-ng-repeat="card in myLetters track by card.letter | orderBy:sortByRating" class="box border-color-{{armColor(card.letter)}}">
 
         <div class="pane-label hover-back-{{armColor(card.letter)}}">
             {{card.letter}}
@@ -135,6 +135,7 @@ HERE IS THE CSS
         </div>
     </div>
 -->
+
     <div data-ng-init="hidden=true" class="navbar-fixed-bottom panel panel-footer saypanel">
         <button data-ng-show="hidden" data-ng-click="hidden=false" class="handle btn btn-success">+</button>
         <button data-ng-hide="hidden" data-ng-click="hidden=true" class="handle btn btn-warning">-</button>
@@ -149,15 +150,14 @@ HERE IS THE CSS
         <label>...and choose letters. <span class="label label-info">{{currentLetters.length}}</span> orders now
             available!</label>
 
-        <div class="row">
+        <div class="row say-buttons">
             <button type="submit" onclick="document.getElementById('usertext').focus()"
-                    class="col-sm-1 btn btn-lg  color-{{armColor(popLetter)}}"
+                    class="btn btn-lg  color-{{armColor(popLetter)}}"
                     data-ng-if="currentLetters.length!=0"
                     data-ng-click="takeLetter(popLetter)"
                     data-ng-disabled="!linkedText">{{popLetter}}
-            </button>
-            <button type="button" onclick="document.getElementById('usertext').focus()"
-                    class="col-sm-1 btn btn-lg  color-{{armColor(letter)}}"
+            </button><button type="button" onclick="document.getElementById('usertext').focus()"
+                    class="btn btn-lg  color-{{armColor(letter)}}"
                     data-ng-repeat="letter in showLetters"
                     data-ng-click="takeLetter(letter)"
                     data-ng-disabled="!linkedText">{{letter}}
