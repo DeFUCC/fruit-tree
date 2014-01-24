@@ -1,8 +1,11 @@
-<div class="deckgrid-box hover-back-{{mother.armColor(card.letter)}} border-color-{{mother.armColor(card.letter)}}">
+<div data-ng-init="card.select=''"  data-ng-class="card.select" class="deckgrid-box hover-back-{{mother.armColor(card.letter)}} border-color-{{mother.armColor(card.letter)}}">
 
 
-        <div class="pane-label hover-back-{{mother.armColor(card.letter)}}">
+        <div  data-ng-show="card.select == ''" data-ng-click="card.select='color-'+mother.armColor(card.letter);" class="pane-label hover-back-{{mother.armColor(card.letter)}}">
             | {{card.letter}} |
+        </div>
+        <div data-ng-hide="card.select == ''" data-ng-click="card.select=''" class="pane-label hover-back-{{mother.armColor(card.letter)}}">
+        | {{card.letter}} |
         </div>
 
             <div class="rating">
