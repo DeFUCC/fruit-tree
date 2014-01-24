@@ -35,6 +35,8 @@ controllers.lettersCtrl = function ($scope,$firebase) {
         $scope.rating = remote.rating;
         $scope.shuffleLetters();
     };
+
+
     $scope.takeLetter = function(letter) {
         var place = $scope.currentLetters.indexOf(letter);
         if (place >= 0) {
@@ -43,6 +45,7 @@ controllers.lettersCtrl = function ($scope,$firebase) {
             $scope.currentLetters.splice(place,1);
             $scope.linkedText = '';
             $scope.saveToLocalStorage();
+            $scope.saveToFireBase();
             $scope.shuffleLetters();
         }
     };
@@ -131,6 +134,7 @@ controllers.lettersCtrl = function ($scope,$firebase) {
           }
           if (!have) {$scope.rating.push({letter:letter, pluses:1, minuses:0, zeros:0})}
           $scope.saveToLocalStorage();
+          $scope.saveToFireBase();
       },
       zero:function (letter){
           var have = false;
@@ -142,6 +146,7 @@ controllers.lettersCtrl = function ($scope,$firebase) {
           }
           if (!have) {$scope.rating.push({letter:letter, pluses:0, minuses:0, zeros:1})}
           $scope.saveToLocalStorage();
+          $scope.saveToFireBase();
       },
       minus: function (letter){
           var have = false;
@@ -153,6 +158,7 @@ controllers.lettersCtrl = function ($scope,$firebase) {
           }
           if (!have) {$scope.rating.push({letter:letter, pluses:0, minuses:1, zeros:0})}
           $scope.saveToLocalStorage();
+          $scope.saveToFireBase();
       },
       getTotal: function (letter) {
           for (var i=0; i<$scope.rating.length; i++) {
@@ -175,7 +181,6 @@ controllers.lettersCtrl = function ($scope,$firebase) {
     $scope.sortByRating = function (card) {
             for (var i=0; i<$scope.rating.length; i++) {
                 if (card.letter == $scope.rating[i].letter) {
-                    console.log('works');
                     return $scope.rating[i].minuses - $scope.rating[i].pluses;
                 }
             }
