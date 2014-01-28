@@ -12,7 +12,9 @@
     width: 24%;
 }
 .sayings {
-    margin-bottom: 300px;
+    max-height: 800px;
+    overflow: scroll;
+    padding:40px 0;
 }
 .saying-letter {
 
@@ -22,7 +24,7 @@ div {
 }
 body {
     background: #000;
-    color:#eee;
+    color:#bbb;
 }
 .deckgrid-box {
     border: solid 4px #333;
@@ -30,17 +32,24 @@ body {
     overflow: hidden;
     display: block;
     transition: all 600ms linear;
+    position: relative;
 }
 .deckgrid-box:hover .pane-label {
     background-color: inherit !important;
     border-radius: 5px;
     color:inherit !important;
- }
+}
+.deckgrid-box:hover .corner {
+    opacity: .40;
+}
 
 .box:hover .pane-label {
     background-color: inherit !important;
     border-radius: 5px;
     color:inherit !important;
+}
+.box:hover .corner {
+    opacity: .40;
 }
 .box {
     border: solid 4px #333;
@@ -51,16 +60,36 @@ body {
     overflow: hidden;
     display: block;
     transition: all 600ms linear;
+    position: relative;
 
 }
 .corner {
+    z-index: 80;
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 0 0 30px 30px;
+    border-color: transparent transparent #444 transparent;
     position: absolute;
     bottom:0;
     right:0;
+    float: right;
+    transition: all 600ms linear;
+}
+.corner:hover {
+    cursor: pointer;
+    opacity: .80;
+}
+.corner .more {
+    margin:15px 0 0 -14px;
+}
+.corner .less {
+    margin:10px 0 0 -12px;
 }
 .saying-text {
-   margin:25px 0 0 0;
+    margin:25px 0 0 0;
     padding: 4px;
+
 }
 .marker {
     float:right;
@@ -72,6 +101,9 @@ body {
     background: #262626;
     padding:10px 50px;
     overflow: visible;
+}
+#usertext {
+    width:100%;
 }
 .say-buttons button{
     margin:5px;
@@ -125,11 +157,14 @@ body {
 }
 .plus {
     background-color: #999;
- }
+}
 .rating {
     display: block;
     float:right;
-    font-size: 12px;
+    margin: 0 3px 0 0;
+}
+.rating .label {
+    font-size: 10px;
 }
 .minus:hover {
     cursor: pointer;
