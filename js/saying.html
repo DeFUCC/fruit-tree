@@ -9,7 +9,7 @@
     </div>
 
     <div class="rating">
-        <span data-ng-show="mother.rate.getRating(card.letter)<0" data-ng-click="mother.rate.minus(card.letter)" class="minus label label-important">{{mother.rate.getRating(card.letter)}}</span>
+        <span data-ng-show="mother.rate.getRating(card.letter)<0" data-ng-click="mother.rate.minus(card.letter)" class="minus label label-danger">{{mother.rate.getRating(card.letter)}}</span>
         <span data-ng-hide="mother.rate.getRating(card.letter)<0" data-ng-click="mother.rate.minus(card.letter)" class="minus label">-</span>
         <span data-ng-click="mother.rate.zero(card.letter)" class="zero label label-default">{{mother.rate.getTotal(card.letter) || 0}}</span>
         <span data-ng-show="mother.rate.getRating(card.letter)>0" data-ng-click="mother.rate.plus(card.letter)" class="plus label label-success">+{{mother.rate.getRating(card.letter)}}</span>
