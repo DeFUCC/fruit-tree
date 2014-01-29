@@ -32,7 +32,7 @@
 <div class="container" data-ng-controller="lettersCtrl" data-ng-init="loadFromLocalStorage();shuffleLetters()">
     <div class="navbar navbar-fixed-top row">
         <div class="col-md-offset-2 col-md-8">
-            Total <span class="label label-primary">{{myLetters.length}}</span> sayings.
+            Total <span class="label label-primary">{{root.sayings.length}}</span> sayings.
         <div class="btn-group">
             <button type="button" class="btn btn-sm btn-success" data-ng-click="saveToFireBase()">Save to database</button>
             <button type="button" class="btn btn-sm btn-warning" data-ng-click="loadFromFireBase();saveToLocalStorage();">Load from database</button>
@@ -47,7 +47,7 @@
     <div class="row sayings">
         <div class="col-md-10 col-md-offset-1 row" >
         <div id="sayings-container">
-            <div data-ng-repeat="saying in myLetters track by $id(saying)" class="square border-color-{{armColor(saying.letter)}}">
+            <div data-ng-repeat="saying in sayings track by $id(saying)" class="square border-color-{{armColor(saying.letter)}}">
                 <span class="label color-{{armColor(saying.letter)}}">{{saying.letter}}</span>
                 {{saying.text}}
 
@@ -90,7 +90,7 @@ HERE IS THE CSS
     <div class="row sayings">
         <div class="col-md-10 col-md-offset-1" id="sayings-container">
 
-            <div deckgrid source="myLetters" cardTemplate="js/saying.html" class="deckgrid"></div>
+            <div deckgrid source="root.sayings" cardTemplate="js/saying.html" class="deckgrid"></div>
 
          </div>
     </div>
@@ -99,7 +99,7 @@ HERE IS THE CSS
     <div class="row">
         <div class="col-md-7">
             <dl class="dl-horizontal">
-                <dt data-ng-repeat-start="why in myLetters track by why.letter"><span class="label label-{{getButtonStatus(why)}}">{{why.letter}}</span></dt>
+                <dt data-ng-repeat-start="why in sayings track by why.letter"><span class="label label-{{getButtonStatus(why)}}">{{why.letter}}</span></dt>
                 <dd data-ng-repeat-end=""> {{why.text}}</dd>
 
             </dl>
@@ -110,7 +110,7 @@ HERE IS THE CSS
 <!-- HTML boxes
     <div class="row sayings">
         <div class="col-md-10 col-md-offset-1" id="sayings-container">
-        <div data-ng-repeat="card in myLetters track by card.letter | orderBy:sortByRating" class="box border-color-{{armColor(card.letter)}}">
+        <div data-ng-repeat="card in sayings track by card.letter | orderBy:sortByRating" class="box border-color-{{armColor(card.letter)}}">
 
         <div class="pane-label hover-back-{{armColor(card.letter)}}">
             {{card.letter}}
@@ -147,27 +147,22 @@ HERE IS THE CSS
                       rows="2"></textarea>
         </div>
 
-        <label>...and choose letters. <span class="label label-info">{{currentLetters.length}}</span> orders now
+        <label>...and choose letters. <span class="label label-info">{{root.freeOrders.length}}</span> orders now
             available!</label>
 
         <div class="row say-buttons">
-            <button type="submit" onclick="document.getElementById('usertext').focus()"
-                    class="btn btn-lg  color-{{armColor(popLetter)}}"
-                    data-ng-if="currentLetters.length!=0"
-                    data-ng-click="takeLetter(popLetter)"
-                    data-ng-disabled="!linkedText">{{popLetter}}
-            </button><button type="button" onclick="document.getElementById('usertext').focus()"
-                    class="btn btn-lg  color-{{armColor(letter)}}"
-                    data-ng-repeat="letter in showLetters"
-                    data-ng-click="takeLetter(letter)"
-                    data-ng-disabled="!linkedText">{{letter}}
+            <button type="button" onclick="document.getElementById('usertext').focus()"
+                    class="btn btn-lg  color-{{armColor(order)}}"
+                    data-ng-repeat="order in root.freeOrders | limitTo: 12"
+                    data-ng-click="root.say(order,linkedText)"
+                    data-ng-disabled="!linkedText">{{order}}
             </button>
         </div>
     </form>
 
     <div class="row">
         <div data-ng-if="currentLetters.length==0" class="col-sm-12 btn btn-warning btn-lg"
-             data-ng-click="refillLetters()">Add letters!
+             data-ng-click="root.()">Add letters!
         </div>
     </div>
     </div>
