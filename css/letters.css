@@ -53,8 +53,8 @@ body {
 }
 .box {
     border: solid 4px #333;
-    width: 180px;
-    height:180px;
+    width:23%;
+    height:220px;
     float:left;
     margin: 4px 2px;
     overflow: hidden;
@@ -87,8 +87,13 @@ body {
     margin:10px 0 0 -12px;
 }
 .saying-text {
+    width: 100%;
+    height:85%;
     margin:25px 0 0 0;
     padding: 4px;
+    display: block;
+    overflow-y: scroll;
+    overflow-x: hidden;
 
 }
 .marker {
@@ -185,176 +190,176 @@ body {
 
 
 /* bg-color-hover */
-.border-select-c {
+.border-select-K {
     border-color: #ff0000;
 }
-.border-select-cd {
+.border-select-P {
     border-color: #ff4500;
 }
-.border-select-d {
+.border-select-Y {
     border-color: #ff7b00;
 }
-.border-select-dd {
+.border-select-O {
     border-color: #ffb900;
 }
-.border-select-e {
+.border-select-M {
     border-color: #ffff00;
 }
-.border-select-f {
+.border-select-T {
     border-color: #00ff00;
 }
-.border-select-fd {
+.border-select-B {
     border-color: #00ff7b;
 }
-.border-select-g {
+.border-select-X {
     border-color: #00ffff;
 }
-.border-select-gd {
+.border-select-A {
     border-color: #007bff;
 }
-.border-select-a {
+.border-select-C {
     border-color: #0000ff;
 }
-.border-select-ad {
+.border-select-H {
     border-color: #7b00ff;
 }
-.border-select-b {
+.border-select-E {
     border-color: #ff00ff;
 }
 /*background-color */
-.color-c {
+.color-K {
     background-color: #ff0000;
     color:#fff;
 }
-.color-cd {
+.color-P {
     background-color: #ff4500;
     color:#fff;
 }
-.color-d{
+.color-Y{
     background-color: #ff7b00;
     color:#fff;
 }
-.color-dd {
+.color-O {
     background-color: #ffb900;
     color:#fff;
 }
-.color-e{
+.color-M{
     background-color: #ffff00;
     color:#000;
 }
-.color-f {
+.color-T {
     background-color: #00ff00;
     color:#000;
 }
-.color-fd {
+.color-B {
     background-color: #00ff7b;
     color:#000;
 }
-.color-g {
+.color-X {
     background-color: #00ffff;
     color:#000;
 }
-.color-gd {
+.color-A {
     background-color: #007bff;
     color:#fff;
 }
-.color-a{
+.color-C{
     background-color: #0000ff;
     color:#fff;
 }
-.color-ad {
+.color-H {
     background-color: #7b00ff;
     color:#fff;
 }
-.color-b {
+.color-E {
     background-color: #ff00ff;
     color:#fff;
 }
 /* hover classes */
-.hover-back-c:hover {
+.hover-back-K:hover {
     background-color: #ff0000;
     color:#fff;
 }
-.hover-back-cd:hover {
+.hover-back-P:hover {
     background-color: #ff4500;
     color:#fff;
 }
-.hover-back-d:hover {
+.hover-back-Y:hover {
     background-color: #ff7b00;
     color:#fff;
 }
-.hover-back-dd:hover {
+.hover-back-O:hover {
     background-color: #ffb900;
     color:#fff;
 }
-.hover-back-e:hover {
+.hover-back-M:hover {
     background-color: #ffff00;
     color:#000;
 }
-.hover-back-f:hover {
+.hover-back-T:hover {
     background-color: #00ff00;
     color:#000;
 }
-.hover-back-fd:hover {
+.hover-back-B:hover {
     background-color: #00ff7b;
     color:#000;
 }
-.hover-back-g:hover {
+.hover-back-X:hover {
     background-color: #00ffff;
     color:#000;
 }
-.hover-back-gd:hover {
+.hover-back-A:hover {
     background-color: #007bff;
     color:#fff;
 }
-.hover-back-a:hover {
+.hover-back-C:hover {
     background-color: #0000ff;
     color:#fff;
 }
-.hover-back-ad:hover {
+.hover-back-H:hover {
     background-color: #7b00ff;
     color:#fff;
 }
-.hover-back-b:hover {
+.hover-back-E:hover {
     background-color: #ff00ff;
     color:#fff;
 }
 
 /* bg-color-hover */
-.border-color-c:hover {
+.border-color-K:hover {
     border-color: #ff0000;
 }
-.border-color-cd:hover {
+.border-color-P:hover {
     border-color: #ff4500;
 }
-.border-color-d:hover {
+.border-color-Y:hover {
     border-color: #ff7b00;
 }
-.border-color-dd:hover {
+.border-color-O:hover {
     border-color: #ffb900;
 }
-.border-color-e:hover {
+.border-color-M:hover {
     border-color: #ffff00;
 }
-.border-color-f:hover {
+.border-color-T:hover {
     border-color: #00ff00;
 }
-.border-color-fd:hover {
+.border-color-B:hover {
     border-color: #00ff7b;
 }
-.border-color-g:hover {
+.border-color-X:hover {
     border-color: #00ffff;
 }
-.border-color-gd:hover {
+.border-color-A:hover {
     border-color: #007bff;
 }
-.border-color-a:hover {
+.border-color-C:hover {
     border-color: #0000ff;
 }
-.border-color-ad:hover {
+.border-color-H:hover {
     border-color: #7b00ff;
 }
-.border-color-b:hover {
+.border-color-E:hover {
     border-color: #ff00ff;
 }
 /* responsiveness */

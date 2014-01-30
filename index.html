@@ -29,26 +29,28 @@
 
 </head>
 <body>
-<div class="container" data-ng-controller="lettersCtrl" data-ng-init="loadFromLocalStorage();shuffleLetters()">
+<div class="container" data-ng-controller="lettersCtrl">
     <div class="navbar navbar-fixed-top row">
         <div class="col-md-offset-2 col-md-8">
             Total <span class="label label-primary">{{root.sayings.length}}</span> sayings.
         <div class="btn-group">
             <button type="button" class="btn btn-sm btn-success" data-ng-click="saveToFireBase()">Save to database</button>
-            <button type="button" class="btn btn-sm btn-warning" data-ng-click="loadFromFireBase();saveToLocalStorage();">Load from database</button>
-            <button onclick="document.getElementById('usertext').focus()" class="btn btn-sm btn-danger" data-ng-click="restart()">Restart</button>
+            <button type="button" class="btn btn-sm btn-warning" data-ng-click="loadFromFireBase()">Load from database</button>
+            <button onclick="document.getElementById('usertext').focus()" class="btn btn-sm btn-danger" data-ng-click="reset()">Restart</button>
         </div>
         </div>
     </div>
 
     <h3>Sayings:</h3>
+    Columns: <input ng-init="cols=4" type="range" defa min="1" max="6" data-ng-model="cols" data-ng-model-instant>
+    <span class="label label-default">{{cols}}</span>
 <!-- Columns layout made with CSS columns ONLY! For further analysis.
 
     <div class="row sayings">
         <div class="col-md-10 col-md-offset-1 row" >
         <div id="sayings-container">
-            <div data-ng-repeat="saying in sayings track by $id(saying)" class="square border-color-{{armColor(saying.letter)}}">
-                <span class="label color-{{armColor(saying.letter)}}">{{saying.letter}}</span>
+            <div data-ng-repeat="saying in sayings track by $id(saying)" class="square border-color-{{getColor(saying.letter)}}">
+                <span class="label color-{{getColor(saying.letter)}}">{{saying.letter}}</span>
                 {{saying.text}}
 
             </div>
@@ -85,7 +87,7 @@ HERE IS THE CSS
 
 -->
 
-
+<!-- DECKGRID
 
     <div class="row sayings">
         <div class="col-md-10 col-md-offset-1" id="sayings-container">
@@ -94,6 +96,8 @@ HERE IS THE CSS
 
          </div>
     </div>
+
+-->
 
 <!-- Just a description list as the first version.
     <div class="row">
@@ -107,34 +111,54 @@ HERE IS THE CSS
     </div>
 -->
 
-<!-- HTML boxes
+
     <div class="row sayings">
         <div class="col-md-10 col-md-offset-1" id="sayings-container">
-        <div data-ng-repeat="card in sayings track by card.letter | orderBy:sortByRating" class="box border-color-{{armColor(card.letter)}}">
+        <div
+            data-ng-style="{width:100/cols-2+'%'}"
+            data-ng-repeat="card in root.sayings | orderBy:root.ratingSort"
+            data-ng-class="card.select"
+            class="box hover-back-{{getColor(card.order)}} border-color-{{getColor(card.order)}}">
 
-        <div class="pane-label hover-back-{{armColor(card.letter)}}">
-            {{card.letter}}
-        </div>
+            <div  data-ng-show="card.select == ''" data-ng-click="card.select='color-'+getColor(card.order);" class="pane-label hover-back-{{getColor(card.order)}}">
+                | {{card.order}} |
+            </div>
+            <div data-ng-class="card.select" data-ng-hide="card.select == ''" data-ng-click="card.select=''" class="pane-label hover-back-{{getColor(card.order)}}">
+                | {{card.order}} |
+            </div>
 
         <div class="rating">
-            <span data-ng-show="rate.getRating(card.letter)<0" data-ng-click="rate.minus(card.letter)" class="label label-danger">{{rate.getRating(card.letter)}}</span>
-            <span data-ng-hide="rate.getRating(card.letter)<0" data-ng-click="rate.minus(card.letter)" class="minus label label-danger">-</span>
-            <span data-ng-click="rate.zero(card.letter)" class="zero label label-default">{{rate.getTotal(card.letter) || 0}}</span>
-            <span data-ng-show="rate.getRating(card.letter)>0" data-ng-click="rate.plus(card.letter)" class="label label-success">+{{rate.getRating(card.letter)}}</span>
-            <span data-ng-hide="rate.getRating(card.letter)>0" data-ng-click="rate.plus(card.letter)" class="plus label label-success">+</span>
+            <span data-ng-show="root[card.order].getRating()<0" data-ng-click="root[card.order].rate('-')" class="label label-danger">{{root[card.order].getRating()}}</span>
+            <span data-ng-hide="root[card.order].getRating()<0" data-ng-click="root[card.order].rate('-')" class="minus label label-danger">-</span>
+            <span data-ng-click="root[card.order].rate('0')" class="zero label label-default">{{root[card.order].getTotal() || 0}}</span>
+            <span data-ng-show="root[card.order].getRating()>0" data-ng-click="root[card.order].rate('+')" class="label label-success">+{{root[card.order].getRating()}}</span>
+            <span data-ng-hide="root[card.order].getRating()>0" data-ng-click="root[card.order].rate('+')" class="plus label label-success">+</span>
         </div>
 
 
 
-        <div class="saying-text">
-            {{card.text.substring(0,140)}}<span data-ng-if="card.text.length > 140 && !card.more">...<button class="btn btn-xs marker hover-back-{{armColor(card.letter)}}" data-ng-click="card.more = card.text.substring(140)">...</button></span><span data-ng-if="card.more">{{card.more}}<br><button class="btn btn-xs marker hover-back-{{armColor(card.letter)}}" data-ng-click="card.more = undefined">^</button></span>
-        </div>
+            <div data-ng-if="!card.more" class="saying-text">
+                {{card.text.substring(0,140)}}<span ng-if="card.text.length>139">...</span>
+            </div>
+            <div data-ng-if="card.more" class="saying-text">
+                {{card.text}}
+            </div>
 
+            <div data-ng-if="card.text.length > 140 && !card.more"
+                 data-ng-click="card.more = true"
+                 class="corner">
+                <div class="more">+</div>
+            </div>
+            <div data-ng-if="card.more"
+                 data-ng-click="card.more = false"
+                 class="corner">
+                <div class="less">-</div>
+            </div>
 
         </div>
         </div>
     </div>
--->
+
 
     <div data-ng-init="hidden=true" class="navbar-fixed-bottom panel panel-footer saypanel">
         <button data-ng-show="hidden" data-ng-click="hidden=false" class="handle btn btn-success">+</button>
@@ -152,7 +176,7 @@ HERE IS THE CSS
 
         <div class="row say-buttons">
             <button type="button" onclick="document.getElementById('usertext').focus()"
-                    class="btn btn-lg  color-{{armColor(order)}}"
+                    class="btn btn-lg  color-{{getColor(order)}}"
                     data-ng-repeat="order in root.freeOrders | limitTo: 12"
                     data-ng-click="root.say(order,linkedText)"
                     data-ng-disabled="!linkedText">{{order}}
