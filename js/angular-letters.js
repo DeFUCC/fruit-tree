@@ -8,7 +8,17 @@ fruitTree.controller(controllers);
 controllers.lettersCtrl = function ($scope,$firebase) {
     var baseLetters = ['A','B','C','E','H','K','M','O','P','T','X','Y'];
     var baseColors = ['c', 'cd', 'd','dd','e','f','fd','g','gd','a','ad','b'];
+    function shuffle(massive) {
+        arr = massive.concat();
+        for (var i = arr.length - 1; i > 0; i--) {
+            var num = Math.floor(Math.random() * (i + 1));
+            var d = arr[num];
+            arr[num] = arr[i];
+            arr[i] = d;
+        }
 
+        return arr;
+    }
     function Order (order, text) {
         var baseLetters = ['A','B','C','E','H','K','M','O','P','T','X','Y'];
         var ordr = this,
@@ -35,7 +45,6 @@ controllers.lettersCtrl = function ($scope,$firebase) {
         };
         ordr.order = order || '0';
         ordr.text = text || '';
-        ordr.color = ordr.order.substring(0,1);
         ordr.sayings = [];
         ordr.pretakenOrders = [];
         ordr.freeOrders = shuffle(availableOrders);
@@ -93,58 +102,37 @@ controllers.lettersCtrl = function ($scope,$firebase) {
         ordr.getTotal = function () {
             return pluses + minuses + zeros;
         };
+        ordr.ratingSort = function (card) {
+            var order = card.order;
+            return -ordr[order].getRating();
+        }
     }
 
+
+
+
     $scope.root = new Order();
-
-
-    $scope.availableColors = baseColors.concat();
-    $scope.bit = 1;
-    $scope.currentLetters = baseLetters.concat();
-    $scope.showLetters = shuffle($scope.currentLetters).slice(0,12);
-    $scope.popLetter = $scope.showLetters.pop();
-    $scope.sayings = [];
-    $scope.colors = [];
-    $scope.rating = [];
-    $scope.fireLetters = $firebase(new Firebase('http://fruit-tree.firebaseio.com')); //creating a firebase object
-    $scope.fireLetters.$bind($scope, "remoteLetters"); //bind a $scope.remoteLetters object for saving
-    $scope.saveToFireBase = function () {
-        var remote = $scope.remoteLetters;
-        remote.sayings = $scope.sayings;
-        remote.currentLetters = $scope.currentLetters;
-        remote.bit = $scope.bit;
-        remote.colors = $scope.colors;
-        remote.rating = $scope.rating;
+    $scope.getColor = function (order) {
+        return order.substring(0,1);
     };
-    $scope.loadFromFireBase = function () {
-        var remote = $scope.remoteLetters;
-        $scope.sayings = remote.sayings;
-        $scope.currentLetters = remote.currentLetters;
-        $scope.bit = remote.bit;
-        $scope.colors = remote.colors;
-        $scope.rating = remote.rating;
-        $scope.shuffleLetters();
-    };
+    $scope.reset = function () {
+        $scope.root = new Order();
+    }
 
 
-    $scope.takeLetter = function(letter) {
-        var place = $scope.currentLetters.indexOf(letter);
-        if (place >= 0) {
-            $scope.sayings.push({letter: letter, text: $scope.linkedText});
-            $scope.rating.push({letter:letter, pluses:0,minuses:0,zeros:0});
-            $scope.currentLetters.splice(place,1);
-            $scope.linkedText = '';
-            $scope.saveToLocalStorage();
-            $scope.saveToFireBase();
-            $scope.shuffleLetters();
-        }
-    };
+   // $scope.firebase = $firebase(new Firebase('https://frukt.firebaseio.com')); //creating a firebase object
+   // $scope.remote = {};
+   // $scope.remote.root = new Order();
+   // $scope.firebase.$bind($scope, "remote"); //bind a $scope.remoteLetters object for saving
 
-    $scope.selectOrder = function (obj) {
-        $scope.selectedOrder = obj;
-    };
+   // $scope.saveToFireBase = function () {
+   //     $scope.remote.root = $scope.root;
+   // };
+   // $scope.loadFromFireBase = function () {
+   //     var remoteroot = $scope.remote.root;
+   //     $scope.root = remoteroot;
+   // };
 
-    $scope.storageStatus = function() { return localStorage.length};
 
     $scope.loadFromLocalStorage = function () {
        if (localStorage.length > 0) {
@@ -157,16 +145,6 @@ controllers.lettersCtrl = function ($scope,$firebase) {
        }
     };
 
-    $scope.restart = function(){
-        localStorage.clear();
-        $scope.bit = 1;
-        $scope.currentLetters = baseLetters.concat();
-        $scope.shuffleLetters();
-        $scope.sayings = [];
-        $scope.colors = [];
-        $scope.rating = [];
-        $scope.selectedOrder=false;
-    };
 
     $scope.saveToLocalStorage = function () {
         localStorage["sayings"] = JSON.stringify($scope.sayings);
@@ -176,120 +154,7 @@ controllers.lettersCtrl = function ($scope,$firebase) {
         localStorage["rating"] = JSON.stringify($scope.rating);
     };
 
-    $scope.refillLetters = function () {
-        var current, result=baseLetters.concat(), order;
 
-        for (var b=0;b<$scope.bit; b++) {
-            current = result.slice(0);
-            order=0;
-            for (var i=0; i<current.length;i++) {
-
-                for (var j=0;j<12;j++) {
-
-                    result[order++]=current[i]+baseLetters[j];
-                }
-            }
-        }
-        $scope.bit++;
-        $scope.currentLetters = result;
-        $scope.shuffleLetters();
-    };
-
-    $scope.shuffleLetters = function (){
-        $scope.showLetters = shuffle($scope.currentLetters).slice(0,12);
-        $scope.popLetter = $scope.showLetters.shift();
-    };
-
-    $scope.armColor = function(letter){
-        for (var i=0; i<$scope.colors.length; i++) {
-            if (letter == $scope.colors[i].letter) {
-                return $scope.colors[i].color;
-            }
-        }
-        var color = 'c';
-        if ($scope.availableColors.length == 0) {$scope.availableColors = baseColors.concat();}
-        color = $scope.availableColors.shift();
-        $scope.colors.push({letter:letter, color:color});
-        return color;
-    };
-
-    $scope.rate = {
-      plus: function (letter){
-          var have = false;
-          for (var i=0; i<$scope.rating.length; i++) {
-              if (letter == $scope.rating[i].letter) {
-                  ++$scope.rating[i].pluses;
-                  have=true;
-              }
-          }
-          if (!have) {$scope.rating.push({letter:letter, pluses:1, minuses:0, zeros:0})}
-          $scope.saveToLocalStorage();
-          $scope.saveToFireBase();
-      },
-      zero:function (letter){
-          var have = false;
-          for (var i=0; i<$scope.rating.length; i++) {
-              if (letter == $scope.rating[i].letter) {
-                  ++$scope.rating[i].zeros;
-                  have=true;
-              }
-          }
-          if (!have) {$scope.rating.push({letter:letter, pluses:0, minuses:0, zeros:1})}
-          $scope.saveToLocalStorage();
-          $scope.saveToFireBase();
-      },
-      minus: function (letter){
-          var have = false;
-          for (var i=0; i<$scope.rating.length; i++) {
-              if (letter == $scope.rating[i].letter) {
-                  ++$scope.rating[i].minuses;
-                  have=true;
-              }
-          }
-          if (!have) {$scope.rating.push({letter:letter, pluses:0, minuses:1, zeros:0})}
-          $scope.saveToLocalStorage();
-          $scope.saveToFireBase();
-      },
-      getTotal: function (letter) {
-          for (var i=0; i<$scope.rating.length; i++) {
-              if (letter == $scope.rating[i].letter) {
-                  var total = $scope.rating[i].pluses + $scope.rating[i].minuses + $scope.rating[i].zeros;
-                  return total;
-              }
-          }
-          return 0;
-      },
-      getRating: function (letter) {
-          for (var i=0; i<$scope.rating.length; i++) {
-              if (letter == $scope.rating[i].letter) {
-                  var rating = $scope.rating[i].pluses - $scope.rating[i].minuses;
-                  return rating;
-              }
-          }
-          return 0;
-      }
-    };
-
-    $scope.sortByRating = function (card) {
-            for (var i=0; i<$scope.rating.length; i++) {
-                if (card.letter == $scope.rating[i].letter) {
-                    return $scope.rating[i].minuses - $scope.rating[i].pluses;
-                }
-            }
-            return 0;
-    };
-
-    function shuffle(massive) {
-        arr = massive.concat();
-        for (var i = arr.length - 1; i > 0; i--) {
-            var num = Math.floor(Math.random() * (i + 1));
-            var d = arr[num];
-            arr[num] = arr[i];
-            arr[i] = d;
-        }
-
-        return arr;
-    }
 
 
 };
