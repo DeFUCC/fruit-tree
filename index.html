@@ -41,9 +41,42 @@
         </div>
     </div>
 
-    <h3>Sayings:</h3>
-    Columns: <input ng-init="cols=4" type="range" defa min="1" max="6" data-ng-model="cols" data-ng-model-instant>
+    <h3>Создай:</h3>
+
+    <div data-ng-init="hidden=true" class="navbar-static-top panel panel-footer saypanel">
+        <div class="btn-group">
+        <button data-ng-click="$parent.hidden=!$parent.hidden" data-ng-repeat="type in types" class="btn btn-default">{{type}}</button>
+        </div><br><br><br>
+        <div data-ng-hide="hidden" class="tab-content">
+            <form class="form-horizontal" data-ng-submit="takeLetter(popLetter)">
+                <div class="form-group ">
+                    <label for="usertext">Enter your text... <span class="label label-info">{{140 - linkedText.length}}</span> symbols to be shown, the least to be hidden. </label>
+                    <textarea autofocus id="usertext" data-ng-model="linkedText" class="form-control"
+                              rows="2"></textarea>
+                </div>
+
+                <label>...and choose letters. <span class="label label-info">{{root.freeOrders.length}}</span> orders now
+                    available!</label>
+
+                <div class="row say-buttons">
+                    <button type="button" onclick="document.getElementById('usertext').focus()"
+                            class="btn btn-lg  color-{{getColor(order)}}"
+                            data-ng-repeat="order in root.freeOrders | limitTo: 12"
+                            data-ng-click="root.say(order,linkedText)"
+                            data-ng-disabled="!linkedText">{{order}}
+                    </button>
+                </div>
+            </form>
+
+
+        </div>
+    </div>
+
+
+    <div>
+    Columns: <input data-ng-init="cols=4" type="range" defa min="1" max="6" data-ng-model="cols" data-ng-model-instant>
     <span class="label label-default">{{cols}}</span>
+    </div>
 <!-- Columns layout made with CSS columns ONLY! For further analysis.
 
     <div class="row sayings">
@@ -115,6 +148,7 @@ HERE IS THE CSS
     <div class="row sayings">
         <div class="col-md-10 col-md-offset-1" id="sayings-container">
         <div
+            data-ng-init="card.select=''"
             data-ng-style="{width:100/cols-2+'%'}"
             data-ng-repeat="card in root.sayings | orderBy:root.ratingSort"
             data-ng-class="card.select"
@@ -123,9 +157,11 @@ HERE IS THE CSS
             <div  data-ng-show="card.select == ''" data-ng-click="card.select='color-'+getColor(card.order);" class="pane-label hover-back-{{getColor(card.order)}}">
                 | {{card.order}} |
             </div>
-            <div data-ng-class="card.select" data-ng-hide="card.select == ''" data-ng-click="card.select=''" class="pane-label hover-back-{{getColor(card.order)}}">
+            <div  data-ng-class="card.select" data-ng-hide="card.select == ''" data-ng-click="card.select=''" class="pane-label hover-back-{{getColor(card.order)}}">
                 | {{card.order}} |
             </div>
+
+            <div class="date">{{card.date}} &mdash; {{card.time}}</div>
 
         <div class="rating">
             <span data-ng-show="root[card.order].getRating()<0" data-ng-click="root[card.order].rate('-')" class="label label-danger">{{root[card.order].getRating()}}</span>
@@ -160,37 +196,7 @@ HERE IS THE CSS
     </div>
 
 
-    <div data-ng-init="hidden=true" class="navbar-fixed-bottom panel panel-footer saypanel">
-        <button data-ng-show="hidden" data-ng-click="hidden=false" class="handle btn btn-success">+</button>
-        <button data-ng-hide="hidden" data-ng-click="hidden=true" class="handle btn btn-warning">-</button>
-    <div data-ng-hide="hidden">
-        <form class="form-horizontal" data-ng-submit="takeLetter(popLetter)">
-        <div class="form-group ">
-            <label for="usertext">Enter your text... <span class="label label-info">{{140 - linkedText.length}}</span> symbols to be shown, the least to be hidden. </label>
-            <textarea autofocus id="usertext" data-ng-model="linkedText" class="form-control"
-                      rows="2"></textarea>
-        </div>
 
-        <label>...and choose letters. <span class="label label-info">{{root.freeOrders.length}}</span> orders now
-            available!</label>
-
-        <div class="row say-buttons">
-            <button type="button" onclick="document.getElementById('usertext').focus()"
-                    class="btn btn-lg  color-{{getColor(order)}}"
-                    data-ng-repeat="order in root.freeOrders | limitTo: 12"
-                    data-ng-click="root.say(order,linkedText)"
-                    data-ng-disabled="!linkedText">{{order}}
-            </button>
-        </div>
-    </form>
-
-    <div class="row">
-        <div data-ng-if="currentLetters.length==0" class="col-sm-12 btn btn-warning btn-lg"
-             data-ng-click="root.()">Add letters!
-        </div>
-    </div>
-    </div>
-</div>
 
 </div>
 </body>

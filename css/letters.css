@@ -63,6 +63,14 @@ body {
     position: relative;
 
 }
+
+.date {
+    margin:6px 0 0 6px;
+    font-size:8px;
+    float:left;
+    display: block;
+}
+
 .corner {
     z-index: 80;
     width: 0;
