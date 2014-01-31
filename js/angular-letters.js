@@ -71,7 +71,8 @@ controllers.lettersCtrl = function ($scope,$firebase) {
         ordr.say = function (order, text) {
             var place = availableOrders.indexOf(order);
             if (place>=0) {
-                ordr.sayings.push({order:order, text:text});
+                var time = new Date();
+                ordr.sayings.push({order:order, date:time.toLocaleDateString(), time:time.toLocaleTimeString(),  text:text});
                 ordr[order]=new Order(order,text);
                 availableOrders.splice(place,1);
                 ordr.shuffleOrders();
@@ -106,6 +107,37 @@ controllers.lettersCtrl = function ($scope,$firebase) {
             var order = card.order;
             return -ordr[order].getRating();
         }
+        ordr.exportSayings = function () {
+            var result = {},i;
+            result.order=ordr.order;
+            result.text=ordr.text;
+            result.pretakenOrders=ordr.pretakenOrders;
+            result.bit=ordr.bit;
+            result.sayings=ordr.sayings;
+            result.pluses=pluses;
+            result.minuses=minuses;
+            result.zeros=zeros;
+            result.availableOrders=availableOrders;
+            for (i=0;i<ordr.sayings.length;i++) {
+                result[ordr.sayings[i].order]=ordr[ordr.sayings[i].order].exportSayings();
+            }
+            return result;
+        };
+        ordr.importSayings = function (obj) {
+            ordr.order=obj.order || '0';
+            ordr.text=obj.text || '';
+            ordr.pretakenOrders=obj.pretakenOrders || [];
+            ordr.bit=obj.bit || 1;
+            ordr.sayings=obj.sayings || [];
+            pluses=obj.pluses || 0;
+            minuses=obj.minuses || 0;
+            zeros=obj.zeros || 0;
+            ordr.availableOrders=obj.availableOrders || baseLetters.concat();
+            for (var i=0;i<ordr.sayings.length;i++) {
+                ordr[ordr.sayings[i].order] = new Order;
+                ordr[ordr.sayings[i].order].importSayings(obj[obj.sayings[i].order]);
+            }
+        }
     }
 
 
@@ -117,24 +149,22 @@ controllers.lettersCtrl = function ($scope,$firebase) {
     };
     $scope.reset = function () {
         $scope.root = new Order();
-    }
+    };
 
 
-   // $scope.firebase = $firebase(new Firebase('https://frukt.firebaseio.com')); //creating a firebase object
-   // $scope.remote = {};
-   // $scope.remote.root = new Order();
-   // $scope.firebase.$bind($scope, "remote"); //bind a $scope.remoteLetters object for saving
+$scope.firebase = $firebase(new Firebase('https://frukt.firebaseio.com')); //creating a firebase object
+$scope.firebase.$bind($scope, "remote"); //bind a $scope.remoteLetters object for saving
 
-   // $scope.saveToFireBase = function () {
-   //     $scope.remote.root = $scope.root;
-   // };
-   // $scope.loadFromFireBase = function () {
-   //     var remoteroot = $scope.remote.root;
-   //     $scope.root = remoteroot;
-   // };
+$scope.saveToFireBase = function () {
+ $scope.remote.root = $scope.root.exportSayings();
+};
+$scope.loadFromFireBase = function () {
+$scope.root=new Order();
+$scope.root.importSayings($scope.remote.root);
+ };
 
-
-    $scope.loadFromLocalStorage = function () {
+$scope.types=['Затея','Событие','Личность','Оценка','Высказывание','Навык','Штука','Задача','Поставка'];
+ /*  $scope.loadFromLocalStorage = function () {
        if (localStorage.length > 0) {
        $scope.currentLetters=JSON.parse(localStorage["currentLetters"]);
        $scope.sayings=JSON.parse(localStorage["sayings"]);
@@ -153,7 +183,7 @@ controllers.lettersCtrl = function ($scope,$firebase) {
         localStorage["colors"] = JSON.stringify($scope.colors);
         localStorage["rating"] = JSON.stringify($scope.rating);
     };
-
+*/
 
 
 
