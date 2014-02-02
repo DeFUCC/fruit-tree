@@ -54,7 +54,7 @@ body {
 .box {
     border: solid 4px #333;
     width:23%;
-    height:220px;
+    height:160px;
     float:left;
     margin: 4px 2px;
     overflow: hidden;

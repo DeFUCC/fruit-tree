@@ -27,9 +27,10 @@
     </script>
     -->
 
+
 </head>
 <body>
-<div class="container" data-ng-controller="lettersCtrl">
+<div class="container" id="fruit" data-ng-controller="lettersCtrl">
     <div class="navbar navbar-fixed-top row">
         <div class="col-md-offset-2 col-md-8">
             Total <span class="label label-primary">{{root.sayings.length}}</span> sayings.
@@ -42,7 +43,7 @@
     </div>
 
     <h3>Создай:</h3>
-
+    {{width}}
     <div data-ng-init="hidden=true" class="navbar-static-top panel panel-footer saypanel">
         <div class="btn-group">
         <button data-ng-click="$parent.hidden=!$parent.hidden" data-ng-repeat="type in types" class="btn btn-default">{{type}}</button>
@@ -74,7 +75,7 @@
 
 
     <div>
-    Columns: <input data-ng-init="cols=4" type="range" defa min="1" max="6" data-ng-model="cols" data-ng-model-instant>
+    Columns: <input data-ng-init="cols=4" type="range" defa min="1" max="{{colsmax}}" data-ng-model="cols" data-ng-model-instant>
     <span class="label label-default">{{cols}}</span>
     </div>
 <!-- Columns layout made with CSS columns ONLY! For further analysis.
@@ -146,7 +147,7 @@ HERE IS THE CSS
 
 
     <div class="row sayings">
-        <div class="col-md-10 col-md-offset-1" id="sayings-container">
+        <div class="" id="sayings-container">
         <div
             data-ng-init="card.select=''"
             data-ng-style="{width:100/cols-2+'%'}"
@@ -161,7 +162,7 @@ HERE IS THE CSS
                 | {{card.order}} |
             </div>
 
-            <div class="date">{{card.date}} &mdash; {{card.time}}</div>
+
 
         <div class="rating">
             <span data-ng-show="root[card.order].getRating()<0" data-ng-click="root[card.order].rate('-')" class="label label-danger">{{root[card.order].getRating()}}</span>
