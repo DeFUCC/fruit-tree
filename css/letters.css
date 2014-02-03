@@ -11,10 +11,20 @@
 .deckgrid .column-1-4 {
     width: 24%;
 }
+.pretake {
+    width:60px;
+    padding:4px;
+}
 .sayings {
     max-height: 800px;
     overflow: scroll;
     padding:40px 0;
+}
+.order {
+    margin:0 4px;
+}
+.orders, .types {
+    margin:10px 0;
 }
 .saying-letter {
 
@@ -111,8 +121,9 @@ body {
     transition: all 600ms linear;
 }
 .saypanel {
+    margin-top:30px;
     background: #262626;
-    padding:10px 50px;
+    padding:10px 10px;
     overflow: visible;
 }
 #usertext {

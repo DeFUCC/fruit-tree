@@ -10,7 +10,9 @@
     <script type="application/javascript" src="js/angular-letters.js"></script>
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <link href="css/letters.css" rel="stylesheet">
-    <script src="js/angular-deckgrid.js"></script>
+    <script src="js/ui-bootstrap-tpls-0.10.0.js"></script>
+
+    <!--  <script src="js/angular-deckgrid.js"></script> -->
  <!-- Masonry script seemed a little bit difficult because of a need to re-layout on element add.
 
    <script src="js/masonry.pkgd.min.js"></script>
@@ -30,52 +32,68 @@
 
 </head>
 <body>
-<div class="container" id="fruit" data-ng-controller="lettersCtrl">
-    <div class="navbar navbar-fixed-top row">
-        <div class="col-md-offset-2 col-md-8">
+<div  class="app" id="fruit" data-ng-controller="lettersCtrl">
+    <div class="">
+        <div class="top-bttns">
             Total <span class="label label-primary">{{root.sayings.length}}</span> sayings.
-        <div class="btn-group">
-            <button type="button" class="btn btn-sm btn-success" data-ng-click="saveToFireBase()">Save to database</button>
-            <button type="button" class="btn btn-sm btn-warning" data-ng-click="loadFromFireBase()">Load from database</button>
-            <button onclick="document.getElementById('usertext').focus()" class="btn btn-sm btn-danger" data-ng-click="reset()">Restart</button>
+        <div class="btn-group btn-group-xs">
+            <button type="button" class="btn btn-xs btn-success" data-ng-click="saveToFireBase()">Save to database</button>
+            <button type="button" class="btn btn-xs btn-warning" data-ng-click="loadFromFireBase()">Load from database</button>
+            <button onclick="document.getElementById('usertext').focus()" class="btn btn-xs btn-danger" data-ng-click="reset()">Restart</button>
         </div>
         </div>
     </div>
 
-    <h3>Создай:</h3>
+
     {{width}}
-    <div data-ng-init="hidden=true" class="navbar-static-top panel panel-footer saypanel">
-        <div class="btn-group">
-        <button data-ng-click="$parent.hidden=!$parent.hidden" data-ng-repeat="type in types" class="btn btn-default">{{type}}</button>
-        </div><br><br><br>
-        <div data-ng-hide="hidden" class="tab-content">
-            <form class="form-horizontal" data-ng-submit="takeLetter(popLetter)">
-                <div class="form-group ">
-                    <label for="usertext">Enter your text... <span class="label label-info">{{140 - linkedText.length}}</span> symbols to be shown, the least to be hidden. </label>
-                    <textarea autofocus id="usertext" data-ng-model="linkedText" class="form-control"
-                              rows="2"></textarea>
-                </div>
 
-                <label>...and choose letters. <span class="label label-info">{{root.freeOrders.length}}</span> orders now
-                    available!</label>
-
-                <div class="row say-buttons">
-                    <button type="button" onclick="document.getElementById('usertext').focus()"
-                            class="btn btn-lg  color-{{getColor(order)}}"
-                            data-ng-repeat="order in root.freeOrders | limitTo: 12"
-                            data-ng-click="root.say(order,linkedText)"
-                            data-ng-disabled="!linkedText">{{order}}
-                    </button>
-                </div>
-            </form>
-
-
+    <div  class="saypanel">
+        <button data-ng-init="hidden=true" type="button" class="btn btn-md btn-success" data-ng-click="hidden = !hidden">Создать</button>
+        <form data-ng-submit="root.say(root.pretaken)">
+        <div class="types" data-collapse="hidden">
+            Выбери тип высказывания: <div class="btn-group btn-group-md">
+                <button type="button" data-ng-repeat="type in types" data-ng-model="$parent.sayingType" data-btn-radio="type" class="btn btn-md btn-primary">{{type}}</button>
+            </div>
         </div>
+
+
+        <div class="orders" data-collapse="hidden">
+        Выбери порядок:
+            <button type="button" onclick="document.getElementById('usertext').focus()"
+                    class="btn btn-md order color-{{getColor(root.pretaken)}}"
+                    data-ng-click="root.pretaken=''">
+                {{root.pretaken || root.freeOrders.length}}
+            </button>
+        <input type="search" class="input-sm pretake" data-ng-model="pretake">
+        <button data-ng-disabled="$parent.root.pretaken!=''" type="button" onclick="document.getElementById('usertext').focus()"
+                class="btn btn-md order color-{{getColor(order)}}"
+                data-ng-repeat="order in root.freeOrders | filter:pretake | limitTo: 12 "
+                data-ng-click="root.pretakeOrder(order)">
+            {{order}}
+        </button>
+        </div>
+        <div data-ng-show="sayingType && root.pretaken">
+           <h3>{{sayingType}}</h3>
+            <label for="usertext">Название</label>
+            <input autofocus id="usertext"
+                   data-tooltip="Осталось {{140 - $parent.linkedText.length}} символов"
+                   data-tooltip-trigger="focus" data-tooltip-placement="top"
+                   data-ng-model="$parent.linkedText"
+                   data-ng-model-instant
+                   class="form-control">
+            <label for="picture">URL картинки</label>
+            <input autofocus id="picture"
+                   data-ng-model="picLink"
+                   data-ng-model-instant
+                   class="form-control">
+            <button class="btn btn-success" data-ng-click="root.say(root.pretaken, sayingType, picLink, linkedText);pretake='';sayingType='';picLink='';hidden=true">Создать</button>
+        </div>
+        </form>
     </div>
 
 
-    <div>
-    Columns: <input data-ng-init="cols=4" type="range" defa min="1" max="{{colsmax}}" data-ng-model="cols" data-ng-model-instant>
+    <div data-ng-init="columner()">
+    Zoom: <input data-ng-init="cols=4" type="range"  min="1" max="{{colsmax}}" data-ng-model="cols" data-ng-model-instant>
     <span class="label label-default">{{cols}}</span>
     </div>
 <!-- Columns layout made with CSS columns ONLY! For further analysis.
@@ -146,11 +164,10 @@ HERE IS THE CSS
 -->
 
 
-    <div class="row sayings">
+    <div class="sayings">
         <div class="" id="sayings-container">
-        <div
-            data-ng-init="card.select=''"
-            data-ng-style="{width:100/cols-2+'%'}"
+        <div data-ng-init="card.select=''"
+            data-ng-style="{'width':$parent.width/$parent.cols -5 +'px', 'background-image':'url('+card.picLink+')', 'background-size':$parent.width/$parent.cols+'px', 'background-position':'center', 'background-repeat':'no-repeat'}"
             data-ng-repeat="card in root.sayings | orderBy:root.ratingSort"
             data-ng-class="card.select"
             class="box hover-back-{{getColor(card.order)}} border-color-{{getColor(card.order)}}">
@@ -174,7 +191,7 @@ HERE IS THE CSS
 
 
 
-            <div data-ng-if="!card.more" class="saying-text">
+            <div data-ng-if="!card.more" class="saying-text" >
                 {{card.text.substring(0,140)}}<span ng-if="card.text.length>139">...</span>
             </div>
             <div data-ng-if="card.more" class="saying-text">
