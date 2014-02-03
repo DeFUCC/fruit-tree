@@ -1,7 +1,7 @@
 /**
  * Created by starov on 26.12.13.
  */
-var fruitTree = angular.module('fruitTree',['firebase', 'akoenig.deckgrid']);
+var fruitTree = angular.module('fruitTree',['firebase', 'ui.bootstrap' /*, 'akoenig.deckgrid' */]);
 var controllers = {};
 fruitTree.controller(controllers);
 
@@ -10,15 +10,14 @@ controllers.lettersCtrl = function ($scope,$firebase) {
     var baseColors = ['c', 'cd', 'd','dd','e','f','fd','g','gd','a','ad','b'];
 
     var fruit = document.getElementById('fruit');
-    columner();
-    function columner () {
+    $scope.columner = function () {
         $scope.width=fruit.clientWidth;
         $scope.colsmax=Math.floor($scope.width/160);
         $scope.cols = $scope.colsmax;
         $scope.$apply();
-    }
+    };
 
-    window.onresize = columner;
+    window.onresize = $scope.columner;
 
     $scope.makeColumns = function (obj, cols) {
         var i, col;
@@ -38,7 +37,7 @@ controllers.lettersCtrl = function ($scope,$firebase) {
 
         return arr;
     }
-    function Order (order, text) {
+    function Order (order, type, picLink, text) {
         var baseLetters = ['A','B','C','E','H','K','M','O','P','T','X','Y'];
         var ordr = this,
             bit = 1,
@@ -62,41 +61,35 @@ controllers.lettersCtrl = function ($scope,$firebase) {
             ordr.shuffleOrders();
         };
         ordr.order = order || '0';
+        ordr.type = type || '';
+        ordr.picLink = picLink || '';
         ordr.text = text || '';
         ordr.sayings = [];
         ordr.availableOrders = baseLetters.concat();
-        ordr.pretakenOrders = [];
+        ordr.pretaken='';
         ordr.freeOrders = shuffle(ordr.availableOrders);
         ordr.shuffleOrders = function () {
             ordr.freeOrders = shuffle(ordr.availableOrders);
         };
         ordr.pretakeOrder = function (order) {
-            var place = availableOrders.indexOf(order);
-               if (place>=0){
-                    var time = new Date();
-                    availableOrders.splice(place,1);
-                    ordr.pretakenOrders.push({order:order, time:time});
-                    return {order:order, time:time}
-               }
-            return false;
+                    ordr.pretaken = order;
+                    ordr.shuffleOrders();
+                    return order
         };
-        ordr.returnOrder = function (order) {
-            var place = ordr.pretakenOrders.indexOf(order);
-            if (place>=0){
-                ordr.pretakenOrders.splice(place,1);
-                availableOrders.push(order);
-            }
+        ordr.returnOrder = function () {
+            ordr.pretaken='';
         };
-        ordr.say = function (order, text) {
+        ordr.say = function (order, type, picLink, text) {
             var place = ordr.availableOrders.indexOf(order);
             if (place>=0) {
                 var time = new Date();
-                ordr.sayings.push({order:order, date:time.toLocaleDateString(), time:time.toLocaleTimeString(),  text:text});
-                ordr[order]=new Order(order,text);
+                ordr.sayings.push({order:order, type:type, picLink:picLink, date:time.toLocaleDateString(), time:time.toLocaleTimeString(),  text:text});
+                ordr[order]=new Order(order,type,picLink,text);
                 ordr.availableOrders.splice(place,1);
+                ordr.pretaken='';
                 ordr.shuffleOrders();
                 $scope.linkedText = '';   //view repair
-                if (ordr.availableOrders.length == 0) {refillOrders()}
+                if (ordr.availableOrders.length == 0) {refillOrders()};
                 return true;
             }
             return false;
@@ -125,10 +118,12 @@ controllers.lettersCtrl = function ($scope,$firebase) {
         ordr.ratingSort = function (card) {
             var order = card.order;
             return -ordr[order].getRating();
-        }
+        };
         ordr.exportSayings = function () {
             var result = {},i;
             result.order=ordr.order;
+            result.type=ordr.type;
+            result.picLink=ordr.picLink;
             result.text=ordr.text;
             result.pretakenOrders=ordr.pretakenOrders;
             result.bit=ordr.bit;
@@ -144,6 +139,8 @@ controllers.lettersCtrl = function ($scope,$firebase) {
         };
         ordr.importSayings = function (obj) {
             ordr.order=obj.order || '0';
+            ordr.type=obj.type || '';
+            ordr.picLink=obj.picLink || '';
             ordr.text=obj.text || '';
             ordr.pretakenOrders=obj.pretakenOrders || [];
             bit=obj.bit || 1;
@@ -153,7 +150,7 @@ controllers.lettersCtrl = function ($scope,$firebase) {
             zeros=obj.zeros || 0;
             ordr.availableOrders=obj.availableOrders;
             for (var i=0;i<ordr.sayings.length;i++) {
-                ordr[ordr.sayings[i].order] = new Order;
+                ordr[ordr.sayings[i].order] = new Order();
                 ordr[ordr.sayings[i].order].importSayings(obj[obj.sayings[i].order]);
             }
 
@@ -183,28 +180,23 @@ $scope.root.importSayings($scope.remote.root);
     $scope.root.shuffleOrders();
  };
 
-$scope.types=['Затея','Событие','Личность','Оценка','Высказывание','Навык','Штука','Задача','Поставка'];
- /*  $scope.loadFromLocalStorage = function () {
+$scope.types=['Design','Event','Person','Saying'];
+
+ /*   $scope.loadFromLocalStorage = function () {
        if (localStorage.length > 0) {
-       $scope.currentLetters=JSON.parse(localStorage["currentLetters"]);
-       $scope.sayings=JSON.parse(localStorage["sayings"]);
-       $scope.bit=localStorage["bit"];
-       $scope.colors=JSON.parse(localStorage["colors"]);
-       $scope.rating=JSON.parse(localStorage["rating"]);
-       $scope.shuffleLetters();
+       $scope.root = new Order();
+       $scope.root.importSayings(JSON.parse(localStorage["root"]));
+       $scope.root.shuffleOrders();
        }
     };
 
 
     $scope.saveToLocalStorage = function () {
-        localStorage["sayings"] = JSON.stringify($scope.sayings);
-        localStorage["currentLetters"] = JSON.stringify($scope.currentLetters);
-        localStorage["bit"] = $scope.bit;
-        localStorage["colors"] = JSON.stringify($scope.colors);
-        localStorage["rating"] = JSON.stringify($scope.rating);
+        localStorage["root"] = JSON.stringify($scope.root.exportSayings());
+        console.log(localStorage['root']);
     };
-*/
 
+*/
 
 
 };
