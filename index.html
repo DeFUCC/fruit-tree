@@ -168,7 +168,7 @@ HERE IS THE CSS
         <div class="" id="root-container">
         <div data-ng-init="card.select=''"
             data-ng-style="{'width':$parent.width/$parent.cols -5 +'px', 'background-image':'url('+card.picLink+')', 'background-size':$parent.width/$parent.cols+'px', 'background-position':'center', 'background-repeat':'no-repeat'}"
-            data-ng-repeat="card in root.sayings | orderBy:root.ratingSort"
+            data-ng-repeat="card in root.objToArray() | orderBy:sort"
             data-ng-class="card.select"
             class="box hover-back-{{getColor(card.order)}} border-color-{{getColor(card.order)}}">
 
@@ -182,11 +182,11 @@ HERE IS THE CSS
 
 
         <div class="rating">
-            <span data-ng-show="root[card.order].getRating()<0" data-ng-click="root[card.order].rate('-')" class="label label-danger">{{root[card.order].getRating()}}</span>
-            <span data-ng-hide="root[card.order].getRating()<0" data-ng-click="root[card.order].rate('-')" class="minus label label-danger">-</span>
-            <span data-ng-click="root[card.order].rate('0')" class="zero label label-default">{{root[card.order].getTotal() || 0}}</span>
-            <span data-ng-show="root[card.order].getRating()>0" data-ng-click="root[card.order].rate('+')" class="label label-success">+{{root[card.order].getRating()}}</span>
-            <span data-ng-hide="root[card.order].getRating()>0" data-ng-click="root[card.order].rate('+')" class="plus label label-success">+</span>
+            <span data-ng-show="root.l[card.order].getRating()<0" data-ng-click="root.l[card.order].rate('-')" class="label label-danger">{{root.l[card.order].getRating()}}</span>
+            <span data-ng-hide="root.l[card.order].getRating()<0" data-ng-click="root.l[card.order].rate('-')" class="minus label label-danger">-</span>
+            <span data-ng-click="root.l[card.order].rate('0')" class="zero label label-default">{{root.l[card.order].getTotal() || 0}}</span>
+            <span data-ng-show="root.l[card.order].getRating()>0" data-ng-click="root.l[card.order].rate('+')" class="label label-success">+{{root.l[card.order].getRating()}}</span>
+            <span data-ng-hide="root.l[card.order].getRating()>0" data-ng-click="root.l[card.order].rate('+')" class="plus label label-success">+</span>
         </div>
 
 

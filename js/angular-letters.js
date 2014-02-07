@@ -41,22 +41,29 @@ controllers.lettersCtrl = function ($scope,$firebase) {
         return arr;
     }
 
-    function Order (order, type, picLink, text) {
+    function Order (order, type, picLink, text, date) {
         var baseLetters = ['A','B','C','E','H','K','M','O','P','T','X','Y'];
         this.pluses=0;
         this.zeros=0;
         this.minuses=0;
+        this.date=date;
         this.order = order || '0';
         this.type = type || '';
         this.picLink = picLink || '';
         this.text = text || '';
-        this.sayings = [];
         this.bit = 1;
+        this.l={};
         this.availableOrders = baseLetters.concat();
         this.pretaken='';
         this.freeOrders = shuffle(this.availableOrders);
     }
-
+Order.prototype.objToArray = function () {
+    var i, arr=[];
+    for (i in this.l) {
+        arr.push(this.l[i]);
+    }
+    return arr;
+};
 Order.prototype.importSayings = function (obj) {
     this.order=obj.order || '0';
     this.type=obj.type || '';
@@ -64,15 +71,15 @@ Order.prototype.importSayings = function (obj) {
     this.text=obj.text || '';
     this.pretakenOrders=obj.pretakenOrders || [];
     this.bit=obj.bit || 1;
-    this.sayings=obj.sayings || [];
+    this.l={};
     this.pluses=obj.pluses || 0;
     this.minuses=obj.minuses || 0;
     this.zeros=obj.zeros || 0;
     this.availableOrders=obj.availableOrders;
     this.shuffleOrders();
-    for (var i=0;i<this.sayings.length;i++) {
-        this[this.sayings[i].order] = new Order();
-        this[this.sayings[i].order].importSayings(obj[obj.sayings[i].order]);
+    for (var i in obj.l) {
+        this.l[i] = new Order();
+        this.l[i].importSayings(obj.l[i]);
     }
 
 };
@@ -84,18 +91,18 @@ Order.prototype.exportSayings = function () {
         result.text=this.text;
         result.pretakenOrders=this.pretakenOrders;
         result.bit=this.bit;
-        result.sayings=this.sayings;
+        result.l={};
         result.pluses=this.pluses;
         result.minuses=this.minuses;
         result.zeros=this.zeros;
         result.availableOrders=this.availableOrders;
-        for (i=0;i<this.sayings.length;i++) {
-            result[this.sayings[i].order]=this[this.sayings[i].order].exportSayings();
+        for (i in this.l) {
+            result.l[i]=this.l[i].exportSayings();
         }
         return result;
     };
 Order.prototype.ratingSort = function (card) {
-    return $scope.root[card.order].minuses - $scope.root[card.order].pluses;
+    return $scope.root.l[card.order].minuses - $scope.root.l[card.order].pluses;
 };
 Order.prototype.getTotal = function () {
         return this.pluses + this.minuses + this.zeros;
@@ -143,8 +150,8 @@ Order.prototype.say = function (order, type, picLink, text) {
     var place = this.availableOrders.indexOf(order);
     if (place>=0) {
         var time = new Date();
-        this.sayings.push({order:order, type:type, picLink:picLink, date:time.toLocaleDateString(), time:time.toLocaleTimeString(),  text:text});
-        this[order]=new Order(order,type,picLink,text);
+        var date = time.toJSON();
+        this.l[order]= new Order (order,type,picLink,text, date);
         this.availableOrders.splice(place,1);
         this.pretaken='';
         this.shuffleOrders();
@@ -163,6 +170,11 @@ Order.prototype.pretakeOrder = function (order) {
     this.shuffleOrders();
     return order
 };
+
+    $scope.sort = function (card) {
+        console.log('WTF');
+        return $scope.root.l[card.order].minuses - $scope.root.l[card.order].pluses;
+    };
 
     $scope.root = new Order();
     $scope.getColor = function (order) {
