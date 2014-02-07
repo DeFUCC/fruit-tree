@@ -61,7 +61,7 @@
         Выбери порядок:
             <button type="button" onclick="document.getElementById('usertext').focus()"
                     class="btn btn-md order color-{{getColor(root.pretaken)}}"
-                    data-ng-click="root.pretaken=''">
+                    data-ng-click="root.returnOrder()">
                 {{root.pretaken || root.freeOrders.length}}
             </button>
         <input type="search" class="input-sm pretake" data-ng-model="pretake">
@@ -93,7 +93,7 @@
 
 
     <div data-ng-init="columner()">
-    Zoom: <input data-ng-init="cols=4" type="range"  min="1" max="{{colsmax}}" data-ng-model="cols" data-ng-model-instant>
+    Zoom: <input type="range"  min="1" max="{{colsmax}}" data-ng-model="cols" data-ng-model-instant>
     <span class="label label-default">{{cols}}</span>
     </div>
 <!-- Columns layout made with CSS columns ONLY! For further analysis.
@@ -165,7 +165,7 @@ HERE IS THE CSS
 
 
     <div class="sayings">
-        <div class="" id="sayings-container">
+        <div class="" id="root-container">
         <div data-ng-init="card.select=''"
             data-ng-style="{'width':$parent.width/$parent.cols -5 +'px', 'background-image':'url('+card.picLink+')', 'background-size':$parent.width/$parent.cols+'px', 'background-position':'center', 'background-repeat':'no-repeat'}"
             data-ng-repeat="card in root.sayings | orderBy:root.ratingSort"
@@ -210,6 +210,17 @@ HERE IS THE CSS
             </div>
 
         </div>
+        </div>
+    </div>
+
+    <div data-ng-init="sel='Y'" class="child border-color-{{getColor(sel)}}">
+        <div class="left-strip color-{{getColor(sel)}}">
+            {{sel}}
+        </div>
+        <div class="saying-full">
+            <h3>Заголовок выбранного высказывания</h3>
+            <img src="http://ooley.ru/ooley.png" class="full-pic"/>
+
         </div>
     </div>
 
