@@ -45,8 +45,6 @@
     </div>
 
 
-    {{width}}
-
     <div  class="saypanel">
         <button data-ng-init="hidden=true" type="button" class="btn btn-md btn-success" data-ng-click="hidden = !hidden">Создать</button>
         <form data-ng-submit="root.say(root.pretaken)">
@@ -74,15 +72,15 @@
         </div>
         <div data-ng-show="sayingType && root.pretaken">
            <h3>{{sayingType}}</h3>
-            <label for="usertext">Название</label>
-            <input autofocus id="usertext"
+            <label for="usertext" >Название</label>
+            <input id="usertext" autofocus
                    data-tooltip="Осталось {{140 - $parent.linkedText.length}} символов"
                    data-tooltip-trigger="focus" data-tooltip-placement="top"
                    data-ng-model="$parent.linkedText"
                    data-ng-model-instant
                    class="form-control">
-            <label for="picture">URL картинки</label>
-            <input autofocus id="picture"
+            <label for="piclink" >URL картинки</label>
+            <input id="piclink" autofocus
                    data-ng-model="picLink"
                    data-ng-model-instant
                    class="form-control">
@@ -151,45 +149,25 @@ HERE IS THE CSS
 
 -->
 
-<!-- Just a description list as the first version.
-    <div class="row">
-        <div class="col-md-7">
-            <dl class="dl-horizontal">
-                <dt data-ng-repeat-start="why in sayings track by why.letter"><span class="label label-{{getButtonStatus(why)}}">{{why.letter}}</span></dt>
-                <dd data-ng-repeat-end=""> {{why.text}}</dd>
-
-            </dl>
-        </div>
-    </div>
--->
-
 
     <div class="sayings">
-        <div class="" id="root-container">
+        <div class="root-container">
         <div data-ng-init="card.select=''"
             data-ng-style="{'width':$parent.width/$parent.cols -5 +'px', 'background-image':'url('+card.picLink+')', 'background-size':$parent.width/$parent.cols+'px', 'background-position':'center', 'background-repeat':'no-repeat'}"
             data-ng-repeat="card in root.objToArray() | orderBy:sort"
             data-ng-class="card.select"
             class="box hover-back-{{getColor(card.order)}} border-color-{{getColor(card.order)}}">
 
-            <div  data-ng-show="card.select == ''" data-ng-click="card.select='color-'+getColor(card.order);" class="pane-label hover-back-{{getColor(card.order)}}">
+            <div  data-ng-show="card.select == ''" data-ng-click="card.select='color-'+getColor(card.order); $parent.sel=card.order" class="pane-label hover-back-{{getColor(card.order)}}">
                 | {{card.order}} |
             </div>
             <div  data-ng-class="card.select" data-ng-hide="card.select == ''" data-ng-click="card.select=''" class="pane-label hover-back-{{getColor(card.order)}}">
                 | {{card.order}} |
             </div>
 
-
-
-        <div class="rating">
-            <span data-ng-show="root.l[card.order].getRating()<0" data-ng-click="root.l[card.order].rate('-')" class="label label-danger">{{root.l[card.order].getRating()}}</span>
-            <span data-ng-hide="root.l[card.order].getRating()<0" data-ng-click="root.l[card.order].rate('-')" class="minus label label-danger">-</span>
-            <span data-ng-click="root.l[card.order].rate('0')" class="zero label label-default">{{root.l[card.order].getTotal() || 0}}</span>
-            <span data-ng-show="root.l[card.order].getRating()>0" data-ng-click="root.l[card.order].rate('+')" class="label label-success">+{{root.l[card.order].getRating()}}</span>
-            <span data-ng-hide="root.l[card.order].getRating()>0" data-ng-click="root.l[card.order].rate('+')" class="plus label label-success">+</span>
-        </div>
-
-
+            <div class="rating">
+                <div data-ng-click="root.l[card.order].rate('-')" class="minus">{{root.l[card.order].getRating()<0 ? root.l[card.order].getRating() : '-'}}</div><div data-ng-click="root.l[card.order].rate('0')" class="zero">{{root.l[card.order].getTotal() || 0}}</div><div data-ng-click="root.l[card.order].rate('+')" class="plus">+{{root.l[card.order].getRating()>0 ? root.l[card.order].getRating() : ''}}</div>
+            </div>
 
             <div data-ng-if="!card.more" class="saying-text" >
                 {{card.text.substring(0,140)}}<span ng-if="card.text.length>139">...</span>
@@ -213,15 +191,19 @@ HERE IS THE CSS
         </div>
     </div>
 
-    <div data-ng-init="sel='Y'" class="child border-color-{{getColor(sel)}}">
+    <div data-ng-if="sel" class="child border-color-{{getColor(sel)}}">
         <div class="left-strip color-{{getColor(sel)}}">
             {{sel}}
         </div>
-        <div class="saying-full">
-            <h3>Заголовок выбранного высказывания</h3>
-            <img src="http://ooley.ru/ooley.png" class="full-pic"/>
-
+        <div class="rating">
+            <div data-ng-click="root.l[sel].rate('-')" class="minus">{{root.l[sel].getRating()<0 ? root.l[sel].getRating() : '-'}}</div><div data-ng-click="root.l[sel].rate('0')" class="zero">{{root.l[sel].getTotal() || 0}}</div><div data-ng-click="root.l[sel].rate('+')" class="plus">+{{root.l[sel].getRating()>0 ? root.l[sel].getRating() : ''}}</div>
         </div>
+        <div class="saying-full">
+            <h3>{{root.l[sel].text}}</h3>
+            <img ng-src="{{root.l[sel].picLink}}" class="full-pic">
+        </div>
+
+
     </div>
 
 

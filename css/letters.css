@@ -53,7 +53,6 @@ body {
     color:#eee;
 }
 .child {
-    display:none;
     width:100%;
     padding-left:50px;
     border: solid 5px #333;
@@ -191,31 +190,47 @@ body {
     width:75%;
     font-size: 12px;
 }
-.minus {
-    background-color: #333;
-}
-.zero {
-    background-color: #555;
-}
-.plus {
-    background-color: #999;
-}
 .rating {
-    display: block;
     float:right;
-    margin: 0 3px 0 0;
+    color: #fff;
+    font-size:10px;
+    font-family: "Helvetica Neue Cyr", Helvetica, Arial, sans-serif;
+    font-weight:bold;
+    opacity: .5;
+    transition: all 600ms linear;
 }
-.rating .label {
-    font-size: 10px;
+.rating:hover {
+    opacity: .9;
+}
+.rating div {
+    display:inline-block;
+    padding:3px 7px;
+}
+.rating div:hover {
+    cursor:pointer;
+
+}
+.rating .minus {
+    background-color:#333;
+
+    padding-left:8px;
 }
 .minus:hover {
-    cursor: pointer;
+    background-color:#510a0a;
 }
-.plus:hover {
-    cursor: pointer;
+.rating .zero {
+    background-color:#555;
 }
 .zero:hover {
-    cursor: pointer;
+    background-color: #666;
+}
+.rating .plus {
+    background-color:#999;
+
+    padding-right:8px;
+}
+.plus:hover {
+    background-color:#48d741;
 }
 
 .more {

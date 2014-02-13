@@ -5,6 +5,35 @@ var fruitTree = angular.module('fruitTree',['firebase', 'ui.bootstrap' /*, 'akoe
 var controllers = {};
 fruitTree.controller(controllers);
 
+/* A template for a recursive directory
+
+fruitTree.directive("tree", function($compile) {
+    return {
+        restrict: "E",
+        scope: {family: '='},
+        template:
+            '<p>{{ family.name }}</p>'+
+                '<ul>' +
+                '<li ng-repeat="child in family.children">' +
+                '<tree family="child"></tree>' +
+                '</li>' +
+                '</ul>',
+        compile: function(tElement, tAttr) {
+            var contents = tElement.contents().remove();
+            var compiledContents;
+            return function(scope, iElement, iAttr) {
+                if(!compiledContents) {
+                    compiledContents = $compile(contents);
+                }
+                compiledContents(scope, function(clone, scope) {
+                    iElement.append(clone);
+                });
+            };
+        }
+    };
+});
+*/
+
 controllers.lettersCtrl = function ($scope,$firebase) {
     var baseLetters = ['A','B','C','E','H','K','M','O','P','T','X','Y'];
     var baseColors = ['c', 'cd', 'd','dd','e','f','fd','g','gd','a','ad','b'];
@@ -12,8 +41,9 @@ controllers.lettersCtrl = function ($scope,$firebase) {
     var retina = window.devicePixelRatio > 1;
     if (retina) {boxWidth=320};
 
-    var fruit = document.getElementById('fruit');
-    $scope.columner = function () {
+
+    $scope.columner = function (el) {
+        var fruit = document.getElementById('fruit');
         $scope.width=fruit.clientWidth;
         $scope.colsmax=Math.floor($scope.width/boxWidth);
         $scope.cols = $scope.colsmax;
@@ -22,12 +52,6 @@ controllers.lettersCtrl = function ($scope,$firebase) {
 
     window.onresize = $scope.columner;
 
-    $scope.makeColumns = function (obj, cols) {
-        var i, col;
-        for (i=0;i<obj.sayings.length;i++) {
-
-        }
-    };
 
     function shuffle(massive) {
         arr = massive.concat();
@@ -172,8 +196,7 @@ Order.prototype.pretakeOrder = function (order) {
 };
 
     $scope.sort = function (card) {
-        console.log('WTF');
-        return $scope.root.l[card.order].minuses - $scope.root.l[card.order].pluses;
+        return card.minuses - card.pluses;
     };
 
     $scope.root = new Order();
