@@ -33,7 +33,7 @@
 .sayings {
     max-height: 800px;
     overflow: scroll;
-    padding:40px 0;
+    padding: 0;
 }
 .order {
     margin:0 4px;
@@ -54,7 +54,7 @@ body {
 }
 .child {
     width:100%;
-    padding-left:50px;
+    padding-left:40px;
     border: solid 5px #333;
     position: relative;
 }
@@ -83,9 +83,8 @@ body {
 .box {
     border: solid 4px #333;
     width:23%;
-    height:160px;
     float:left;
-    margin: 4px 2px;
+    margin:0;
     overflow: hidden;
     display: block;
     transition: all 600ms linear;
@@ -140,7 +139,6 @@ body {
     transition: all 600ms linear;
 }
 .saypanel {
-    margin-top:30px;
     background: #262626;
     padding:10px 10px;
     overflow: visible;
@@ -413,6 +411,10 @@ body {
 }
 .border-color-E:hover {
     border-color: #ff00ff;
+}
+
+[ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+    display: none !important;
 }
 /* responsiveness */
 @media screen and (min-width: 481px) and (max-width: 640px){
