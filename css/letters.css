@@ -55,7 +55,7 @@ body {
 .child {
     width:100%;
     padding-left:40px;
-    border: solid 5px #333;
+    border-top: solid 5px #333;
     position: relative;
 }
 .left-strip {
