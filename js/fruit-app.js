@@ -7,55 +7,10 @@ fruitTree.controller(controllers);
 
 
 
- fruitTree.directive("roll", function($compile) {
- return {
- restrict: "E",
- templateUrl: 'roll.html',
- scope: {
-     tape: '=',
-     width: '=',
-     rate: '=',
-     select: '='
- },
- controller: function($scope) {
-     $scope.selector = function (card) {
-         $scope.select = card || '';
-     }
- },
- compile: function(tElement, tAttr) {
- var contents = tElement.contents().remove();
- var compiledContents;
- return function(scope, iElement, iAttr) {
- if(!compiledContents) {
- compiledContents = $compile(contents);
- }
- compiledContents(scope, function(clone, scope) {
- iElement.append(clone);
- });
- };
- }
- };
- });
-
-
 controllers.lettersCtrl = function ($scope, $firebase) {
     var baseLetters = ['A', 'B', 'C', 'E', 'H', 'K', 'M', 'O', 'P', 'T', 'X', 'Y'];
     var baseColors = ['c', 'cd', 'd', 'dd', 'e', 'f', 'fd', 'g', 'gd', 'a', 'ad', 'b'];
-    var boxWidth = 160;
-    var retina = window.devicePixelRatio > 1;
-    if (retina) {
-        boxWidth = 320
-    }
-    $scope.columner = function () {
-        var fruit = document.getElementById('fruit');
-        $scope.width = fruit.clientWidth;
-        $scope.colsmax = Math.floor($scope.width / boxWidth);
-        $scope.cols = $scope.colsmax;
-        $scope.boxWidth = $scope.width/$scope.cols -5 +'px';
-        $scope.$apply();
-    };
 
-    window.onresize = $scope.columner;
 
     function shuffle(massive) {
         arr = massive.concat();
@@ -98,61 +53,9 @@ controllers.lettersCtrl = function ($scope, $firebase) {
     $scope.rate.zero = function (card) {card.zeros++};
     $scope.rate.getTotal = function (card) {return card.pluses + card.minuses + card.zeros};
     $scope.rate.getRating = function (card) {return card.pluses - card.minuses;};
-    $scope.rate.getColor = function (order) {return order.substring(0, 1);};
     $scope.rate.sort = function (card) {return card.minuses - card.pluses;};
 
 
-    $scope.refillOrders = function (stem) {
-        var current, result = baseLetters.concat(), order;
-
-        for (var b = 0; b < this.bit; b++) {
-            current = result.slice(0);
-            order = 0;
-            for (var i = 0; i < current.length; i++) {
-
-                for (var j = 0; j < 12; j++) {
-
-                    result[order++] = current[i] + baseLetters[j];
-                }
-            }
-        }
-        stem.bit++;
-        stem.availableOrders = result;
-        $scope.shuffleOrders(stem);
-    };
-    $scope.say = function (stem, order, type, picLink, text) {
-        var place = stem.availableOrders.indexOf(order);
-        if (place >= 0) {
-            var time = new Date();
-            var date = time.toJSON();
-            if (!stem.branches) {stem.branches = []}
-            stem.branches.push(new Order(order, type, picLink, text, date));
-            stem.availableOrders.splice(place, 1);
-            $scope.pretaken = '';
-            $scope.pretake='';
-            $scope.sayingType='';
-            $scope.picLink='';
-            $scope.hidden=true;
-            $scope.shuffleOrders(stem);
-            $scope.linkedText = '';   //view repair
-            if (stem.availableOrders.length == 0) {
-                refillOrders(stem)
-            }
-            return true;
-        }
-        return false;
-    };
-
-    $scope.returnOrder = function (stem) {
-        if ($scope.pretaken != '') {
-            $scope.pretaken = '';
-            $scope.shuffleOrders(stem);
-        }
-    };
-    $scope.pretakeOrder = function (stem, order) {
-        $scope.pretaken = order;
-        $scope.shuffleOrders(stem);
-    };
 
 
     $scope.select = function(card) {
@@ -182,6 +85,7 @@ controllers.lettersCtrl = function ($scope, $firebase) {
 
 
     $scope.root = new Order();
+    $scope.proto = Order;
     $scope.sel='';
 
     $scope.pretaken = '';

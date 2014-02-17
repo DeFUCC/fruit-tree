@@ -7,26 +7,31 @@
     <script src="js/angular.js"></script>
     <script src="https://cdn.firebase.com/v0/firebase.js"></script>
     <script src="https://cdn.firebase.com/libs/angularfire/0.5.0/angularfire.js"></script>
-    <script type="application/javascript" src="js/angular-letters.js"></script>
+    <script type="application/javascript" src="js/fruit-app.js"></script>
+    <script type="application/javascript" src="js/fruit-directives.js"></script>
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <link href="css/letters.css" rel="stylesheet">
     <script src="js/ui-bootstrap-tpls-0.10.0.js"></script>
 
     <script type="text/ng-template"  id="roll.html">
+        <div data-ng-init="columner()">
+            Zoom: <input type="range"  min="1" max="{{colsmax}}" data-ng-model="cols">
+            <span class="label label-default">{{cols}}</span>{{width}}
+        </div>
         <div class="sayings">
             <div class="root-container">
                 <div data-ng-repeat="card in tape | orderBy:rate.sort" >
 
         <div data-ng-init="card.select=''"
-             data-ng-style="{'width':width, 'background-image':'url('+card.picLink+')', 'background-size':width, 'background-position':'center', 'background-repeat':'no-repeat'}"
-
+             style="width:{{100/$parent.cols || 25}}%; "
              data-ng-class="card.select"
-             class="box hover-back-{{rate.getColor(card.order)}} border-color-{{rate.getColor(card.order)}}">
+             class="box hover-back-{{getColor(card.order)}} border-color-{{getColor(card.order)}}">
+            <div class="box-inner" style="background-size: {{$parent.width/$parent.cols}}px; background-image: url({{card.picLink}}); background-position: center; background-repeat: no-repeat;"></div>
 
-            <div  data-ng-show="card.select == ''" data-ng-click="card.select='color-'+rate.getColor(card.order); selector(card)" class="pane-label hover-back-{{rate.getColor(card.order)}}">
+            <div  data-ng-show="card.select == ''" data-ng-click="card.select='color-'+getColor(card.order); selector(card)" class="pane-label hover-back-{{getColor(card.order)}}">
                 | {{card.order}} |
             </div>
-            <div  data-ng-class="card.select" data-ng-hide="card.select == ''" data-ng-click="card.select=''; selector()" class="pane-label hover-back-{{rate.getColor(card.order)}}">
+            <div  data-ng-class="card.select" data-ng-hide="card.select == ''" data-ng-click="card.select=''; selector()" class="pane-label hover-back-{{getColor(card.order)}}">
                 | {{card.order}} |
             </div>
 
@@ -59,6 +64,84 @@
         </div>
     </script>
 
+    <script type="text/ng-template" id="saypanel.html">
+        <div  class="saypanel">
+            <button data-ng-init="hidden=true"
+                    type="button"
+                    class="btn btn-md btn-success buzz-out"
+                    data-ng-click="hidden = !hidden">+</button>
+            <form data-ng-submit="say(stem,pretaken, sayingType, picLink, linkedText)">
+                <div class="types" data-collapse="hidden">
+                    Выбери тип высказывания: <div class="btn-group btn-group-md">
+                    <button type="button" data-ng-repeat="type in types" data-ng-model="$parent.sayingType" data-btn-radio="type" class="btn btn-md btn-primary">{{type}}</button>
+                </div>
+                </div>
+
+
+                <div class="orders" data-collapse="hidden">
+                    Выбери порядок:
+                    <button type="button"
+                            class="btn btn-md order color-{{getColor(pretaken)}}"
+                            data-ng-click="returnOrder(stem)">
+                        {{pretaken || stem.freeOrders.length}}
+                    </button>
+                    <input type="search" class="input-sm pretake" data-ng-model="pretake">
+                    <button data-ng-disabled="$parent.pretaken!=''" type="button"
+                            class="btn btn-md order color-{{getColor(order)}}"
+                            data-ng-repeat="order in stem.freeOrders | filter:pretake | limitTo: 12 "
+                            data-ng-click="pretakeOrder(stem, order)">
+                        {{order}}
+                    </button>
+                </div>
+                <div data-collapse="hidden && !sayingType && !pretaken">
+                    <h3>{{sayingType}}</h3>
+                    <label for="usertext" >Название</label>
+                    <input id="usertext" autofocus
+                           placeholder="Название не длиннее 140 символов"
+                           data-tooltip="Осталось {{140 - $parent.linkedText.length}} символов"
+                           data-tooltip-trigger="focus" data-tooltip-placement="top"
+                           data-ng-model="$parent.linkedText"
+                           data-ng-model-instant
+                           class="form-control">
+                    <label for="piclink" >URL картинки</label>
+                    <input id="piclink"
+                           placeholder="URL"
+                           data-ng-model="picLink"
+                           data-ng-model-instant
+                           class="form-control">
+                    <button class="btn btn-success" data-ng-click="say(stem, pretaken, sayingType, picLink, linkedText);">+</button>
+                </div>
+            </form>
+        </div>
+
+    </script>
+
+    <script type="text/ng-template" id="nest.html">
+
+        <div data-ng-if="sel" class="child border-color-{{getColor(sel.order)}}">
+            <div class="left-strip color-{{getColor(sel.order)}}">
+                <span class="strip-letter">{{sel.order}}</span>
+            </div>
+            <div class="rating">
+                <div data-ng-click="rate.minus(sel)" class="minus">{{rate.getRating(sel)<0 ? rate.getRating(sel) : '-'}}</div><div data-ng-click="rate.zero(sel)" class="zero">{{rate.getTotal(sel) || 0}}</div><div data-ng-click="rate.plus(sel)" class="plus">+{{rate.getRating(sel)>0 ? rate.getRating(sel) : ''}}</div>
+            </div>
+            <div class="saying-full">
+                <h3>{{sel.text}}</h3>
+                <img data-ng-src="{{sel.picLink}}" src="" class="full-pic">
+            </div>
+
+
+            <saypanel stem="sel" types="types" proto="proto"></saypanel>
+
+
+            <roll data-ng-if="sel.branches" tape="sel.branches"  rate="rate" select="$parent.next"></roll>
+
+            <nest sel="next" rate="rate" types="types" proto="proto"></nest>
+
+        </div>
+
+    </script>
+
 </head>
 <body data-ng-cloak>
 <div  class="app" id="fruit" data-ng-controller="lettersCtrl">
@@ -73,196 +156,16 @@
         </div>
     </div>
 
-
-    <div  class="saypanel">
-        <button data-ng-init="hidden=true" type="button" class="btn btn-md btn-success" data-ng-click="hidden = !hidden">Создать</button>
-        <form data-ng-submit="say(root,pretaken, sayingType, picLink, linkedText)">
-        <div class="types" data-collapse="hidden">
-            Выбери тип высказывания: <div class="btn-group btn-group-md">
-                <button type="button" data-ng-repeat="type in types" data-ng-model="$parent.sayingType" data-btn-radio="type" class="btn btn-md btn-primary">{{type}}</button>
-            </div>
-        </div>
-
-
-        <div class="orders" data-collapse="hidden">
-        Выбери порядок:
-            <button type="button" onclick="document.getElementById('usertext').focus()"
-                    class="btn btn-md order color-{{getColor(pretaken)}}"
-                    data-ng-click="returnOrder(root)">
-                {{pretaken || root.freeOrders.length}}
-            </button>
-        <input type="search" class="input-sm pretake" data-ng-model="pretake">
-        <button data-ng-disabled="$parent.pretaken!=''" type="button" onclick="document.getElementById('usertext').focus()"
-                class="btn btn-md order color-{{getColor(order)}}"
-                data-ng-repeat="order in root.freeOrders | filter:pretake | limitTo: 12 "
-                data-ng-click="pretakeOrder(root, order)">
-            {{order}}
-        </button>
-        </div>
-        <div data-ng-show="sayingType && pretaken">
-           <h3>{{sayingType}}</h3>
-            <label for="usertext" >Название</label>
-            <input id="usertext" autofocus
-                   placeholder="Название не длиннее 140 символов"
-                   data-tooltip="Осталось {{140 - $parent.linkedText.length}} символов"
-                   data-tooltip-trigger="focus" data-tooltip-placement="top"
-                   data-ng-model="$parent.linkedText"
-                   data-ng-model-instant
-                   class="form-control">
-            <label for="piclink" >URL картинки</label>
-            <input id="piclink" autofocus
-                   placeholder="URL"
-                   data-ng-model="picLink"
-                   data-ng-model-instant
-                   class="form-control">
-            <button class="btn btn-success" data-ng-click="say(root, pretaken, sayingType, picLink, linkedText);">Создать</button>
-        </div>
-        </form>
-    </div>
-
-    <div data-ng-init="columner()">
-    Zoom: <input type="range"  min="1" max="{{colsmax}}" data-ng-model="cols" data-ng-model-instant>
-    <span class="label label-default">{{cols}}</span>
-    </div>
-
-    <roll tape="root.branches" width="boxWidth" rate="rate" select="sel"></roll>
+<saypanel stem="root" types="types" proto="proto"></saypanel>
 
 
 
-    <div data-ng-if="sel" class="child border-color-{{getColor(sel.order)}}">
-        <div class="left-strip color-{{getColor(sel.order)}}">
-            {{sel.order}}
-        </div>
-        <div class="rating">
-            <div data-ng-click="rate.minus(sel)" class="minus">{{rate.getRating(sel)<0 ? rate.getRating(sel) : '-'}}</div><div data-ng-click="rate.zero(sel)" class="zero">{{rate.getTotal(sel) || 0}}</div><div data-ng-click="rate.plus(sel)" class="plus">+{{rate.getRating(sel)>0 ? rate.getRating(sel) : ''}}</div>
-        </div>
-        <div class="saying-full">
-            <h3>{{sel.text}}</h3>
-            <img data-ng-src="{{sel.picLink}}" src="" class="full-pic">
-        </div>
+
+    <roll tape="root.branches" rate="rate" select="sel"></roll>
+
+    <nest sel="sel" rate="rate" types="types" proto="proto"></nest>
 
 
-        <div  class="saypanel">
-            <button data-ng-init="hidden=true" type="button" class="btn btn-md btn-success" data-ng-click="hidden = !hidden">Создать</button>
-            <form data-ng-submit="say(sel,pretaken, sayingType, picLink, linkedText)">
-                <div class="types" data-collapse="hidden">
-                    Выбери тип высказывания: <div class="btn-group btn-group-md">
-                    <button type="button" data-ng-repeat="type in types" data-ng-model="$parent.sayingType" data-btn-radio="type" class="btn btn-md btn-primary">{{type}}</button>
-                </div>
-                </div>
-
-
-                <div class="orders" data-collapse="hidden">
-                    Выбери порядок:
-                    <button type="button" onclick="document.getElementById('usertext2').focus()"
-                            class="btn btn-md order color-{{getColor(pretaken)}}"
-                            data-ng-click="returnOrder(sel)">
-                        {{pretaken || sel.freeOrders.length}}
-                    </button>
-                    <input type="search" class="input-sm pretake" data-ng-model="pretake">
-                    <button data-ng-disabled="$parent.pretaken!=''" type="button" onclick="document.getElementById('usertext2').focus()"
-                            class="btn btn-md order color-{{getColor(order)}}"
-                            data-ng-repeat="order in sel.freeOrders | filter:pretake | limitTo: 12 "
-                            data-ng-click="pretakeOrder(sel, order)">
-                        {{order}}
-                    </button>
-                </div>
-                <div data-ng-show="sayingType && pretaken">
-                    <h3>{{sayingType}}</h3>
-                    <label for="usertext2" >Название</label>
-                    <input id="usertext2" autofocus
-                           placeholder="Название не длиннее 140 символов"
-                           data-tooltip="Осталось {{140 - $parent.linkedText.length}} символов"
-                           data-tooltip-trigger="focus" data-tooltip-placement="top"
-                           data-ng-model="$parent.linkedText"
-                           data-ng-model-instant
-                           class="form-control">
-                    <label for="piclink2" >URL картинки</label>
-                    <input id="piclink2" autofocus
-                           placeholder="URL"
-                           data-ng-model="picLink"
-                           data-ng-model-instant
-                           class="form-control">
-                    <button class="btn btn-success" data-ng-click="say(sel, pretaken, sayingType, picLink, linkedText);">Создать</button>
-                </div>
-            </form>
-        </div>
-
-
-            <roll data-ng-if="sel.branches" tape="sel.branches" width="boxWidth" rate="rate" select="$parent.selSec"></roll>
-
-
-
-        <div data-ng-if="selSec" class="child border-color-{{getColor(selSec.order)}}">
-            <div class="left-strip color-{{getColor(selSec.order)}}">
-                {{selSec.order}}
-            </div>
-            <div class="rating">
-                <div data-ng-click="rate.minus(selSec)" class="minus">{{rate.getRating(selSec)<0 ? rate.getRating(selSec) : '-'}}</div><div data-ng-click="rate.zero(selSec)" class="zero">{{rate.getTotal(selSec) || 0}}</div><div data-ng-click="rate.plus(selSec)" class="plus">+{{rate.getRating(selSec)>0 ? rate.getRating(selSec) : ''}}</div>
-            </div>
-            <div class="saying-full">
-                <h3>{{selSec.text}}</h3>
-                <img data-ng-src="{{selSec.picLink}}" src="" class="full-pic">
-            </div>
-
-
-            <div  class="saypanel">
-                <button data-ng-init="hidden=true" type="button" class="btn btn-md btn-success" data-ng-click="hidden = !hidden">Создать</button>
-                <form data-ng-submit="say(selSec,pretaken, sayingType, picLink, linkedText)">
-                    <div class="types" data-collapse="hidden">
-                        Выбери тип высказывания: <div class="btn-group btn-group-md">
-                        <button type="button" data-ng-repeat="type in types" data-ng-model="$parent.sayingType" data-btn-radio="type" class="btn btn-md btn-primary">{{type}}</button>
-                    </div>
-                    </div>
-
-
-                    <div class="orders" data-collapse="hidden">
-                        Выбери порядок:
-                        <button type="button" onclick="document.getElementById('usertext2').focus()"
-                                class="btn btn-md order color-{{getColor(pretaken)}}"
-                                data-ng-click="returnOrder(selSec)">
-                            {{pretaken || selSec.freeOrders.length}}
-                        </button>
-                        <input type="search" class="input-sm pretake" data-ng-model="pretake">
-                        <button data-ng-disabled="$parent.pretaken!=''" type="button" onclick="document.getElementById('usertext2').focus()"
-                                class="btn btn-md order color-{{getColor(order)}}"
-                                data-ng-repeat="order in selSec.freeOrders | filter:pretake | limitTo: 12 "
-                                data-ng-click="pretakeOrder(selSec, order)">
-                            {{order}}
-                        </button>
-                    </div>
-                    <div data-ng-show="sayingType && pretaken">
-                        <h3>{{sayingType}}</h3>
-                        <label for="usertext3" >Название</label>
-                        <input id="usertext3" autofocus
-                               placeholder="Название не длиннее 140 символов"
-                               data-tooltip="Осталось {{140 - $parent.linkedText.length}} символов"
-                               data-tooltip-trigger="focus" data-tooltip-placement="top"
-                               data-ng-model="$parent.linkedText"
-                               data-ng-model-instant
-                               class="form-control">
-                        <label for="piclink3" >URL картинки</label>
-                        <input id="piclink3" autofocus
-                               placeholder="URL"
-                               data-ng-model="picLink"
-                               data-ng-model-instant
-                               class="form-control">
-                        <button class="btn btn-success" data-ng-click="say(selSec, pretaken, sayingType, picLink, linkedText);">Создать</button>
-                    </div>
-                </form>
-            </div>
-
-
-            <roll data-ng-if="selSec.branches" tape="selSec.branches" width="boxWidth" rate="rate" select="selTri"></roll>
-
-
-        </div>
-        
-        
-        
-        
-        
-    </div>
 
 
 
