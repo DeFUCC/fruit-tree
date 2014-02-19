@@ -6,10 +6,14 @@ fruitTree.directive("nest", function($compile) {
             sel: '=',
             rate: '=',
             types: '=',
-            proto: '='
+            proto: '=',
+            address: '=',
+            num:'='
         },
         controller: function($scope) {
             $scope.next='';
+            $scope.numb = $scope.num +1;
+            console.log($scope.num);
             $scope.getColor = function (order) {if (order) { return order.substring(0, 1);} else return 0};
         },
         compile: function(tElement, tAttr) {
@@ -36,7 +40,8 @@ fruitTree.directive("saypanel", function($compile) {
         scope: {
             stem: '=',
             types: '=',
-            proto: '='
+            proto: '=',
+            parent: '='
         },
         controller: function ($scope) {
 
@@ -127,6 +132,7 @@ fruitTree.directive("roll", function($compile) {
         restrict: "E",
         templateUrl: 'roll.html',
         scope: {
+            parent: '@',
             tape: '=',
             rate: '=',
             select: '='
@@ -137,19 +143,23 @@ fruitTree.directive("roll", function($compile) {
             if (retina) {
                 boxWidth = 360
             }
+
+            $scope.cols='4';
+            $scope.colsmax='5';
+            var init=true;
             $scope.columner = function () {
-                var fruit = document.getElementById('fruit');
-                $scope.width = fruit.clientWidth;
+                var element = document.getElementById($scope.parent) || document.body;
+                $scope.width = element.clientWidth;
                 $scope.colsmax = Math.floor($scope.width / boxWidth);
-                $scope.cols = $scope.colsmax;
+                if ($scope.cols > $scope.colsmax || init) {$scope.cols = $scope.colsmax; init=false};
                 $scope.boxWidth = $scope.width/$scope.cols -5 +'px';
-                $scope.$apply();
             };
-            window.onload = $scope.columner;
             window.onresize = $scope.columner;
             $scope.selector = function (card) {
-                $scope.select = card || '';
-                console.log($scope.select);
+                if ($scope.select =='') {
+                $scope.select = card
+                } else {$scope.select = ''}
+                if (card.select == '') {card.select='color-'+$scope.getColor(card.order)} else {card.select =''}
             };
             $scope.getColor = function (order) {if (order) { return order.substring(0, 1);} else return 0};
         },

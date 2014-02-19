@@ -56,8 +56,6 @@ controllers.lettersCtrl = function ($scope, $firebase) {
     $scope.rate.sort = function (card) {return card.minuses - card.pluses;};
 
 
-
-
     $scope.select = function(card) {
         $scope.sel = card || '';
     };

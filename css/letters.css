@@ -1,31 +1,3 @@
-.deckgrid[deckgrid]::before {
-    /* Defines that the grid should have 3 columns. Each column will have the classes 'column' and 'column-1-4' */
-    content: '4 .column.column-1-4';
-    display:none;
-}
-.deckgrid .column {
-    float: left;
-}
-.deckgrid .column-1-4 {
-    width: 24%;
-}
-.deckgrid-box {
-    border: solid 4px #333;
-    margin: 4px 2px;
-    overflow: hidden;
-    display: block;
-    transition: all 600ms linear;
-    position: relative;
-}
-.deckgrid-box:hover .pane-label {
-    background-color: inherit !important;
-    border-radius: 5px;
-    color:inherit !important;
-}
-.deckgrid-box:hover .corner {
-    opacity: .40;
-}
-
 .pretake {
     width:60px;
     padding:4px;
@@ -56,6 +28,8 @@ body {
     width:100%;
     padding-left:40px;
     border-top: solid 5px #333;
+    border-right:solid 1px #333;
+    border-bottom:solid 1px #333;
     position: relative;
 }
 .left-strip {
@@ -97,6 +71,9 @@ body {
     transition: all 600ms linear;
     position: relative;
     z-index: 0;
+}
+.saying-text:hover {
+    cursor: pointer;
 }
 .box-inner {
     position: absolute;
