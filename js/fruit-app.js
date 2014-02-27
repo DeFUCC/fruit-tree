@@ -65,6 +65,7 @@ controllers.lettersCtrl = function ($scope, $firebase) {
     };
     $scope.reset = function () {
         $scope.root = new Order();
+        $scope.start = '';
         $scope.sel='';
         $scope.pretaken='';
     };
@@ -81,7 +82,6 @@ controllers.lettersCtrl = function ($scope, $firebase) {
         $scope.shuffleOrders($scope.start);
     };
 
-    $scope.root = new Order();
     $scope.proto = Order;
     $scope.sel='';
     $scope.fruit = {
