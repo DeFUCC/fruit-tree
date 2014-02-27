@@ -2,6 +2,7 @@
 <html data-ng-app="fruitTree">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
 
     <title>Fruit-tree</title>
     <script src="js/angular.js"></script>
@@ -41,13 +42,13 @@
             </div>
 
             <div data-ng-click="selector(card)" data-ng-if="!card.more" class="saying-text" >
-                {{card.text.substring(0,140)}}<span data-ng-if="card.text.length>139">...</span>
+                <p>{{card.heading.substring(0,140)}}<span data-ng-if="card.heading.length>139">...</span></p>
             </div>
             <div data-ng-click="selector(card)" data-ng-if="card.more" class="saying-text">
-                {{card.text}}
+                {{card.heading}}
             </div>
 
-            <div data-ng-if="card.text.length > 140 && !card.more"
+            <div data-ng-if="card.heading.length > 140 && !card.more"
                  data-ng-click="card.more = true"
                  class="corner">
                 <div class="more">+</div>
@@ -73,8 +74,10 @@
                     data-ng-click="hidden = !hidden">+</button>
             <form data-ng-submit="say(stem,pretaken, sayingType, picLink, linkedText)">
                 <div class="types" data-collapse="hidden">
-                    Выбери тип высказывания: <div class="btn-group btn-group-md">
-                    <button type="button" data-ng-repeat="type in types" data-ng-model="$parent.sayingType" data-btn-radio="type" class="btn btn-md btn-primary">{{type}}</button>
+                    Выбери тип высказывания:
+
+                    <div class="btn-group btn-group-md">
+                    <button type="button"  data-ng-repeat="type in types" data-ng-model="$parent.sayingType" data-btn-radio="type" class="btn btn-md btn-primary"> {{type}}</button>
                 </div>
                 </div>
 
@@ -96,10 +99,18 @@
                 </div>
                 <div data-collapse="hidden && !sayingType && !pretaken">
                     <h3>{{sayingType}}</h3>
-                    <label for="usertext" >Название</label>
-                    <input id="usertext" autofocus
+                    <label for="heading" >Название</label>
+                    <input id="heading"
                            placeholder="Название не длиннее 140 символов"
-                           data-tooltip="Осталось {{140 - $parent.linkedText.length}} символов"
+                           data-tooltip="Осталось {{140 - $parent.heading.length}} символов"
+                           data-tooltip-trigger="focus" data-tooltip-placement="top"
+                           data-ng-model="$parent.heading"
+                           data-ng-model-instant
+                           class="form-control">
+                    <label for="text" >Содержание</label>
+                    <input id="text"
+                           placeholder="Введите текст высказывания"
+                           data-tooltip="{{$parent.linkedText.length || 0}} символов"
                            data-tooltip-trigger="focus" data-tooltip-placement="top"
                            data-ng-model="$parent.linkedText"
                            data-ng-model-instant
@@ -110,7 +121,7 @@
                            data-ng-model="picLink"
                            data-ng-model-instant
                            class="form-control">
-                    <button class="btn btn-success" data-ng-click="say(stem, pretaken, sayingType, picLink, linkedText);">+</button>
+                    <button class="btn btn-success" data-ng-click="say(stem, pretaken, sayingType, picLink, heading, linkedText);">+</button>
                 </div>
             </form>
         </div>
@@ -127,17 +138,14 @@
                 <div data-ng-click="rate.minus(sel)" class="minus">{{rate.getRating(sel)<0 ? rate.getRating(sel) : '-'}}</div><div data-ng-click="rate.zero(sel)" class="zero">{{rate.getTotal(sel) || 0}}</div><div data-ng-click="rate.plus(sel)" class="plus">+{{rate.getRating(sel)>0 ? rate.getRating(sel) : ''}}</div>
             </div>
             <div class="saying-full">
-                <h3>{{sel.text}}</h3>
+                <h3>{{sel.heading}}</h3>
+                <p>{{sel.text}}</p>
                 <img data-ng-src="{{sel.picLink}}" src="" class="full-pic">
             </div>
 
-
-            <saypanel stem="sel" types="types" proto="proto"></saypanel>
-
-
             <roll parent="{{address + '|' + sel.order +'|'}}" data-ng-if="sel.branches" tape="sel.branches"  rate="rate" select="$parent.next"></roll>
-
-            <nest num="numb" address="address + '|' + sel.order +'|'" sel="next" rate="rate" types="types" proto="proto"></nest>
+            <saypanel data-ng-if="add" stem="sel" types="types" proto="proto"></saypanel>
+            <nest add="true" num="numb" address="address + '|' + sel.order +'|'" sel="next" rate="rate" types="types" proto="proto"></nest>
 
         </div>
 
@@ -146,27 +154,25 @@
 </head>
 <body data-ng-cloak>
 <div  class="app" id="fruit" data-ng-controller="lettersCtrl">
+
+<div class="top-frukt">
+    <div data-ng-click="start=fruit.f" class="f">Ф</div><div data-ng-click="start=fruit.r" class="r">Р</div><div data-ng-click="start=fruit.u" class="u">У</div><div data-ng-click="start=fruit.k" class="k">К</div><div data-ng-click="start=fruit.t" class="t">Т</div>
+</div>
+<div class="top-menu">
+    <div data-ng-click="start=fruit.tree" class="tree">Фруктовое дерево </div><div data-ng-click="start=fruit.designs" class="design">Затеи</div><div data-ng-click="start=fruit.tasks" class="task">Задачи</div><div data-ng-click="start=fruit.demands" class="demand">Поставки</div><div data-ng-click="start=fruit.sandbox" class="sandbox">Инкубатор затей</div>
+</div>
+
+        <nest add="true" num="1" address="" sel="start" rate="rate" types="types" proto="proto"></nest>
+
     <div class="">
         <div class="top-bttns">
-            Total <span class="label label-primary">{{root.sayings.length}}</span> sayings.
-        <div class="btn-group btn-group-xs">
-            <button type="button" class="btn btn-xs btn-success" data-ng-click="saveToFireBase()">Save to database</button>
-            <button type="button" class="btn btn-xs btn-warning" data-ng-click="loadFromFireBase()">Load from database</button>
-            <button onclick="document.getElementById('usertext').focus()" class="btn btn-xs btn-danger" data-ng-click="reset()">Restart</button>
-        </div>
+            <div class="btn-group btn-group-xs">
+                <button type="button" class="btn btn-xs btn-success" data-ng-click="saveToFireBase()">Save to database</button>
+                <button type="button" class="btn btn-xs btn-warning" data-ng-click="loadFromFireBase()">Load from database</button>
+                <button onclick="document.getElementById('usertext').focus()" class="btn btn-xs btn-danger" data-ng-click="reset()">Restart</button>
+            </div>
         </div>
     </div>
-
-<saypanel stem="root" types="types" proto="proto"></saypanel>
-
-
-
-
-    <roll parent="{{root.order}}" tape="root.branches" rate="rate" select="sel"></roll>
-
-    <nest num="1" address="" sel="sel" rate="rate" types="types" proto="proto"></nest>
-
-
 
 
 

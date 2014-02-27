@@ -11,8 +11,7 @@ controllers.lettersCtrl = function ($scope, $firebase) {
     var baseLetters = ['A', 'B', 'C', 'E', 'H', 'K', 'M', 'O', 'P', 'T', 'X', 'Y'];
     var baseColors = ['c', 'cd', 'd', 'dd', 'e', 'f', 'fd', 'g', 'gd', 'a', 'ad', 'b'];
 
-
-    function shuffle(massive) {
+     function shuffle(massive) {
         arr = massive.concat();
         for (var i = arr.length - 1; i > 0; i--) {
             var num = Math.floor(Math.random() * (i + 1));
@@ -24,7 +23,7 @@ controllers.lettersCtrl = function ($scope, $firebase) {
         return arr;
     }
 
-    function Order(order, type, picLink, text, date) {
+    function Order(order, type, picLink, heading, text, date) {
         this.pluses = 0;
         this.zeros = 0;
         this.minuses = 0;
@@ -32,6 +31,7 @@ controllers.lettersCtrl = function ($scope, $firebase) {
         this.order = order || '0';
         this.type = type || '';
         this.picLink = picLink || '';
+        this.heading = heading || '';
         this.text = text || '';
         this.bit = 1;
         this.branches = [];
@@ -74,18 +74,29 @@ controllers.lettersCtrl = function ($scope, $firebase) {
     $scope.firebase.$bind($scope, "remote"); //bind a $scope.remote object for saving
 
     $scope.saveToFireBase = function () {
-        $scope.remote.root = $scope.root;
+        $scope.remote.fruit = $scope.fruit;
     };
     $scope.loadFromFireBase = function () {
-        $scope.root = $scope.remote.root;
-        $scope.shuffleOrders($scope.root);
+        $scope.fruit = $scope.remote.fruit;
+        $scope.shuffleOrders($scope.start);
     };
 
 
     $scope.root = new Order();
     $scope.proto = Order;
     $scope.sel='';
-
+    $scope.fruit = {
+        f: new Order('Ф','foundation','', 'Фонд', '— некоммерческая организация, все ресурсы которой направляются на реализацию ее Миссии.' ),
+        r: new Order('P', 'development', '','Развитие', '— движение системы к сместившейся точке равновесия.'),
+        u: new Order('Y','universalization','','Универсализация','- реализация стремления каждого элемента системы овладеть практическим опытом изучения всей системы.'),
+        k: new Order('K','cooperation','','Кооперация','- сложение всех возможных усилий для решения задач, неразрешимых индивидуально.'),
+        t: new Order('T','creativity','','Творчество','- процесс осознанного приложения свободно определяемого усилия с целью увеличения меры совершенства окружающего мира'),
+        tree: new Order('B','tree','','Фруктовое дерево','- общий обзор структуры потоков ФРУКТа'),
+        designs: new Order('O','designs','','Затеи','Затея — подробный план реализации общественно значимого инфраструктурного проекта'),
+        tasks: new Order('X','tasks','','Задачи','Задача — описание необходимого к реализации действия с приложением всей имеющейся информации'),
+        demands: new Order('A','demands','','Поставки','Поставка - описание необходимых для реализации затей предметов с приложением всей имеющейся информации'),
+        sandbox: new Order('E','sandbox','','Инкубатор затей','- место коллективной разработки затей.')
+};
     $scope.pretaken = '';
     $scope.types = ['Design', 'Event', 'Person', 'Saying'];
 

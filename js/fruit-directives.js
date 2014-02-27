@@ -8,12 +8,12 @@ fruitTree.directive("nest", function($compile) {
             types: '=',
             proto: '=',
             address: '=',
-            num:'='
+            num:'=',
+            add: '='
         },
         controller: function($scope) {
             $scope.next='';
             $scope.numb = $scope.num +1;
-            console.log($scope.num);
             $scope.getColor = function (order) {if (order) { return order.substring(0, 1);} else return 0};
         },
         compile: function(tElement, tAttr) {
@@ -31,6 +31,33 @@ fruitTree.directive("nest", function($compile) {
     };
 });
 
+fruitTree.directive("ico", function() {
+   return {
+       restrict:"E",
+       scope:{},
+       link: function (scope,element,attrs,controller) {
+
+        }
+   };
+});
+
+fruitTree.directive("stripLetter", function($compile) {
+    return {
+        restrict: "C",
+        link: function (scope, element, attrs, controller) {
+            var elem=element[0];
+            console.log(elem.offsetParent.offsetParent.offsetTop);
+            while (elem.hasOwnProperty('offsetParent')) {
+                scope.offset += elem.offsetParent.offsetParent.offsetTop;
+                elem=elem.offsetParent;
+            }
+            console.log(scope.offset);
+            scope.$watch(window.scrollY, function(value) {
+                if (value>scope.offset ) {element.marginTop=value+10}
+                });
+            }
+        }
+    });
 
 
 fruitTree.directive("saypanel", function($compile) {
@@ -46,13 +73,13 @@ fruitTree.directive("saypanel", function($compile) {
         controller: function ($scope) {
 
             $scope.pretaken='';
-            $scope.say = function (stem, order, type, picLink, text) {
+            $scope.say = function (stem, order, type, picLink, heading, text) {
                 var place = stem.availableOrders.indexOf(order);
                 if (place >= 0) {
                     var time = new Date();
                     var date = time.toJSON();
                     if (!stem.branches) {stem.branches = []}
-                    stem.branches.push(new $scope.proto(order, type, picLink, text, date));
+                    stem.branches.push(new $scope.proto(order, type, picLink, heading, text, date));
                     stem.availableOrders.splice(place, 1);
                     $scope.pretaken = '';
                     $scope.pretake='';
