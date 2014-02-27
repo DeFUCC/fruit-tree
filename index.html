@@ -143,9 +143,9 @@
                 <img data-ng-src="{{sel.picLink}}" src="" class="full-pic">
             </div>
 
-            <roll parent="{{address + '|' + sel.order +'|'}}" data-ng-if="sel.branches" tape="sel.branches"  rate="rate" select="$parent.next"></roll>
+            <roll parent="{{address + '|' + sel.order +'|'}}" data-ng-if="sel.branches" tape="sel.branches"  rate="rate" select="sel.next"></roll>
             <saypanel data-ng-if="add" stem="sel" types="types" proto="proto"></saypanel>
-            <nest add="true" num="numb" address="address + '|' + sel.order +'|'" sel="next" rate="rate" types="types" proto="proto"></nest>
+            <nest add="true" num="numb" address="address + '|' + sel.order +'|'" sel="sel.next" rate="rate" types="types" proto="proto"></nest>
 
         </div>
 
