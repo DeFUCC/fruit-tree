@@ -188,7 +188,6 @@ body {
     display: flex;
     flex-flow: row wrap;
     justify-content: flex-start;
-    max-height: 40vh;
     overflow-y: scroll;
 }
 .box:hover .pane-label {
@@ -201,7 +200,6 @@ body {
 }
 .box {
     flex: 1 1 12em;
-    min-height: 8em;
     border: solid 4px #333;
     background-color: #4a4d51;
     float:left;
@@ -213,8 +211,6 @@ body {
     z-index: 0;
 }
 .saying-text p {
-    position: relative;
-    top: 50%;
     text-align: center;
 }
 .saying-text:hover {
