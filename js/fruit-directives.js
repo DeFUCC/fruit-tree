@@ -41,6 +41,8 @@ fruitTree.directive("ico", function() {
    };
 });
 
+// The stripLetter must fix the order to the viewport while scrolling... Now it doesn't
+/*
 fruitTree.directive("stripLetter", function($compile) {
     return {
         restrict: "C",
@@ -58,7 +60,7 @@ fruitTree.directive("stripLetter", function($compile) {
             }
         }
     });
-
+*/
 
 fruitTree.directive("saypanel", function($compile) {
     return {
@@ -165,23 +167,6 @@ fruitTree.directive("roll", function($compile) {
             select: '='
         },
         controller: function($scope) {
-            var boxWidth = 180;
-            var retina = window.devicePixelRatio > 1;
-            if (retina) {
-                boxWidth = 360
-            }
-
-            $scope.cols='4';
-            $scope.colsmax='5';
-            var init=true;
-            $scope.columner = function () {
-                var element = document.getElementById($scope.parent) || document.body;
-                $scope.width = element.clientWidth;
-                $scope.colsmax = Math.floor($scope.width / boxWidth);
-                if ($scope.cols > $scope.colsmax || init) {$scope.cols = $scope.colsmax; init=false};
-                $scope.boxWidth = $scope.width/$scope.cols -5 +'px';
-            };
-            window.onresize = $scope.columner;
             $scope.selector = function (card) {
                 if ($scope.select =='') {
                 $scope.select = card

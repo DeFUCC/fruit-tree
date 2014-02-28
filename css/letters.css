@@ -184,6 +184,13 @@ body {
     max-width: 30%;
     max-height: 300px;
 }
+.box-container {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: flex-start;
+    max-height: 40vh;
+    overflow-y: scroll;
+}
 .box:hover .pane-label {
     background-color: inherit !important;
     border-radius: 5px;
@@ -193,9 +200,10 @@ body {
     opacity: .40;
 }
 .box {
+    flex: 1 1 12em;
+    min-height: 8em;
     border: solid 4px #333;
-    width:23%;
-    height: 180px;
+    background-color: #4a4d51;
     float:left;
     margin:0;
     overflow: hidden;
@@ -208,9 +216,6 @@ body {
     position: relative;
     top: 50%;
     text-align: center;
-    -webkit-transform: translateY(-50%);
-    -ms-transform: translateY(-50%);
-    transform: translateY(-50%);
 }
 .saying-text:hover {
     cursor: pointer;

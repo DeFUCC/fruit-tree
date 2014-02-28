@@ -79,7 +79,6 @@ controllers.lettersCtrl = function ($scope, $firebase) {
     };
     $scope.loadFromFireBase = function () {
         $scope.fruit = $scope.remote.fruit;
-        $scope.shuffleOrders($scope.start);
     };
 
     $scope.proto = Order;

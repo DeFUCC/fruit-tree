@@ -15,54 +15,53 @@
     <script src="js/ui-bootstrap-tpls-0.10.0.js"></script>
 
     <script type="text/ng-template"  id="roll.html">
-        <div data-ng-init="columner()">
-            Zoom: <input type="range" value="{{cols}}"  min="1" max="{{colsmax}}" data-ng-model="cols">
-            <span class="label label-default">{{cols}}</span>{{width}}
-        </div>
-        <div id="{{parent}}" class="sayings">
-            <div data-ng-mouseover="columner()" class="root-container">
-                <div data-ng-repeat="card in tape | orderBy:rate.sort" >
 
-        <div data-ng-init="card.select=''"
-             style="width:{{100/$parent.cols || 25}}%; "
+        <div class="box-container sayings" id="{{parent}}">
+           <div data-ng-repeat="card in tape | orderBy:rate.sort"
+                data-ng-init="card.select=''"
+                data-ng-class="card.select"
+                style="flex-grow: {{rate.getTotal(card)+1}}"
+                class="box hover-back-{{getColor(card.order)}} border-color-{{getColor(card.order)}}">
 
-             data-ng-class="card.select"
-             class="box hover-back-{{getColor(card.order)}} border-color-{{getColor(card.order)}}">
-            <div data-ng-if="card.picLink" class="box-inner" style="background-size: {{$parent.width/$parent.cols}}px; background-image: url({{card.picLink}}); background-position: center; background-repeat: no-repeat;"></div>
+                        <div data-ng-if="card.picLink" class="box-inner"
+                             style="background: url('{{card.picLink}}') center no-repeat; background-size: 100% "></div>
 
-            <div  data-ng-show="card.select == ''"  class="pane-label hover-back-{{getColor(card.order)}}">
-                | {{card.order}} |
-            </div>
-            <div  data-ng-class="card.select" data-ng-hide="card.select == ''" data-ng-click="card.select=''; selector()" class="pane-label hover-back-{{getColor(card.order)}}">
-                | {{card.order}} |
-            </div>
 
-            <div class="rating">
-                <div data-ng-click="rate.minus(card)" class="minus">{{rate.getRating(card)<0 ? rate.getRating(card) : '-'}}</div><div data-ng-click="rate.zero(card)" class="zero">{{rate.getTotal(card) || 0}}</div><div data-ng-click="rate.plus(card)" class="plus">+{{rate.getRating(card)>0 ? rate.getRating(card) : ''}}</div>
-            </div>
+                        <div data-ng-class="card.select" 
+                             data-ng-click="card.select=''; selector()"
+                             class="pane-label hover-back-{{getColor(card.order)}}">
+                            | {{card.order}} |
+                        </div>
 
-            <div data-ng-click="selector(card)" data-ng-if="!card.more" class="saying-text" >
-                <p>{{card.heading.substring(0,140)}}<span data-ng-if="card.heading.length>139">...</span></p>
-            </div>
-            <div data-ng-click="selector(card)" data-ng-if="card.more" class="saying-text">
-                {{card.heading}}
-            </div>
+                        <div class="rating">
+                            <div data-ng-click="rate.minus(card)" class="minus">{{rate.getRating(card)<0 ?
+                                rate.getRating(card) : '-'}}
+                            </div>
+                            <div data-ng-click="rate.zero(card)" class="zero">{{rate.getTotal(card) || 0}}</div>
+                            <div data-ng-click="rate.plus(card)" class="plus">+{{rate.getRating(card)>0 ?
+                                rate.getRating(card) : ''}}
+                            </div>
+                        </div>
 
-            <div data-ng-if="card.heading.length > 140 && !card.more"
-                 data-ng-click="card.more = true"
-                 class="corner">
-                <div class="more">+</div>
-            </div>
-            <div data-ng-if="card.more"
-                 data-ng-click="card.more = false"
-                 class="corner">
-                <div class="less">-</div>
-            </div>
+                        <div data-ng-click="selector(card)" data-ng-if="!card.more" class="saying-text">
+                            <p>{{card.heading.substring(0,140)}}<span data-ng-if="card.heading.length>139">...</span>
+                            </p>
+                        </div>
+                        <div data-ng-click="selector(card)" data-ng-if="card.more" class="saying-text">
+                            {{card.heading}}
+                        </div>
 
-        </div>
-
-                </div>
-            </div>
+                        <div data-ng-if="card.heading.length > 140 && !card.more"
+                             data-ng-click="card.more = true"
+                             class="corner">
+                            <div class="more">+</div>
+                        </div>
+                        <div data-ng-if="card.more"
+                             data-ng-click="card.more = false"
+                             class="corner">
+                            <div class="less">-</div>
+                        </div>
+           </div>
         </div>
     </script>
 
@@ -169,7 +168,7 @@
             <div class="btn-group btn-group-xs">
                 <button type="button" class="btn btn-xs btn-success" data-ng-click="saveToFireBase()">Save to database</button>
                 <button type="button" class="btn btn-xs btn-warning" data-ng-click="loadFromFireBase()">Load from database</button>
-                <button onclick="document.getElementById('usertext').focus()" class="btn btn-xs btn-danger" data-ng-click="reset()">Restart</button>
+                <button class="btn btn-xs btn-danger" data-ng-click="reset()">Restart</button>
             </div>
         </div>
     </div>
