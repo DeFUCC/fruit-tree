@@ -1,3 +1,10 @@
+input {
+    border:none;
+    background: #555;
+    color:#fff;
+}
+textarea {color:#fff;}
+
 .top-frukt {
     width:100%;
 
@@ -293,12 +300,7 @@ body {
 .say-buttons button{
     margin:5px;
 }
-.handle {
-    position: relative;
-    left:50%;
-    color:#FFF;
-    background-color: #CCC;
-}
+
 .pane {
     display: block;
     float:left;

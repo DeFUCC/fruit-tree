@@ -11,6 +11,7 @@
     <script type="application/javascript" src="js/fruit-app.js"></script>
     <script type="application/javascript" src="js/fruit-directives.js"></script>
     <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/gridforms.css" rel="stylesheet">
     <link href="css/letters.css" rel="stylesheet">
     <script src="js/ui-bootstrap-tpls-0.10.0.js"></script>
 
@@ -71,58 +72,73 @@
     <script type="text/ng-template" id="saypanel.html">
         <div data-ng-if="!hide" class="saypanel">
 
-            <form  data-ng-submit="say(stem,pretaken, sayingType, picLink, linkedText)">
-                <div class="types" data-collapse="hide">
-                    Выбери тип высказывания:
+            <form class="grid-form" data-collapse="hide">
+                <fieldset>
+                    <div data-row-span="4">
+                        <div data-field-span="1">
+                            <label>Выбери тип высказывания:</label>
 
-                    <div class="btn-group btn-group-md">
-                    <button type="button"  data-ng-repeat="type in types" data-ng-model="$parent.sayingType" data-btn-radio="type" class="btn btn-md btn-primary"> {{type}}</button>
-                </div>
-                </div>
+                            <div class="btn-group btn-group-sm">
+                                <button type="button" data-ng-repeat="type in types" data-ng-model="$parent.sayingType"
+                                        data-btn-radio="type" class="btn btn-sm btn-primary"> {{type}}
+                                </button>
+                            </div>
+                        </div>
+                            <div data-field-span="3">
+                                <label>Выбери порядок:</label>
+                                <button type="button"
+                                        class="btn btn-sm order color-{{getColor(pretaken)}}"
+                                        data-ng-click="returnOrder(stem)">
+                                    {{pretaken || stem.freeOrders.length}}
+                                </button>
+                                <input type="search" class="input-sm pretake" data-ng-model="pretake">
+                                <button data-ng-disabled="$parent.pretaken!=''" type="button"
+                                        class="btn btn-sm order color-{{getColor(order)}}"
+                                        data-ng-repeat="order in stem.freeOrders | filter:pretake | limitTo: 12 "
+                                        data-ng-click="pretakeOrder(stem, order)">
+                                    {{order}}
+                                </button>
+                            </div>
 
-
-                <div class="orders" data-collapse="hide">
-                    Выбери порядок:
-                    <button type="button"
-                            class="btn btn-md order color-{{getColor(pretaken)}}"
-                            data-ng-click="returnOrder(stem)">
-                        {{pretaken || stem.freeOrders.length}}
-                    </button>
-                    <input type="search" class="input-sm pretake" data-ng-model="pretake">
-                    <button data-ng-disabled="$parent.pretaken!=''" type="button"
-                            class="btn btn-md order color-{{getColor(order)}}"
-                            data-ng-repeat="order in stem.freeOrders | filter:pretake | limitTo: 12 "
-                            data-ng-click="pretakeOrder(stem, order)">
-                        {{order}}
-                    </button>
-                </div>
-                <div data-collapse="hidden && !sayingType && !pretaken">
-                    <h3>{{sayingType}}</h3>
-                    <label for="heading" >Название</label>
-                    <input id="heading"
-                           placeholder="Название не длиннее 140 символов"
-                           data-tooltip="Осталось {{140 - $parent.heading.length}} символов"
-                           data-tooltip-trigger="focus" data-tooltip-placement="top"
-                           data-ng-model="$parent.heading"
-                           data-ng-model-instant
-                           class="form-control">
-                    <label for="text" >Содержание</label>
-                    <input id="text"
-                           placeholder="Введите текст высказывания"
-                           data-tooltip="{{$parent.linkedText.length || 0}} символов"
-                           data-tooltip-trigger="focus" data-tooltip-placement="top"
-                           data-ng-model="$parent.linkedText"
-                           data-ng-model-instant
-                           class="form-control">
-                    <label for="piclink" >URL картинки</label>
-                    <input id="piclink"
-                           placeholder="URL"
-                           data-ng-model="picLink"
-                           data-ng-model-instant
-                           class="form-control">
-                    <button class="btn btn-success" data-ng-click="say(stem, pretaken, sayingType, picLink, heading, linkedText);">+</button>
-                </div>
+                    </div>
+                </fieldset>
             </form>
+
+                <div data-collapse="!sayingType">
+
+
+            <form class="grid-form">
+
+            <fieldset>
+                <legend>Добавляем: {{sayingType}}</legend>
+
+                <div data-row-span="2">
+                    <div data-field-span="1">
+                        <label>Название</label>
+                        <input  data-tooltip="Осталось {{140 - $parent.heading.length}} символов"
+                                data-tooltip-trigger="focus" data-tooltip-placement="top"
+                                data-ng-model="$parent.heading"
+                                data-ng-model-instant type="text">
+                    </div>
+                    <div data-field-span="1">
+                        <label>URL картинки</label>
+                        <input data-ng-model="picLink"
+                               data-ng-model-instant type="text">
+                    </div>
+                </div>
+                <div data-row-span="1">
+                    <div data-field-span="1">
+                        <label>Текст</label>
+                        <textarea data-tooltip="{{$parent.linkedText.length || 0}} символов"
+                                  data-tooltip-trigger="focus" data-tooltip-placement="top"
+                                  data-ng-model="$parent.linkedText"
+                                  data-ng-model-instant></textarea>
+                    </div>
+                </div>
+            </fieldset>
+                <button class="btn btn-success" data-ng-click="say(stem, pretaken, sayingType, picLink, heading, linkedText);">+</button>
+            </form>
+                </div>
         </div>
 
     </script>

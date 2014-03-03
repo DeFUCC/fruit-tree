@@ -76,8 +76,8 @@ fruitTree.directive("saypanel", function($compile) {
             hide: '='
         },
         controller: function ($scope) {
-
-            $scope.pretaken='';
+            var baseLetters = ['A', 'B', 'C', 'E', 'H', 'K', 'M', 'O', 'P', 'T', 'X', 'Y'];
+            $scope.pretaken=false;
             $scope.say = function (stem, order, type, picLink, heading, text) {
                 var place = stem.availableOrders.indexOf(order);
                 if (place >= 0) {
@@ -94,7 +94,6 @@ fruitTree.directive("saypanel", function($compile) {
                     $scope.shuffleOrders(stem);
                     $scope.heading = '';
                     $scope.text = '';
-                    $scope.hide=true;
                     if (stem.availableOrders.length == 0) {
                         $scope.refillOrders(stem)
                     }
