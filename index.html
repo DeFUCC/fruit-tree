@@ -104,7 +104,7 @@
                 </fieldset>
             </form>
 
-                <div data-collapse="!sayingType">
+                <div data-collapse="!sayingType ">
 
 
             <form class="grid-form">
@@ -148,11 +148,15 @@
         <div data-ng-if="sel" class="child border-color-{{getColor(sel.order)}}">
             <div class="left-strip color-{{getColor(sel.order)}}">
                 <span id="let{{num}}" class="strip-letter">{{sel.order}}</span>
+                <br><br><br>
+                <span class="close strip-letter">&times;</span>
+
             </div>
             <div class="rating">
                 <div data-ng-click="rate.minus(sel)" class="minus">{{rate.getRating(sel)<0 ? rate.getRating(sel) : '-'}}</div><div data-ng-click="rate.zero(sel)" class="zero">{{rate.getTotal(sel) || 0}}</div><div data-ng-click="rate.plus(sel)" class="plus">+{{rate.getRating(sel)>0 ? rate.getRating(sel) : ''}}</div>
             </div>
             <div class="saying-full">
+                <small>{{sel.date}}</small>
                 <h3>{{sel.heading}}</h3>
                 <p>{{sel.text}}</p>
                 <img data-ng-src="{{sel.picLink}}" src="" class="full-pic">

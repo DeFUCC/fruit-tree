@@ -181,6 +181,7 @@ body {
 }
 .strip-letter {
     padding:5px;
+    float:none;
 }
 .strip-letter:hover {
     cursor: pointer;
