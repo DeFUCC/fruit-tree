@@ -202,7 +202,6 @@ body {
     flex: 1 1 12em;
     border: solid 4px #333;
     background-color: #4a4d51;
-    float:left;
     margin:0;
     overflow: hidden;
     display: block;
@@ -210,8 +209,22 @@ body {
     position: relative;
     z-index: 0;
 }
+.box .selected { color:red;}
 .saying-text p {
+    font-size: 15px;
     text-align: center;
+    width:100%;
+}
+.box-plus {
+    display: flex;
+    font-size:40px;
+    text-align: center;
+    vertical-align: middle;
+    cursor: pointer;
+    flex: 1 1 2em;
+}
+.big-plus {
+    margin:auto;
 }
 .saying-text:hover {
     cursor: pointer;
@@ -258,10 +271,9 @@ body {
 }
 .saying-text {
     width: 100%;
-    height:85%;
-    margin:20px 0 0 0;
+    height:100%;
+    margin:auto;
     padding: 4px;
-    display: block;
     overflow-y: scroll;
     overflow-x: hidden;
 

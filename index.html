@@ -28,7 +28,7 @@
 
 
                         <div data-ng-class="card.select"
-                             data-ng-click="card.select=''; selector()"
+                             data-ng-click="card.select=''; selector(card)"
                              class="pane-label hover-back-{{getColor(card.order)}}">
                             | {{card.order}} |
                         </div>
@@ -62,17 +62,17 @@
                             <div class="less">-</div>
                         </div>
            </div>
+                <div class="box box-plus hover-back-T" data-ng-click="toggleAdd()">
+                 <div class="big-plus">+</div>
+                </div>
         </div>
     </script>
 
     <script type="text/ng-template" id="saypanel.html">
-        <div  class="saypanel">
-            <button data-ng-init="hidden=true"
-                    type="button"
-                    class="btn btn-md btn-success buzz-out"
-                    data-ng-click="hidden = !hidden">+</button>
-            <form data-ng-submit="say(stem,pretaken, sayingType, picLink, linkedText)">
-                <div class="types" data-collapse="hidden">
+        <div data-ng-if="!hide" class="saypanel">
+
+            <form  data-ng-submit="say(stem,pretaken, sayingType, picLink, linkedText)">
+                <div class="types" data-collapse="hide">
                     Выбери тип высказывания:
 
                     <div class="btn-group btn-group-md">
@@ -81,7 +81,7 @@
                 </div>
 
 
-                <div class="orders" data-collapse="hidden">
+                <div class="orders" data-collapse="hide">
                     Выбери порядок:
                     <button type="button"
                             class="btn btn-md order color-{{getColor(pretaken)}}"
@@ -142,8 +142,8 @@
                 <img data-ng-src="{{sel.picLink}}" src="" class="full-pic">
             </div>
 
-            <roll parent="{{address + '|' + sel.order +'|'}}" data-ng-if="sel.branches" tape="sel.branches"  rate="rate" select="sel.next"></roll>
-            <saypanel data-ng-if="add" stem="sel" types="types" proto="proto"></saypanel>
+            <roll toggle-add="toggleAdd()"  parent="{{address + '|' + sel.order +'|'}}"  tape="sel.branches"  rate="rate" select="sel.next"></roll>
+            <saypanel hide="hide" data-ng-if="add" stem="sel" types="types" proto="proto"></saypanel>
             <nest add="true" num="numb" address="address + '|' + sel.order +'|'" sel="sel.next" rate="rate" types="types" proto="proto"></nest>
 
         </div>
@@ -158,7 +158,7 @@
     <div data-ng-click="start=fruit.f" class="f">Ф <span data-ng-if="fruit.f.branches.length" class="label label-default">{{fruit.f.branches.length}}</span></div><div data-ng-click="start=fruit.r" class="r">Р <span data-ng-if="fruit.r.branches.length" class="label label-default">{{fruit.r.branches.length}}</span></div><div data-ng-click="start=fruit.u" class="u">У<span data-ng-if="fruit.u.branches.length" class="label label-default">{{fruit.u.branches.length}}</span></div><div data-ng-click="start=fruit.k" class="k">К <span data-ng-if="fruit.k.branches.length" class="label label-default">{{fruit.k.branches.length}}</span></div><div data-ng-click="start=fruit.t" class="t">Т<span data-ng-if="fruit.t.branches.length" class="label label-default">{{fruit.t.branches.length}}</span></div>
 </div>
 <div class="top-menu">
-    <div data-ng-click="start=fruit.designs" class="design">Затеи <span data-ng-if="fruit.designs.branches.length" class="label label-default">{{fruit.designs.branches.length}}</span></div><div data-ng-click="start=fruit.sandbox" class="sandbox">Инкубатор затей<span data-ng-if="fruit.sandbox.branches.length" class="label label-default">{{fruit.sandbox.branches.length}}</span></div><div data-ng-click="start=fruit.tree" class="tree">Фруктовое дерево <span data-ng-if="fruit.tree.branches.length" class="label label-default">{{fruit.tree.branches.length}}</span></div><div data-ng-click="start=fruit.tasks" class="task">Задачи<span data-ng-if="fruit.tasks.branches.length" class="label label-default">{{fruit.tasks.branches.length}}</span></div><div data-ng-click="start=fruit.demands" class="demand">Поставки<span data-ng-if="fruit.demands.branches.length" class="label label-default">{{fruit.demands.branches.length}}</span></div>
+    <div data-ng-click="start=fruit.designs" class="design">Затеи <span data-ng-if="fruit.designs.branches.length" class="label label-default">{{fruit.designs.branches.length}}</span></div><div data-ng-click="start=fruit.sandbox" class="sandbox">Инкубатор затей <span data-ng-if="fruit.sandbox.branches.length" class="label label-default">{{fruit.sandbox.branches.length}}</span></div><div data-ng-click="start=fruit.tree" class="tree">Фруктовое дерево <span data-ng-if="fruit.tree.branches.length" class="label label-default">{{fruit.tree.branches.length}}</span></div><div data-ng-click="start=fruit.tasks" class="task">Задачи <span data-ng-if="fruit.tasks.branches.length" class="label label-default">{{fruit.tasks.branches.length}}</span></div><div data-ng-click="start=fruit.demands" class="demand">Поставки <span data-ng-if="fruit.demands.branches.length" class="label label-default">{{fruit.demands.branches.length}}</span></div>
 </div>
 
         <nest add="true" num="1" address="" sel="start" rate="rate" types="types" proto="proto"></nest>
@@ -168,12 +168,16 @@
             <div class="btn-group btn-group-xs">
                 <button type="button" class="btn btn-xs btn-success" data-ng-click="saveToFireBase()">Save to database</button>
                 <button type="button" class="btn btn-xs btn-warning" data-ng-click="loadFromFireBase()">Load from database</button>
-                <button class="btn btn-xs btn-danger" data-ng-click="reset()">Restart</button>
+                <button type="button" class="btn btn-xs btn-info" data-ng-click="exportJSON()">Export JSON</button>
+                <button type="button" class="btn btn-xs btn-primary" data-ng-click="importJSON()">Import JSON</button>
+                <button class="btn btn-xs btn-danger" data-ng-click="setFruit()">Restart</button>
             </div>
         </div>
     </div>
+<div data-ng-if="importShow">
+ <textarea type="" data-ng-model="$parent.JSON" data-ng-model-instant=""></textarea><button class="btn btn-sm btn-default" type="button" data-ng-click="$parent.importShow=false">hide</button>
 
-
+</div>
 
 
 </div>

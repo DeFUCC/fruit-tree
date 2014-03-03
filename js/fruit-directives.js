@@ -13,6 +13,8 @@ fruitTree.directive("nest", function($compile) {
         },
         controller: function($scope) {
             $scope.next='';
+            $scope.hide = true;
+            $scope.toggleAdd = function () {$scope.hide=!$scope.hide};
             $scope.numb = $scope.num +1;
             $scope.getColor = function (order) {if (order) { return order.substring(0, 1);} else return 0};
         },
@@ -70,7 +72,8 @@ fruitTree.directive("saypanel", function($compile) {
             stem: '=',
             types: '=',
             proto: '=',
-            parent: '='
+            parent: '=',
+            hide: '='
         },
         controller: function ($scope) {
 
@@ -89,7 +92,9 @@ fruitTree.directive("saypanel", function($compile) {
                     $scope.picLink='';
                     $scope.hidden=true;
                     $scope.shuffleOrders(stem);
-                    $scope.linkedText = '';   //view repair
+                    $scope.heading = '';
+                    $scope.text = '';
+                    $scope.hide=true;
                     if (stem.availableOrders.length == 0) {
                         $scope.refillOrders(stem)
                     }
@@ -164,7 +169,8 @@ fruitTree.directive("roll", function($compile) {
             parent: '@',
             tape: '=',
             rate: '=',
-            select: '='
+            select: '=',
+            toggleAdd: '&'
         },
         controller: function($scope) {
             $scope.selector = function (card) {

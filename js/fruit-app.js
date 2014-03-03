@@ -63,13 +63,16 @@ controllers.lettersCtrl = function ($scope, $firebase) {
     $scope.getColor = function (order) {
         return order.substring(0, 1);
     };
-    $scope.reset = function () {
-        $scope.root = new Order();
-        $scope.start = '';
-        $scope.sel='';
-        $scope.pretaken='';
-    };
 
+    $scope.exportJSON = function () {
+        $scope.importShow = true;
+        $scope.JSON = JSON.stringify($scope.fruit);
+    };
+    $scope.importShow = false;
+    $scope.importJSON = function () {
+        $scope.importShow = true;
+        $scope.fruit = JSON.parse($scope.JSON);
+    };
 
     $scope.firebase = $firebase(new Firebase('https://frukt.firebaseio.com')); //creating a firebase object
     $scope.firebase.$bind($scope, "remote"); //bind a $scope.remote object for saving
@@ -83,18 +86,21 @@ controllers.lettersCtrl = function ($scope, $firebase) {
 
     $scope.proto = Order;
     $scope.sel='';
-    $scope.fruit = {
-        f: new Order('Ф','foundation','', 'Фонд', '— некоммерческая организация, все ресурсы которой направляются на реализацию ее Миссии.' ),
-        r: new Order('P', 'development', '','Развитие', '— движение системы к сместившейся точке равновесия.'),
-        u: new Order('Y','universalization','','Универсализация','- реализация стремления каждого элемента системы овладеть практическим опытом изучения всей системы.'),
-        k: new Order('K','cooperation','','Кооперация','- сложение всех возможных усилий для решения задач, неразрешимых индивидуально.'),
-        t: new Order('T','creativity','','Творчество','- процесс осознанного приложения свободно определяемого усилия с целью увеличения меры совершенства окружающего мира'),
-        tree: new Order('B','tree','','Фруктовое дерево','- общий обзор структуры потоков ФРУКТа'),
-        designs: new Order('O','designs','','Затеи','Затея — подробный план реализации общественно значимого инфраструктурного проекта'),
-        tasks: new Order('X','tasks','','Задачи','Задача — описание необходимого к реализации действия с приложением всей имеющейся информации'),
-        demands: new Order('A','demands','','Поставки','Поставка - описание необходимых для реализации затей предметов с приложением всей имеющейся информации'),
-        sandbox: new Order('E','sandbox','','Инкубатор затей','- место коллективной разработки затей.')
-};
+    $scope.setFruit = function () {
+        $scope.fruit = {
+            f: new Order('Ф','foundation','', 'Фонд', '— некоммерческая организация, все ресурсы которой направляются на реализацию ее Миссии.' ),
+            r: new Order('P', 'development', '','Развитие', '— движение системы к сместившейся точке равновесия.'),
+            u: new Order('Y','universalization','','Универсализация','- реализация стремления каждого элемента системы овладеть практическим опытом изучения всей системы.'),
+            k: new Order('K','cooperation','','Кооперация','- сложение всех возможных усилий для решения задач, неразрешимых индивидуально.'),
+            t: new Order('T','creativity','','Творчество','- процесс осознанного приложения свободно определяемого усилия с целью увеличения меры совершенства окружающего мира'),
+            tree: new Order('B','tree','','Фруктовое дерево','- общий обзор структуры потоков ФРУКТа'),
+            designs: new Order('O','designs','','Затеи','Затея — подробный план реализации общественно значимого инфраструктурного проекта'),
+            tasks: new Order('X','tasks','','Задачи','Задача — описание необходимого к реализации действия с приложением всей имеющейся информации'),
+            demands: new Order('A','demands','','Поставки','Поставка - описание необходимых для реализации затей предметов с приложением всей имеющейся информации'),
+            sandbox: new Order('E','sandbox','','Инкубатор затей','- место коллективной разработки затей.')
+        };
+    };
+    $scope.setFruit();
     $scope.pretaken = '';
     $scope.types = ['Design', 'Event', 'Person', 'Saying'];
 
