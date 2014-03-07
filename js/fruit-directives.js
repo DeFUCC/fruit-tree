@@ -9,10 +9,13 @@ fruitTree.directive("nest", function($compile) {
             proto: '=',
             address: '=',
             num:'=',
-            add: '='
+            add: '=',
+            close: '&'
         },
         controller: function($scope) {
             $scope.next='';
+            if ($scope.sel && $scope.sel.hasOwnProperty('date')) {$scope.date = new Date($scope.sel.date); $scope.date = $scope.date.toLocaleString()};
+
             $scope.hide = true;
             $scope.toggleAdd = function () {$scope.hide=!$scope.hide};
             $scope.numb = $scope.num +1;
@@ -173,8 +176,8 @@ fruitTree.directive("roll", function($compile) {
         },
         controller: function($scope) {
             $scope.selector = function (card) {
-                if ($scope.select =='') {
-                $scope.select = card
+                if ($scope.select =='' || $scope.select.order != card.order) {
+                    $scope.select = card
                 } else {$scope.select = ''}
                 if (card.select == '') {card.select='color-'+$scope.getColor(card.order)} else {card.select =''}
             };

@@ -73,7 +73,8 @@ controllers.lettersCtrl = function ($scope, $firebase) {
         $scope.importShow = true;
         $scope.fruit = JSON.parse($scope.JSON);
     };
-
+    $scope.loaded = false;
+    $scope.remote = {};
     $scope.firebase = $firebase(new Firebase('https://frukt.firebaseio.com')); //creating a firebase object
     $scope.firebase.$bind($scope, "remote"); //bind a $scope.remote object for saving
 
@@ -83,7 +84,9 @@ controllers.lettersCtrl = function ($scope, $firebase) {
     $scope.loadFromFireBase = function () {
         $scope.fruit = $scope.remote.fruit;
     };
-
+    $scope.firebase.$on("loaded", function() {
+        $scope.loaded = true;
+    });
     $scope.proto = Order;
     $scope.sel='';
     $scope.setFruit = function () {

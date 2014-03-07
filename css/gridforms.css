@@ -16,11 +16,11 @@
 @media only screen and (min-width: 0) and (max-width: 700px) { .grid-form [data-row-span] [data-field-span] { border-bottom: 1px solid #333333; width: 100% !important; } }
 @media only screen and (min-width: 700px) { .grid-form [data-row-span] [data-field-span] { border-right: 1px solid #333333; display: block; } }
 .grid-form [data-row-span] [data-field-span] label:first-child { margin-top: 0; text-transform: uppercase; letter-spacing: 1px; font-size: 10px; color: #aaa; display: block; margin-bottom: 4px; }
-.grid-form [data-row-span] [data-field-span] label:first-child:hover { cursor: text; }
+.grid-form [data-row-span] [data-field-span] label:first-child:hover { }
 .grid-form [data-row-span] [data-field-span]:last-child { border-right: none; }
 .grid-form [data-row-span] [data-field-span].focus { background: #555; }
 .grid-form [data-row-span] [data-field-span].focus label { color: #ccc; }
-.grid-form [data-row-span] [data-field-span]:hover { background: #777; cursor: text; }
+.grid-form [data-row-span] [data-field-span]:hover { background: #777;  }
 .grid-form [data-row-span="1"] > [data-field-span="1"] { width: 100%; }
 .grid-form [data-row-span="2"] > [data-field-span="1"] { width: 50%; }
 .grid-form [data-row-span="2"] > [data-field-span="2"] { width: 100%; }

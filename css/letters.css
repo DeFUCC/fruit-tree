@@ -3,7 +3,7 @@ input {
     background: #555;
     color:#fff;
 }
-textarea {color:#fff;}
+textarea {color:#fff; background: #555;}
 
 .top-frukt {
     width:100%;
@@ -182,21 +182,31 @@ body {
 .strip-letter {
     padding:5px;
     float:none;
+    text-shadow: 0px 2px 3px rgba(0, 0, 0, 0.71);
 }
 .strip-letter:hover {
     cursor: pointer;
 }
+.full-view {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: flex-start;
+}
+.full-view div {
+    flex:1 1 auto;
+}
+.saying-full {
+    width:65%;
+}
 .full-pic {
-    position: relative;
-    right:0;
     max-width: 30%;
     max-height: 300px;
+    overflow: scroll;
 }
 .box-container {
     display: flex;
     flex-flow: row wrap;
     justify-content: flex-start;
-    overflow-y: scroll;
 }
 .box:hover .pane-label {
     background-color: inherit !important;
@@ -219,9 +229,10 @@ body {
 }
 .box .selected { color:red;}
 .saying-text p {
-    font-size: 15px;
+    font-size: 16px;
     text-align: center;
     width:100%;
+    text-shadow: 0px 2px 3px rgba(0, 0, 0, 0.71);
 }
 .box-plus {
     display: flex;
@@ -233,6 +244,7 @@ body {
 }
 .big-plus {
     margin:auto;
+    text-shadow: 0px 2px 3px rgba(0, 0, 0, 0.71);
 }
 .saying-text:hover {
     cursor: pointer;
@@ -328,6 +340,7 @@ body {
     color: #fff;
     box-sizing: border-box;
     transition: all 600ms linear;
+    text-shadow: 0px 2px 3px rgba(0, 0, 0, 0.71);
 }
 .pane-label:hover {
     cursor: pointer;
@@ -456,7 +469,7 @@ body {
 }
 .color-X {
     background-color: #00ffff;
-    color:#000;
+    color:#fff;
 }
 .color-A {
     background-color: #007bff;
@@ -493,19 +506,19 @@ body {
 }
 .hover-back-M:hover {
     background-color: #ffff00;
-    color:#000;
+    color:#fff;
 }
 .hover-back-T:hover {
     background-color: #00ff00;
-    color:#000;
+    color:#fff;
 }
 .hover-back-B:hover {
     background-color: #00ff7b;
-    color:#000;
+    color:#fff;
 }
 .hover-back-X:hover {
     background-color: #00ffff;
-    color:#000;
+    color:#fff;
 }
 .hover-back-A:hover {
     background-color: #007bff;
