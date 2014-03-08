@@ -2,176 +2,204 @@
 <html data-ng-app="fruitTree">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
 
-    <title>Letters</title>
+    <title>Fruit-tree</title>
     <script src="js/angular.js"></script>
     <script src="https://cdn.firebase.com/v0/firebase.js"></script>
     <script src="https://cdn.firebase.com/libs/angularfire/0.5.0/angularfire.js"></script>
-    <script type="application/javascript" src="js/angular-letters.js"></script>
+    <script type="application/javascript" src="js/fruit-app.js"></script>
+    <script type="application/javascript" src="js/fruit-directives.js"></script>
     <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/gridforms.css" rel="stylesheet">
     <link href="css/letters.css" rel="stylesheet">
-    <script src="js/angular-deckgrid.js"></script>
- <!-- Masonry script seemed a little bit difficult because of a need to re-layout on element add.
+    <script src="js/ui-bootstrap-tpls-0.10.0.js"></script>
 
-   <script src="js/masonry.pkgd.min.js"></script>
-    <script>
-        docReady( function() {
+    <script type="text/ng-template"  id="roll.html">
 
-            var container = document.querySelector('#sayings-container');
-            var msnry = new Masonry( container, {
-                columnWidth: 200
-            });
-            msnry.layout();
-        });
+        <div class="box-container sayings" id="{{parent}}">
+           <div data-ng-repeat="card in tape | orderBy:rate.sort"
+                data-ng-init="card.select=''"
+                data-ng-class="card.select"
+                style="flex-grow: {{rate.getTotal(card)+1}}"
+                class="box hover-back-{{getColor(card.order)}} border-color-{{getColor(card.order)}}">
+
+                        <div data-ng-if="card.picLink" class="box-inner"
+                             style="background: url('{{card.picLink}}') center no-repeat; background-size: 100% "></div>
+
+
+                        <div data-ng-class="card.select"
+                             data-ng-click="card.select=''; selector(card)"
+                             class="pane-label hover-back-{{getColor(card.order)}}">
+                            | {{card.order}} |
+                        </div>
+
+                        <div class="rating">
+                            <div data-ng-click="rate.minus(card)" class="minus">{{rate.getRating(card)<0 ?
+                                rate.getRating(card) : '-'}}
+                            </div>
+                            <div data-ng-click="rate.zero(card)" class="zero">{{rate.getTotal(card) || 0}}</div>
+                            <div data-ng-click="rate.plus(card)" class="plus">+{{rate.getRating(card)>0 ?
+                                rate.getRating(card) : ''}}
+                            </div>
+                        </div>
+
+                        <div data-ng-click="selector(card)" data-ng-if="!card.more" class="saying-text">
+                            <p>{{card.heading.substring(0,140)}}<span data-ng-if="card.heading.length>139">...</span>
+                            </p>
+                        </div>
+                        <div data-ng-click="selector(card)" data-ng-if="card.more" class="saying-text">
+                            {{card.heading}}
+                        </div>
+
+                        <div data-ng-if="card.heading.length > 140 && !card.more"
+                             data-ng-click="card.more = true"
+                             class="corner">
+                            <div class="more">+</div>
+                        </div>
+                        <div data-ng-if="card.more"
+                             data-ng-click="card.more = false"
+                             class="corner">
+                            <div class="less">-</div>
+                        </div>
+           </div>
+                <div class="box box-plus hover-back-T" data-ng-click="toggleAdd()">
+                 <div class="big-plus">+</div>
+                </div>
+        </div>
+    </script>
+
+    <script type="text/ng-template" id="saypanel.html">
+        <div data-ng-if="!hide" class="saypanel">
+
+            <form class="grid-form" data-collapse="hide">
+                <fieldset>
+                    <div data-row-span="4">
+                        <div data-field-span="1">
+                            <label>Выбери тип высказывания:</label>
+
+
+                                <button type="button" data-ng-repeat="type in types" data-ng-model="$parent.sayingType"
+                                        data-btn-radio="type" class="btn btn-sm btn-primary"> {{type}}
+                                </button>
+
+                        </div>
+                            <div data-field-span="3">
+                                <label>Выбери порядок:</label>
+                                <button type="button"
+                                        class="btn btn-sm order color-{{getColor(pretaken)}}"
+                                        data-ng-click="returnOrder(stem)">
+                                    {{pretaken || stem.freeOrders.length}}
+                                </button>
+                                <input type="search" class="input-sm pretake" data-ng-model="pretake">
+                                <button data-ng-disabled="$parent.pretaken!=''" type="button"
+                                        class="btn btn-sm order color-{{getColor(order)}}"
+                                        data-ng-repeat="order in stem.freeOrders | filter:pretake | limitTo: 12 "
+                                        data-ng-click="pretakeOrder(stem, order)">
+                                    {{order}}
+                                </button>
+                            </div>
+
+                    </div>
+                </fieldset>
+            </form>
+
+                <div data-collapse="!sayingType ">
+
+
+            <form class="grid-form">
+
+            <fieldset>
+                <legend>Добавляем: {{sayingType}}</legend>
+
+                <div data-row-span="2">
+                    <div data-field-span="1">
+                        <label>Название</label>
+                        <input  data-tooltip="Осталось {{140 - $parent.heading.length}} символов"
+                                data-tooltip-trigger="focus" data-tooltip-placement="top"
+                                data-ng-model="$parent.heading"
+                                data-ng-model-instant type="text">
+                    </div>
+                    <div data-field-span="1">
+                        <label>URL картинки</label>
+                        <input data-ng-model="picLink"
+                               data-ng-model-instant type="text">
+                    </div>
+                </div>
+                <div data-row-span="1">
+                    <div data-field-span="1">
+                        <label>Текст</label>
+                        <textarea data-tooltip="{{$parent.linkedText.length || 0}} символов"
+                                  data-tooltip-trigger="focus" data-tooltip-placement="top"
+                                  data-ng-model="$parent.linkedText"
+                                  data-ng-model-instant></textarea>
+                    </div>
+                </div>
+            </fieldset>
+                <button class="btn btn-success" data-ng-click="say(stem, pretaken, sayingType, picLink, heading, linkedText);">+</button>
+            </form>
+                </div>
+        </div>
 
     </script>
-    -->
 
-</head>
-<body>
-<div class="container" data-ng-controller="lettersCtrl" data-ng-init="loadFromLocalStorage();shuffleLetters()">
-    <div class="navbar navbar-fixed-top row">
-        <div class="col-md-offset-2 col-md-8">
-            Total <span class="label label-primary">{{myLetters.length}}</span> sayings.
-        <div class="btn-group">
-            <button type="button" class="btn btn-sm btn-success" data-ng-click="saveToFireBase()">Save to database</button>
-            <button type="button" class="btn btn-sm btn-warning" data-ng-click="loadFromFireBase();saveToLocalStorage();">Load from database</button>
-            <button onclick="document.getElementById('usertext').focus()" class="btn btn-sm btn-danger" data-ng-click="restart()">Restart</button>
-        </div>
-        </div>
-    </div>
+    <script type="text/ng-template" id="nest.html">
 
-    <h3>Sayings:</h3>
-<!-- Columns layout made with CSS columns ONLY! For further analysis.
-
-    <div class="row sayings">
-        <div class="col-md-10 col-md-offset-1 row" >
-        <div id="sayings-container">
-            <div data-ng-repeat="saying in myLetters track by $id(saying)" class="square border-color-{{armColor(saying.letter)}}">
-                <span class="label color-{{armColor(saying.letter)}}">{{saying.letter}}</span>
-                {{saying.text}}
+        <div data-ng-if="sel" class="child border-color-{{getColor(sel.order)}}">
+            <div class="left-strip color-{{getColor(sel.order)}}">
+                <span id="let{{num}}" class="strip-letter">{{sel.order}}</span>
+                <br><br><br>
+                <span data-ng-click="close()" class="close strip-letter">&times;</span>
 
             </div>
-        </div>
-        </div>
-    </div>
-
-HERE IS THE CSS
-<style>
-#sayings-container {
-    -moz-column-count: 3;
-    -moz-column-gap: 10px;
-    -webkit-column-count: 3;
-    -webkit-column-gap: 10px;
-    column-count: 3;
-    column-gap: 10px;
-    display:block;
-    clear:both;
-    width:100%;
-
-}
-
-.sayings {
-    margin-bottom: 300px;
-}
-.square {
-    display:inline-block;
-    width:99%%;
-    padding:6px;
-    border: solid 6px #ccc;
-    margin: 4px 4px;
-    overflow: hidden;
-</style>
-
--->
-
-
-
-    <div class="row sayings">
-        <div class="col-md-10 col-md-offset-1" id="sayings-container">
-
-            <div deckgrid source="myLetters" cardTemplate="js/saying.html" class="deckgrid"></div>
-
-         </div>
-    </div>
-
-<!-- Just a description list as the first version.
-    <div class="row">
-        <div class="col-md-7">
-            <dl class="dl-horizontal">
-                <dt data-ng-repeat-start="why in myLetters track by why.letter"><span class="label label-{{getButtonStatus(why)}}">{{why.letter}}</span></dt>
-                <dd data-ng-repeat-end=""> {{why.text}}</dd>
-
-            </dl>
-        </div>
-    </div>
--->
-
-<!-- HTML boxes
-    <div class="row sayings">
-        <div class="col-md-10 col-md-offset-1" id="sayings-container">
-        <div data-ng-repeat="card in myLetters track by card.letter | orderBy:sortByRating" class="box border-color-{{armColor(card.letter)}}">
-
-        <div class="pane-label hover-back-{{armColor(card.letter)}}">
-            {{card.letter}}
-        </div>
-
-        <div class="rating">
-            <span data-ng-show="rate.getRating(card.letter)<0" data-ng-click="rate.minus(card.letter)" class="label label-danger">{{rate.getRating(card.letter)}}</span>
-            <span data-ng-hide="rate.getRating(card.letter)<0" data-ng-click="rate.minus(card.letter)" class="minus label label-danger">-</span>
-            <span data-ng-click="rate.zero(card.letter)" class="zero label label-default">{{rate.getTotal(card.letter) || 0}}</span>
-            <span data-ng-show="rate.getRating(card.letter)>0" data-ng-click="rate.plus(card.letter)" class="label label-success">+{{rate.getRating(card.letter)}}</span>
-            <span data-ng-hide="rate.getRating(card.letter)>0" data-ng-click="rate.plus(card.letter)" class="plus label label-success">+</span>
-        </div>
-
-
-
-        <div class="saying-text">
-            {{card.text.substring(0,140)}}<span data-ng-if="card.text.length > 140 && !card.more">...<button class="btn btn-xs marker hover-back-{{armColor(card.letter)}}" data-ng-click="card.more = card.text.substring(140)">...</button></span><span data-ng-if="card.more">{{card.more}}<br><button class="btn btn-xs marker hover-back-{{armColor(card.letter)}}" data-ng-click="card.more = undefined">^</button></span>
-        </div>
-
+            <div><small>{{date}}</small></div>
+            <div class="rating">
+                <div data-ng-click="rate.minus(sel)" class="minus">{{rate.getRating(sel)<0 ? rate.getRating(sel) : '-'}}</div><div data-ng-click="rate.zero(sel)" class="zero">{{rate.getTotal(sel) || 0}}</div><div data-ng-click="rate.plus(sel)" class="plus">+{{rate.getRating(sel)>0 ? rate.getRating(sel) : ''}}</div>
+            </div>
+            <div class="full-view">
+            <div class="saying-full">
+                <h3>{{sel.heading}}</h3>
+                <p>{{sel.text}}</p>
+            </div>
+                <div class="full-pic" data-ng-if="sel.picLink"><img data-ng-src="{{sel.picLink}}"> </div>
+            </div>
+            <roll toggle-add="toggleAdd()"  parent="{{address + '|' + sel.order +'|'}}"  tape="sel.branches"  rate="rate" select="next"></roll>
+            <saypanel hide="hide" data-ng-if="add" stem="sel" types="types" proto="proto"></saypanel>
+            <nest add="true" close="next=''" num="numb" address="address + '|' + sel.order +'|'" sel="next" rate="rate" types="types" proto="proto"></nest>
 
         </div>
-        </div>
-    </div>
--->
 
-    <div data-ng-init="hidden=true" class="navbar-fixed-bottom panel panel-footer saypanel">
-        <button data-ng-show="hidden" data-ng-click="hidden=false" class="handle btn btn-success">+</button>
-        <button data-ng-hide="hidden" data-ng-click="hidden=true" class="handle btn btn-warning">-</button>
-    <div data-ng-hide="hidden">
-        <form class="form-horizontal" data-ng-submit="takeLetter(popLetter)">
-        <div class="form-group ">
-            <label for="usertext">Enter your text... <span class="label label-info">{{140 - linkedText.length}}</span> symbols to be shown, the least to be hidden. </label>
-            <textarea autofocus id="usertext" data-ng-model="linkedText" class="form-control"
-                      rows="2"></textarea>
-        </div>
+    </script>
 
-        <label>...and choose letters. <span class="label label-info">{{currentLetters.length}}</span> orders now
-            available!</label>
+</head>
+<body data-ng-cloak>
+<div  class="app" id="fruit" data-ng-controller="lettersCtrl">
 
-        <div class="row say-buttons">
-            <button type="submit" onclick="document.getElementById('usertext').focus()"
-                    class="btn btn-lg  color-{{armColor(popLetter)}}"
-                    data-ng-if="currentLetters.length!=0"
-                    data-ng-click="takeLetter(popLetter)"
-                    data-ng-disabled="!linkedText">{{popLetter}}
-            </button><button type="button" onclick="document.getElementById('usertext').focus()"
-                    class="btn btn-lg  color-{{armColor(letter)}}"
-                    data-ng-repeat="letter in showLetters"
-                    data-ng-click="takeLetter(letter)"
-                    data-ng-disabled="!linkedText">{{letter}}
-            </button>
-        </div>
-    </form>
-
-    <div class="row">
-        <div data-ng-if="currentLetters.length==0" class="col-sm-12 btn btn-warning btn-lg"
-             data-ng-click="refillLetters()">Add letters!
-        </div>
-    </div>
-    </div>
+<div class="top-frukt">
+    <div data-ng-click="start=fruit.f" class="f">Ф <span data-ng-if="fruit.f.branches.length" class="label label-default">{{fruit.f.branches.length}}</span></div><div data-ng-click="start=fruit.r" class="r">Р <span data-ng-if="fruit.r.branches.length" class="label label-default">{{fruit.r.branches.length}}</span></div><div data-ng-click="start=fruit.u" class="u">У<span data-ng-if="fruit.u.branches.length" class="label label-default">{{fruit.u.branches.length}}</span></div><div data-ng-click="start=fruit.k" class="k">К <span data-ng-if="fruit.k.branches.length" class="label label-default">{{fruit.k.branches.length}}</span></div><div data-ng-click="start=fruit.t" class="t">Т<span data-ng-if="fruit.t.branches.length" class="label label-default">{{fruit.t.branches.length}}</span></div>
 </div>
+<div class="top-menu">
+    <div data-ng-click="start=fruit.sandbox" class="sandbox">Инкубатор затей <span data-ng-if="fruit.sandbox.branches.length" class="label label-default">{{fruit.sandbox.branches.length}}</span></div><div data-ng-click="start=fruit.designs" class="design">Затеи <span data-ng-if="fruit.designs.branches.length" class="label label-default">{{fruit.designs.branches.length}}</span></div><div data-ng-click="start=fruit.tree" class="tree">Фруктовое дерево <span data-ng-if="fruit.tree.branches.length" class="label label-default">{{fruit.tree.branches.length}}</span></div><div data-ng-click="start=fruit.tasks" class="task">Задачи <span data-ng-if="fruit.tasks.branches.length" class="label label-default">{{fruit.tasks.branches.length}}</span></div><div data-ng-click="start=fruit.demands" class="demand">Поставки <span data-ng-if="fruit.demands.branches.length" class="label label-default">{{fruit.demands.branches.length}}</span></div>
+</div>
+
+        <nest add="true" num="1" address="" close="start=''" sel="start" rate="rate" types="types" proto="proto"></nest>
+
+    <div class="">
+        <div class="top-bttns">
+            <div class="btn-group btn-group-xs">
+                <button data-ng-disabled="!loaded" type="button" class="btn btn-xs btn-success" data-ng-click="saveToFireBase()">Save to database</button>
+                <button data-ng-disabled="!loaded" type="button" class="btn btn-xs btn-warning" data-ng-click="loadFromFireBase()">Load from database</button>
+                <button type="button" class="btn btn-xs btn-info" data-ng-click="exportJSON()">Export JSON</button>
+                <button type="button" class="btn btn-xs btn-primary" data-ng-click="importJSON()">Import JSON</button>
+                <button class="btn btn-xs btn-danger" data-ng-click="setFruit()">Restart</button>
+            </div>
+        </div>
+    </div>
+<div data-ng-if="importShow">
+ <textarea data-ng-model="$parent.JSON" data-ng-model-instant></textarea><button class="btn btn-sm btn-default" type="button" data-ng-click="$parent.importShow=false">hide</button>
+
+</div>
+
 
 </div>
 </body>
