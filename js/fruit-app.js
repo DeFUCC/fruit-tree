@@ -105,7 +105,7 @@ controllers.lettersCtrl = function ($scope, $firebase) {
     };
     $scope.setFruit();
     $scope.pretaken = '';
-    $scope.types = ['Design', 'Event', 'Person', 'Saying'];
+    $scope.types = ['Событие', 'Личность', 'Идея','Затея', 'Задача',  'Поставка','Суть'];
 
     /*   $scope.loadFromLocalStorage = function () {
      if (localStorage.length > 0) {

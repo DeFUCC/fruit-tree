@@ -22,35 +22,35 @@ textarea {color:#fff; background: #555;}
 }
 .f {
     color:#888;
-    border-bottom: solid 3px #888;
+    border-bottom: solid 5px #888;
 }
 .f:hover {
    background-color: #888;
 }
 .r {
     color:#a6499b;
-    border-bottom: solid 3px #a6499b;
+    border-bottom: solid 5px #a6499b;
 }
 .r:hover {
     background-color: #a6499b;
 }
 .u {
     color:#f7951d;
-    border-bottom: solid 3px #f7951d;
+    border-bottom: solid 5px #f7951d;
 }
 .u:hover {
     background-color: #f7951d;
 }
 .k {
     color:#ed1c24;
-    border-bottom: solid 3px #ed1c24;
+    border-bottom: solid 5px #ed1c24;
 }
 .k:hover {
     background-color: #ed1c24;
 }
 .t {
     color:#43b549;
-    border-bottom: solid 3px #43b549;
+    border-bottom: solid 5px #43b549;
 }
 .t:hover {
     background-color: #43b549;
@@ -72,35 +72,35 @@ textarea {color:#fff; background: #555;}
 }
 .tree {
     color:#00ff00;
-    border-bottom: solid 3px #00ff00;
+    border-bottom: solid 5px #00ff00;
 }
 .tree:hover {
     background-color: #00ff00;
 }
 .design {
     color:#ff7b00;
-    border-bottom: solid 3px #ff7b00;
+    border-bottom: solid 5px #ff7b00;
 }
 .design:hover {
     background-color: #ff7b00;
 }
 .task {
     color:#00ffff;
-    border-bottom: solid 3px #00ffff;
+    border-bottom: solid 5px #00ffff;
 }
 .task:hover {
     background-color: #00ffff;
 }
 .demand {
     color:#007bff;
-    border-bottom: solid 3px #007bff;
+    border-bottom: solid 5px #007bff;
 }
 .demand:hover {
     background-color: #007bff;
 }
 .sandbox {
     color:#ff00ff;
-    border-bottom: solid 3px #ff00ff;
+    border-bottom: solid 5px #ff00ff;
 }
 .sandbox:hover {
     background-color: #ff00ff;
@@ -180,8 +180,8 @@ body {
     top:0;
 }
 .strip-letter {
-    padding:5px;
-    float:none;
+    padding:8px;
+    margin: auto;
     text-shadow: 0px 2px 3px rgba(0, 0, 0, 0.71);
 }
 .strip-letter:hover {
@@ -194,6 +194,7 @@ body {
 }
 .full-view div {
     flex:1 1 auto;
+    margin:10px;
 }
 .saying-full {
     width:65%;
@@ -204,9 +205,16 @@ body {
     overflow: scroll;
 }
 .box-container {
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
     display: flex;
+    -webkit-flex-flow: row wrap;
+    -moz-flex-flow: row wrap;
     flex-flow: row wrap;
     justify-content: flex-start;
+
 }
 .box:hover .pane-label {
     background-color: inherit !important;
@@ -259,13 +267,23 @@ body {
 .box:hover .box-inner {
     opacity: .5;
 }
-.date {
+.nest-date {
     margin:6px 0 0 6px;
     font-size:8px;
-    float:left;
+    clear: right;
+    float:right;
+    max-width:16em;
     display: block;
 }
-
+.nest-header {
+    padding:0;
+    margin:0;
+}
+.nest-header h3 {
+    margin: 0;
+    padding:  10px 0 14px 10px;
+    text-shadow: 0px 2px 3px rgba(0, 0, 0, 0.71);
+}
 .corner {
     z-index: 80;
     width: 0;
@@ -312,6 +330,19 @@ body {
 
 .say-buttons button{
     margin:5px;
+}
+.say-button {
+    text-align: center;
+    padding:15px;
+    cursor: pointer;
+}
+.say-button:hover {
+    background-color:rgba(255,255,255,0.3);
+}
+.say-button p {
+    font-size: 40px;
+    margin: 0;
+    text-shadow: 0px 2px 3px rgba(0, 0, 0, 0.71);
 }
 
 .pane {
@@ -457,15 +488,15 @@ body {
 }
 .color-M{
     background-color: #ffff00;
-    color:#000;
+    color:#fff;
 }
 .color-T {
     background-color: #00ff00;
-    color:#000;
+    color:#fff;
 }
 .color-B {
     background-color: #00ff7b;
-    color:#000;
+    color:#fff;
 }
 .color-X {
     background-color: #00ffff;

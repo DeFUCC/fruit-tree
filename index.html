@@ -136,7 +136,7 @@
                     </div>
                 </div>
             </fieldset>
-                <button class="btn btn-success" data-ng-click="say(stem, pretaken, sayingType, picLink, heading, linkedText);">+</button>
+                <div class="say-button" data-ng-click="say(stem, pretaken, sayingType, picLink, heading, linkedText);"><p>+</p></div>
             </form>
                 </div>
         </div>
@@ -152,13 +152,17 @@
                 <span data-ng-click="close()" class="close strip-letter">&times;</span>
 
             </div>
-            <div><small>{{date}}</small></div>
-            <div class="rating">
-                <div data-ng-click="rate.minus(sel)" class="minus">{{rate.getRating(sel)<0 ? rate.getRating(sel) : '-'}}</div><div data-ng-click="rate.zero(sel)" class="zero">{{rate.getTotal(sel) || 0}}</div><div data-ng-click="rate.plus(sel)" class="plus">+{{rate.getRating(sel)>0 ? rate.getRating(sel) : ''}}</div>
+            <div class="nest-header color-{{getColor(sel.order)}}">
+
+                <div class="rating">
+                    <div data-ng-click="rate.minus(sel)" class="minus">{{rate.getRating(sel)<0 ? rate.getRating(sel) : '-'}}</div><div data-ng-click="rate.zero(sel)" class="zero">{{rate.getTotal(sel) || 0}}</div><div data-ng-click="rate.plus(sel)" class="plus">+{{rate.getRating(sel)>0 ? rate.getRating(sel) : ''}}</div>
+                </div>
+                <div class="nest-date">{{sel.date}}</div>
+                <h3>{{sel.heading}}</h3>
             </div>
             <div class="full-view">
             <div class="saying-full">
-                <h3>{{sel.heading}}</h3>
+
                 <p>{{sel.text}}</p>
             </div>
                 <div class="full-pic" data-ng-if="sel.picLink"><img data-ng-src="{{sel.picLink}}"> </div>
