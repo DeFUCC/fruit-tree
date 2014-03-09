@@ -130,6 +130,13 @@ textarea {color:#fff; background: #555;}
 }
 .order {
     margin:0 4px;
+    text-shadow: 0px 2px 3px rgba(0, 0, 0, 0.71);
+    transition: all 100ms linear;
+}
+.order:hover {
+    -webkit-box-shadow: 0px 0px 7px 0px rgba(0, 0, 0, 0.5);
+    -moz-box-shadow:    0px 0px 7px 0px rgba(0, 0, 0, 0.5);
+    box-shadow:         0px 0px 7px 0px rgba(0, 0, 0, 0.5);
 }
 .orders, .types {
     margin:10px 0;
@@ -252,6 +259,7 @@ body {
 }
 .big-plus {
     margin:auto;
+    padding:0 15px;
     text-shadow: 0px 2px 3px rgba(0, 0, 0, 0.71);
 }
 .saying-text:hover {
@@ -290,7 +298,7 @@ body {
     height: 0;
     border-style: solid;
     border-width: 0 0 30px 30px;
-    border-color: transparent transparent #444 transparent;
+    border-color: transparent transparent #666 transparent;
     position: absolute;
     bottom:0;
     right:0;
@@ -302,7 +310,8 @@ body {
     opacity: .80;
 }
 .corner .more {
-    margin:15px 0 0 -14px;
+    margin:18px 0 0 -14px;
+    font-size: 11px;
 }
 .corner .less {
     margin:10px 0 0 -12px;
@@ -335,6 +344,7 @@ body {
     text-align: center;
     padding:15px;
     cursor: pointer;
+    text-shadow: 0 2px 3px rgba(0, 0, 0, 0.71);
 }
 .say-button:hover {
     background-color:rgba(255,255,255,0.3);

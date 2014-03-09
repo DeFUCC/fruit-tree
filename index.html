@@ -37,31 +37,23 @@
                         <div class="rating">
                             <div data-ng-click="rate.minus(card)" class="minus">{{rate.getRating(card)<0 ?
                                 rate.getRating(card) : '-'}}
-                            </div>
-                            <div data-ng-click="rate.zero(card)" class="zero">{{rate.getTotal(card) || 0}}</div>
-                            <div data-ng-click="rate.plus(card)" class="plus">+{{rate.getRating(card)>0 ?
+                            </div><div data-ng-click="rate.zero(card)" class="zero">{{rate.getTotal(card) || 0}}</div><div data-ng-click="rate.plus(card)" class="plus">+{{rate.getRating(card)>0 ?
                                 rate.getRating(card) : ''}}
                             </div>
                         </div>
 
-                        <div data-ng-click="selector(card)" data-ng-if="!card.more" class="saying-text">
+                        <div data-ng-click="selector(card)" class="saying-text">
                             <p>{{card.heading.substring(0,140)}}<span data-ng-if="card.heading.length>139">...</span>
                             </p>
                         </div>
-                        <div data-ng-click="selector(card)" data-ng-if="card.more" class="saying-text">
-                            {{card.heading}}
-                        </div>
 
-                        <div data-ng-if="card.heading.length > 140 && !card.more"
+
+                        <div data-ng-if="card.branches.length>0"
                              data-ng-click="card.more = true"
                              class="corner">
-                            <div class="more">+</div>
+                            <div class="more ">{{card.branches.length}}</div>
                         </div>
-                        <div data-ng-if="card.more"
-                             data-ng-click="card.more = false"
-                             class="corner">
-                            <div class="less">-</div>
-                        </div>
+
            </div>
                 <div class="box box-plus hover-back-T" data-ng-click="toggleAdd()">
                  <div class="big-plus">+</div>
@@ -136,7 +128,7 @@
                     </div>
                 </div>
             </fieldset>
-                <div class="say-button" data-ng-click="say(stem, pretaken, sayingType, picLink, heading, linkedText);"><p>+</p></div>
+                <div class="say-button" data-ng-click="say(stem, pretaken, sayingType, picLink, heading, linkedText);hide=true;"><p>+</p></div>
             </form>
                 </div>
         </div>
