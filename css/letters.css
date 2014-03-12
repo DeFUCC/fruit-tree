@@ -4,9 +4,15 @@ input {
     color:#fff;
 }
 textarea {color:#fff; background: #555;}
-
+.hidden-svg {
+    position: absolute;
+    height: 0;
+    width: 0;
+}
 .top-frukt {
     width:100%;
+    font-size: 18px;
+    text-shadow: 0px 2px 3px rgba(0, 0, 0, 0.71);
 
 }
 .top-frukt div {
@@ -65,10 +71,15 @@ textarea {color:#fff; background: #555;}
     text-align: center;
     transition: all 600ms linear;
     padding:10px;
+    text-shadow: 0px 2px 3px rgba(0, 0, 0, 0.71);
 }
 .top-menu div:hover {
     color:#fff;
     cursor: pointer;
+}
+.top-menu svg {
+    height: 25px;
+    width: 25px;
 }
 .tree {
     color:#00ff00;
@@ -106,9 +117,7 @@ textarea {color:#fff; background: #555;}
     background-color: #ff00ff;
 }
 .top-menu svg {
-    height:20px;
-    margin-bottom:-4px;
-    display: inline-block;
+    text-shadow: 0px 2px 3px rgba(0, 0, 0, 0.71);
 }
 #greeting {
     padding:20px;
@@ -152,7 +161,10 @@ body {
     background: #37353a;
     color:#eee;
 }
-
+.shadow {
+    -webkit-filter: drop-shadow( 0px 0px 7px 0px rgba(0, 0, 0, 0.5) );
+    filter: drop-shadow( 0px 0px 7px 0px rgba(0, 0, 0, 0.5) ); /* Same syntax as box-shadow */
+}
 .f-icon {
     display: inline-block;
     padding:0;
@@ -169,16 +181,18 @@ body {
 .donation {
     background-color: #00A651;
 }
-.child {
+.nest {
     width:100%;
-    padding-left:40px;
+    padding-left: 25px;
     border-top: solid 5px #333;
     border-right:solid 1px #333;
     border-bottom:solid 1px #333;
     position: relative;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
 }
 .left-strip {
-    width:40px;
+    width:25px;
     height: 100%;
     padding:10px;
     text-align: center;
@@ -187,29 +201,30 @@ body {
     top:0;
 }
 .strip-letter {
-    padding:8px;
+    padding:0;
     margin: auto;
     text-shadow: 0px 2px 3px rgba(0, 0, 0, 0.71);
 }
 .strip-letter:hover {
     cursor: pointer;
 }
-.full-view {
-    display: flex;
-    flex-flow: row wrap;
-    justify-content: flex-start;
+.strip-close {
+    position: absolute;
+    bottom: 20px;
+    left:8px;
+    margin: auto;
+    cursor: pointer;
+    text-shadow: 0px 2px 3px rgba(0, 0, 0, 0.71);
 }
-.full-view div {
-    flex:1 1 auto;
+.full-view {
     margin:10px;
 }
-.saying-full {
-    width:65%;
-}
+
 .full-pic {
-    max-width: 30%;
+    max-width:30%;
     max-height: 300px;
-    overflow: scroll;
+    float:left;
+    margin:15px;
 }
 .box-container {
     display: -webkit-box;
@@ -221,6 +236,7 @@ body {
     -moz-flex-flow: row wrap;
     flex-flow: row wrap;
     justify-content: flex-start;
+    padding:10px;
 
 }
 .box:hover .pane-label {
@@ -233,20 +249,23 @@ body {
 }
 .box {
     flex: 1 1 12em;
-    border: solid 4px #333;
+    border: solid 6px #333;
     background-color: #4a4d51;
-    margin:0;
+    margin:5px;
     overflow: hidden;
     display: block;
     transition: all 600ms linear;
     position: relative;
     z-index: 0;
+    border-radius: 5px;
 }
 .box .selected { color:red;}
 .saying-text p {
     font-size: 16px;
     text-align: center;
     width:100%;
+    padding:20px 0;
+    margin:10px 0;
     text-shadow: 0px 2px 3px rgba(0, 0, 0, 0.71);
 }
 .box-plus {
@@ -266,6 +285,7 @@ body {
     cursor: pointer;
 }
 .box-inner {
+    border-radius: 5px;
     position: absolute;
     z-index: -1;
     width:100%;
@@ -286,43 +306,44 @@ body {
 .nest-header {
     padding:0;
     margin:0;
+
 }
 .nest-header h3 {
     margin: 0;
     padding:  10px 0 14px 10px;
     text-shadow: 0px 2px 3px rgba(0, 0, 0, 0.71);
+    line-height: 36px;
+    vertical-align: middle;
 }
-.corner {
-    z-index: 80;
-    width: 0;
-    height: 0;
-    border-style: solid;
-    border-width: 0 0 30px 30px;
-    border-color: transparent transparent #666 transparent;
-    position: absolute;
+.review {
+    padding: 4px;
+    position:absolute;
     bottom:0;
     right:0;
-    float: right;
-    transition: all 600ms linear;
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-flex-flow: row wrap;
+    -moz-flex-flow: row wrap;
+    flex-flow: row wrap;
+    justify-content: flex-start;
 }
-.corner:hover {
-    cursor: pointer;
-    opacity: .80;
+.review span {
+    flex: 1 1 3px;
+    width:6px;
+    height:6px;
+    border-radius: 3px;
+    margin: 1px;
+    box-shadow: 0 0 1px 0 rgba(0, 0, 0, 0.71);
 }
-.corner .more {
-    margin:18px 0 0 -14px;
-    font-size: 11px;
-}
-.corner .less {
-    margin:10px 0 0 -12px;
-}
+
 .saying-text {
     width: 100%;
     height:100%;
     margin:auto;
     padding: 4px;
-    overflow-y: scroll;
-    overflow-x: hidden;
 
 }
 .marker {
@@ -393,6 +414,7 @@ body {
 }
 .rating {
     float:right;
+    border-radius: 3px;
     color: #fff;
     font-size:10px;
     font-family: "Helvetica Neue Cyr", Helvetica, Arial, sans-serif;
@@ -413,7 +435,8 @@ body {
 }
 .rating .minus {
     background-color:#333;
-
+    border-bottom-left-radius: 3px;
+    border-top-left-radius: 3px;
     padding-left:8px;
 }
 .minus:hover {
@@ -427,7 +450,8 @@ body {
 }
 .rating .plus {
     background-color:#999;
-
+    border-bottom-right-radius: 3px;
+    border-top-right-radius: 3px;
     padding-right:8px;
 }
 .plus:hover {
@@ -528,6 +552,10 @@ body {
     background-color: #ff00ff;
     color:#fff;
 }
+.color-F {
+    background-color: #999;
+    color:#fff;
+}
 /* hover classes */
 .hover-back-K:hover {
     background-color: #ff0000;
@@ -615,6 +643,9 @@ body {
 .border-color-E:hover {
     border-color: #ff00ff;
 }
+.border-color-F:hover {
+     border-color: #333;
+ }
 
 [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
     display: none !important;

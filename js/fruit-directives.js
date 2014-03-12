@@ -19,7 +19,7 @@ fruitTree.directive("nest", function($compile) {
             $scope.hide = true;
             $scope.toggleAdd = function () {$scope.hide=!$scope.hide};
             $scope.numb = $scope.num +1;
-            $scope.getColor = function (order) {if (order) { return order.substring(0, 1);} else return 0};
+            $scope.getColor = function (order) {if (order == 'Ф') {return 'F'} else if (order) { return order.substring(0, 1);} else return 0};
         },
         compile: function(tElement, tAttr) {
             var contents = tElement.contents().remove();
@@ -36,16 +36,54 @@ fruitTree.directive("nest", function($compile) {
     };
 });
 
-fruitTree.directive("ico", function() {
+fruitTree.directive("icon", function() {
    return {
        restrict:"E",
-       scope:{},
-       link: function (scope,element,attrs,controller) {
-
-        }
+       scope:{
+           type: '@'
+       },
+       templateUrl:'icon.svg'
    };
 });
 
+fruitTree.directive("incubator", function() {
+    return {
+        restrict:"E",
+        scope:{
+            size: '@'
+        },
+        templateUrl:'incubator.svg'
+    };
+});
+
+fruitTree.directive("task", function() {
+    return {
+        restrict:"E",
+        scope:{
+            size: '@'
+        },
+        templateUrl:'task.svg'
+    };
+});
+
+fruitTree.directive("demand", function() {
+    return {
+        restrict:"E",
+        scope:{
+            size: '@'
+        },
+        templateUrl:'demand.svg'
+    };
+});
+fruitTree.directive("tree", function() {
+    return {
+        restrict:"E",
+        scope:{
+            size: '@'
+        },
+        templateUrl:'tree.svg'
+    };
+});
 // The stripLetter must fix the order to the viewport while scrolling... Now it doesn't
 /*
 fruitTree.directive("stripLetter", function($compile) {
@@ -197,5 +235,6 @@ fruitTree.directive("roll", function($compile) {
         }
     };
 });
+
 
 
