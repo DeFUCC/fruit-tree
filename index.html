@@ -53,7 +53,7 @@
 
 
            </div>
-                <div class="box box-plus hover-back-T border-color-T" data-ng-click="toggleAdd()">
+                <div data-ng-if="add" class="box box-plus hover-back-T border-color-T" data-ng-click="toggleAdd()">
                  <div class="big-plus">+</div>
                 </div>
         </div>
@@ -69,8 +69,8 @@
                             <label>Выбери тип высказывания:</label>
 
 
-                                <button type="button" data-ng-repeat="type in types" data-ng-model="$parent.sayingType"
-                                        data-btn-radio="type" class="btn btn-sm btn-primary"> {{type}}
+                                <button type="button" data-ng-repeat="type in types()" data-ng-model="$parent.sayingType"
+                                        data-btn-radio="type" class="btn btn-sm btn-primary"> {{type.name}}
                                 </button>
 
                         </div>
@@ -100,7 +100,7 @@
             <form class="grid-form">
 
             <fieldset>
-                <legend>Добавляем: {{sayingType}}</legend>
+                <legend>Добавляем: {{sayingType.name}}</legend>
 
                 <div data-row-span="2">
                     <div data-field-span="1">
@@ -158,8 +158,8 @@
             </div>
             <div style="clear:both"></div>
             </div>
-            <roll toggle-add="toggleAdd()"  parent="{{address + '|' + sel.order +'|'}}"  tape="sel.branches"  rate="rate" select="next"></roll>
-            <saypanel hide="hide" data-ng-if="add" stem="sel" types="types" proto="proto"></saypanel>
+            <roll add="types.getAll(sel.type).length>0" toggle-add="toggleAdd()"  parent="{{address + '|' + sel.order +'|'}}"  tape="sel.branches"  rate="rate" select="next"></roll>
+            <saypanel hide="hide" data-ng-if="add" stem="sel" types="types.getAll(sel.type)" proto="proto"></saypanel>
             <nest add="true" close="next=''" num="numb" address="address + '|' + sel.order +'|'" sel="next" rate="rate" types="types" proto="proto"></nest>
 
         </div>

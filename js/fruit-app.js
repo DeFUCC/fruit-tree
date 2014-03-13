@@ -1,7 +1,7 @@
 /**
  * Created by starov on 26.12.13.
  */
-var fruitTree = angular.module('fruitTree', ['firebase', 'ui.bootstrap' /*, 'akoenig.deckgrid' */]);
+var fruitTree = angular.module('fruitTree', ['firebase', 'ui.bootstrap']);
 var controllers = {};
 fruitTree.controller(controllers);
 
@@ -10,6 +10,7 @@ fruitTree.controller(controllers);
 controllers.lettersCtrl = function ($scope, $firebase) {
     var baseLetters = ['A', 'B', 'C', 'E', 'H', 'K', 'M', 'O', 'P', 'T', 'X', 'Y'];
     var baseColors = ['c', 'cd', 'd', 'dd', 'e', 'f', 'fd', 'g', 'gd', 'a', 'ad', 'b'];
+
 
      function shuffle(massive) {
         arr = massive.concat();
@@ -23,13 +24,78 @@ controllers.lettersCtrl = function ($scope, $firebase) {
         return arr;
     }
 
+    function getTypes (type) {
+
+        switch (type.type) {
+            case 'design': return [{name:'Название'}];
+            default: return [{name:'Высказывание'}];
+        }
+    }
+
+    function Type(type, name, icon) {
+        this.type=type;
+        this.name=name;
+        this.icon=icon || '';
+        this.all = [];
+    }
+
+    var t = {
+        design: new Type('design','Затея', 'design'),
+        preDesign: new Type('preDesign','Проект затеи', 'sandbox'),
+        demand: new Type('demand','Поставка', 'demand'),
+        task: new Type('task','Задача', 'task'),
+        event: new Type('event','Событие'),
+        thing: new Type('thing','Штука'),
+        skill: new Type('skill','Навык'),
+        person: new Type('person','Личность'),
+        face: new Type('face','Лицо'),
+        saying: new Type('saying','Высказывание'),
+        status: new Type('status','Статус'),
+        step: new Type('step', 'Ступень'),
+        rate: new Type('rate', 'Оценка'),
+        title: new Type('title','Название'),
+        window: new Type('window','Окно'),
+        idea: new Type('idea','Идея'),
+        aim: new Type('aim','Цель'),
+        gist: new Type('gist','Суть'),
+        place: new Type('place','Место'),
+        time: new Type('time','Срок'),
+        theory: new Type('theory','Теория'),
+        practice: new Type('practice','Практика'),
+        question: new Type('question','Вопрос'),
+        answer: new Type('answer','Ответ'),
+        worth: new Type('worth','Ценность'),
+        specification: new Type('specification','Уточнение'),
+        name: new Type('name','ФИО'),
+        phone: new Type('phone','Телефон'),
+        eMail: new Type('eMail','Эл. почта'),
+        contact: new Type('contact','Контакт'),
+        picture: new Type('picture','Картинка'),
+        video: new Type('video','Видео'),
+        sandbox: new Type('sandbox', 'Инкубатор затей')
+    };
+    t.getAll = function (type) {
+        var all = [];
+        if (this.hasOwnProperty(type.type)) {
+            all= all.concat(this[type.type].all);
+        }
+
+        return all;
+    };
+
+    t.design.all=[t.title, t.status, t.step, t.rate, t.window, t.idea, t.aim, t.gist, t.place, t.time, t.face, t.theory, t.practice, t.question, t.answer, t.task, t.demand];
+    t.preDesign.all = t.design.all;
+    t.sandbox.all=[t.preDesign];
+
+    $scope.types = t;
+
     function Order(order, type, picLink, heading, text, date) {
         this.pluses = 0;
         this.zeros = 0;
         this.minuses = 0;
         this.date = date;
         this.order = order || '0';
-        this.type = type || '';
+        this.type = type;
         this.picLink = picLink || '';
         this.heading = heading || '';
         this.text = text || '';
@@ -38,6 +104,7 @@ controllers.lettersCtrl = function ($scope, $firebase) {
         this.availableOrders = baseLetters.concat();
         this.pretaken = '';
         this.freeOrders = shuffle(this.availableOrders);
+        this.add = true;
     }
 
 
@@ -100,12 +167,15 @@ controllers.lettersCtrl = function ($scope, $firebase) {
             designs: new Order('O','designs','','Затеи','Затея — подробный план реализации общественно значимого инфраструктурного проекта'),
             tasks: new Order('X','tasks','','Задачи','Задача — описание необходимого к реализации действия с приложением всей имеющейся информации'),
             demands: new Order('A','demands','','Поставки','Поставка - описание необходимых для реализации затей предметов с приложением всей имеющейся информации'),
-            sandbox: new Order('E','sandbox','','Инкубатор затей','- место коллективной разработки затей.')
+            sandbox: new Order('E',$scope.types.sandbox,'','Инкубатор затей','- место коллективной разработки затей.')
         };
+        $scope.fruit.tasks.add = false;
+        $scope.fruit.demands.add = false;
+        $scope.fruit.tree.add = false;
+        $scope.fruit.sandbox.add = true;
     };
     $scope.setFruit();
     $scope.pretaken = '';
-    $scope.types = ['Событие', 'Личность', 'Идея','Затея', 'Задача',  'Поставка','Суть'];
 
     /*   $scope.loadFromLocalStorage = function () {
      if (localStorage.length > 0) {

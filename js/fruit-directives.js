@@ -9,7 +9,7 @@ fruitTree.directive("nest", function($compile) {
             proto: '=',
             address: '=',
             num:'=',
-            add: '=',
+            add: '@',
             close: '&'
         },
         controller: function($scope) {
@@ -46,44 +46,7 @@ fruitTree.directive("icon", function() {
    };
 });
 
-fruitTree.directive("incubator", function() {
-    return {
-        restrict:"E",
-        scope:{
-            size: '@'
-        },
-        templateUrl:'incubator.svg'
-    };
-});
 
-fruitTree.directive("task", function() {
-    return {
-        restrict:"E",
-        scope:{
-            size: '@'
-        },
-        templateUrl:'task.svg'
-    };
-});
-
-fruitTree.directive("demand", function() {
-    return {
-        restrict:"E",
-        scope:{
-            size: '@'
-        },
-        templateUrl:'demand.svg'
-    };
-});
-fruitTree.directive("tree", function() {
-    return {
-        restrict:"E",
-        scope:{
-            size: '@'
-        },
-        templateUrl:'tree.svg'
-    };
-});
 // The stripLetter must fix the order to the viewport while scrolling... Now it doesn't
 /*
 fruitTree.directive("stripLetter", function($compile) {
@@ -111,7 +74,7 @@ fruitTree.directive("saypanel", function($compile) {
         templateUrl: 'saypanel.html',
         scope: {
             stem: '=',
-            types: '=',
+            types: '&',
             proto: '=',
             parent: '=',
             hide: '='
@@ -123,7 +86,7 @@ fruitTree.directive("saypanel", function($compile) {
                 var place = stem.availableOrders.indexOf(order);
                 if (place >= 0) {
                     var time = new Date();
-                    var date = time.toJSON();
+                    var date = time.toLocaleString();
                     if (!stem.branches) {stem.branches = []}
                     stem.branches.push(new $scope.proto(order, type, picLink, heading, text, date));
                     stem.availableOrders.splice(place, 1);
@@ -207,6 +170,7 @@ fruitTree.directive("roll", function($compile) {
         templateUrl: 'roll.html',
         scope: {
             parent: '@',
+            add: '=',
             tape: '=',
             rate: '=',
             select: '=',
