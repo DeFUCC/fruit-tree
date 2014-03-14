@@ -407,6 +407,10 @@ body {
 .pane-label:hover {
     cursor: pointer;
 }
+.pane-label svg {
+    width: 12px;
+    height: 12px;
+}
 .pane-rating {
     float:right;
     width:75%;

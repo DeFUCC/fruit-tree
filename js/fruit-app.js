@@ -79,13 +79,14 @@ controllers.lettersCtrl = function ($scope, $firebase) {
         if (this.hasOwnProperty(type.type)) {
             all= all.concat(this[type.type].all);
         }
-
         return all;
     };
 
     t.design.all=[t.title, t.status, t.step, t.rate, t.window, t.idea, t.aim, t.gist, t.place, t.time, t.face, t.theory, t.practice, t.question, t.answer, t.task, t.demand];
     t.preDesign.all = t.design.all;
+    t.step.all = t.design.all;
     t.sandbox.all=[t.preDesign];
+    t.question.all=[t.answer];
 
     $scope.types = t;
 

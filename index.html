@@ -31,7 +31,7 @@
                         <div data-ng-class="card.select"
                              data-ng-click="card.select=''; selector(card)"
                              class="pane-label hover-back-{{getColor(card.order)}}">
-                            | {{card.order}} |
+                         <icon data-ng-if="card.type.icon" type="{{card.type.icon}}"></icon> <span data-ng-if="!card.type.icon">{{card.type.name | uppercase}}</span>   | {{card.order}} |
                         </div>
 
                         <div class="rating">
@@ -169,7 +169,7 @@
     <script type="text/ng-template" id="icon.svg">
         <svg viewBox="0 0 100 100" width="30px" height="30px" class="icon">
             <use data-ng-if="type == 'design'" xlink:href="#design"></use>
-            <use data-ng-if="type == 'incubator'" xlink:href="#incubator"></use>
+            <use data-ng-if="type == 'sandbox'" xlink:href="#sandbox"></use>
             <use data-ng-if="type == 'task'" xlink:href="#task"></use>
             <use data-ng-if="type == 'demand'" xlink:href="#demand"></use>
             <use data-ng-if="type == 'tree'" xlink:href="#tree"></use>
@@ -187,7 +187,7 @@
     <div data-ng-click="start=fruit.f" class="f">Ф <span data-ng-if="fruit.f.branches.length" class="label label-default">{{fruit.f.branches.length}}</span></div><div data-ng-click="start=fruit.r" class="r">Р <span data-ng-if="fruit.r.branches.length" class="label label-default">{{fruit.r.branches.length}}</span></div><div data-ng-click="start=fruit.u" class="u">У<span data-ng-if="fruit.u.branches.length" class="label label-default">{{fruit.u.branches.length}}</span></div><div data-ng-click="start=fruit.k" class="k">К <span data-ng-if="fruit.k.branches.length" class="label label-default">{{fruit.k.branches.length}}</span></div><div data-ng-click="start=fruit.t" class="t">Т<span data-ng-if="fruit.t.branches.length" class="label label-default">{{fruit.t.branches.length}}</span></div>
 </div>
 <div class="top-menu">
-    <div data-ng-click="start=fruit.sandbox" class="sandbox"><icon type="incubator"></icon><br>Инкубатор затей <span data-ng-if="fruit.sandbox.branches.length" class="label label-default">{{fruit.sandbox.branches.length}}</span></div><div data-ng-click="start=fruit.designs" class="design"><icon type="design"></icon><br> Затеи <span data-ng-if="fruit.designs.branches.length" class="label label-default">{{fruit.designs.branches.length}}</span></div><div data-ng-click="start=fruit.tree" class="tree"><icon type="tree"></icon><br>Фруктовое дерево <span data-ng-if="fruit.tree.branches.length" class="label label-default">{{fruit.tree.branches.length}}</span></div><div data-ng-click="start=fruit.tasks" class="task"><icon type="task"></icon><br> Задачи <span data-ng-if="fruit.tasks.branches.length" class="label label-default">{{fruit.tasks.branches.length}}</span></div><div data-ng-click="start=fruit.demands" class="demand"><icon type="demand"></icon><br>Поставки <span data-ng-if="fruit.demands.branches.length" class="label label-default">{{fruit.demands.branches.length}}</span></div>
+    <div data-ng-click="start=fruit.sandbox" class="sandbox"><icon type="sandbox"></icon><br>Инкубатор затей <span data-ng-if="fruit.sandbox.branches.length" class="label label-default">{{fruit.sandbox.branches.length}}</span></div><div data-ng-click="start=fruit.designs" class="design"><icon type="design"></icon><br> Затеи <span data-ng-if="fruit.designs.branches.length" class="label label-default">{{fruit.designs.branches.length}}</span></div><div data-ng-click="start=fruit.tree" class="tree"><icon type="tree"></icon><br>Фруктовое дерево <span data-ng-if="fruit.tree.branches.length" class="label label-default">{{fruit.tree.branches.length}}</span></div><div data-ng-click="start=fruit.tasks" class="task"><icon type="task"></icon><br> Задачи <span data-ng-if="fruit.tasks.branches.length" class="label label-default">{{fruit.tasks.branches.length}}</span></div><div data-ng-click="start=fruit.demands" class="demand"><icon type="demand"></icon><br>Поставки <span data-ng-if="fruit.demands.branches.length" class="label label-default">{{fruit.demands.branches.length}}</span></div>
 </div>
 
         <nest add="true" num="1" address="" close="start=''" sel="start" rate="rate" types="types" proto="proto"></nest>
@@ -220,7 +220,7 @@
 		c0,21.282-60.477,24.111-60.521,11.777c-0.046-12.334,62.5-8.914,62.5,12.63c0,21.875-62.5,24.834-62.5,12.5
 		c0-12.334,62.5-9.375,62.5,12.5c0,21.414-62.5,24.704-62.5,12.37c0-12.334,60.521-9.245,60.521,12.037"/>
 </g>
-<g id="incubator">
+<g id="sandbox">
     <path fill="none" stroke="#FFFFFF" stroke-width="8" stroke-linecap="round" stroke-miterlimit="10" d="M79.271,13.093
 				c0,1.38-0.254,2.683-0.73,3.909"/>
 
