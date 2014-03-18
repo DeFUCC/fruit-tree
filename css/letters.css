@@ -4,6 +4,7 @@ input {
     color:#fff;
 }
 textarea {color:#fff; background: #555;}
+
 .hidden-svg {
     position: absolute;
     height: 0;
