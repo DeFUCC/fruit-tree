@@ -9,7 +9,7 @@ fruitTree.directive("nest", function($compile) {
             proto: '=',
             address: '=',
             num:'=',
-            add: '=',
+            add: '@',
             close: '&'
         },
         controller: function($scope) {
@@ -19,7 +19,7 @@ fruitTree.directive("nest", function($compile) {
             $scope.hide = true;
             $scope.toggleAdd = function () {$scope.hide=!$scope.hide};
             $scope.numb = $scope.num +1;
-            $scope.getColor = function (order) {if (order) { return order.substring(0, 1);} else return 0};
+            $scope.getColor = function (order) {if (order == 'Ф') {return 'F'} else if (order) { return order.substring(0, 1);} else return 0};
         },
         compile: function(tElement, tAttr) {
             var contents = tElement.contents().remove();
@@ -36,36 +36,16 @@ fruitTree.directive("nest", function($compile) {
     };
 });
 
-fruitTree.directive("ico", function() {
+fruitTree.directive("icon", function() {
    return {
        restrict:"E",
-       scope:{},
-       link: function (scope,element,attrs,controller) {
-
-        }
+       scope:{
+           type: '@'
+       },
+       templateUrl:'icon.svg'
    };
 });
 
-// The stripLetter must fix the order to the viewport while scrolling... Now it doesn't
-/*
-fruitTree.directive("stripLetter", function($compile) {
-    return {
-        restrict: "C",
-        link: function (scope, element, attrs, controller) {
-            var elem=element[0];
-            console.log(elem.offsetParent.offsetParent.offsetTop);
-            while (elem.hasOwnProperty('offsetParent')) {
-                scope.offset += elem.offsetParent.offsetParent.offsetTop;
-                elem=elem.offsetParent;
-            }
-            console.log(scope.offset);
-            scope.$watch(window.scrollY, function(value) {
-                if (value>scope.offset ) {element.marginTop=value+10}
-                });
-            }
-        }
-    });
-*/
 
 fruitTree.directive("saypanel", function($compile) {
     return {
@@ -73,7 +53,7 @@ fruitTree.directive("saypanel", function($compile) {
         templateUrl: 'saypanel.html',
         scope: {
             stem: '=',
-            types: '=',
+            types: '&',
             proto: '=',
             parent: '=',
             hide: '='
@@ -85,7 +65,7 @@ fruitTree.directive("saypanel", function($compile) {
                 var place = stem.availableOrders.indexOf(order);
                 if (place >= 0) {
                     var time = new Date();
-                    var date = time.toJSON();
+                    var date = time.toLocaleString();
                     if (!stem.branches) {stem.branches = []}
                     stem.branches.push(new $scope.proto(order, type, picLink, heading, text, date));
                     stem.availableOrders.splice(place, 1);
@@ -169,6 +149,7 @@ fruitTree.directive("roll", function($compile) {
         templateUrl: 'roll.html',
         scope: {
             parent: '@',
+            add: '=',
             tape: '=',
             rate: '=',
             select: '=',
@@ -197,5 +178,6 @@ fruitTree.directive("roll", function($compile) {
         }
     };
 });
+
 
 

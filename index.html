@@ -6,10 +6,13 @@
 
     <title>Fruit-tree</title>
     <script src="js/angular.js"></script>
-    <script src="https://cdn.firebase.com/v0/firebase.js"></script>
-    <script src="https://cdn.firebase.com/libs/angularfire/0.5.0/angularfire.js"></script>
+    <script src="https://cdn.firebase.com/js/client/1.0.6/firebase.js"></script>
+    <script src="https://cdn.firebase.com/libs/angularfire/0.7.0/angularfire.js"></script>
     <script type="application/javascript" src="js/fruit-app.js"></script>
     <script type="application/javascript" src="js/fruit-directives.js"></script>
+    <script type="application/javascript" src="js/ng-videosharing-embed.min.js"></script>
+    <script type="application/javascript" src="js/marked.js"></script>
+    <script type="application/javascript" src="js/angular-marked.js"></script>
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <link href="css/gridforms.css" rel="stylesheet">
     <link href="css/letters.css" rel="stylesheet">
@@ -25,45 +28,35 @@
                 class="box hover-back-{{getColor(card.order)}} border-color-{{getColor(card.order)}}">
 
                         <div data-ng-if="card.picLink" class="box-inner"
-                             style="background: url('{{card.picLink}}') center no-repeat; background-size: 100% "></div>
+                             style="background: url('{{card.picLink}}') top no-repeat; background-size: 100% "></div>
 
 
                         <div data-ng-class="card.select"
                              data-ng-click="card.select=''; selector(card)"
                              class="pane-label hover-back-{{getColor(card.order)}}">
-                            | {{card.order}} |
+                         <icon data-ng-if="card.type.icon" type="{{card.type.icon}}"></icon> <span data-ng-if="!card.type.icon">{{card.type.name | uppercase}}</span>   |{{card.order}}|
                         </div>
 
                         <div class="rating">
                             <div data-ng-click="rate.minus(card)" class="minus">{{rate.getRating(card)<0 ?
                                 rate.getRating(card) : '-'}}
-                            </div>
-                            <div data-ng-click="rate.zero(card)" class="zero">{{rate.getTotal(card) || 0}}</div>
-                            <div data-ng-click="rate.plus(card)" class="plus">+{{rate.getRating(card)>0 ?
+                            </div><div data-ng-click="rate.zero(card)" class="zero">{{rate.getTotal(card) || 0}}</div><div data-ng-click="rate.plus(card)" class="plus">+{{rate.getRating(card)>0 ?
                                 rate.getRating(card) : ''}}
                             </div>
                         </div>
 
-                        <div data-ng-click="selector(card)" data-ng-if="!card.more" class="saying-text">
+                        <div data-ng-click="selector(card)" class="saying-text" style="{{card.picLink ? 'padding:140px 0 0 0' : ''}}">
                             <p>{{card.heading.substring(0,140)}}<span data-ng-if="card.heading.length>139">...</span>
                             </p>
                         </div>
-                        <div data-ng-click="selector(card)" data-ng-if="card.more" class="saying-text">
-                            {{card.heading}}
+
+                        <div data-ng-if="card.branches.length>0" class="review">
+                            <span data-ng-repeat="branch in card.branches" class="color-{{getColor(branch.order)}}"></span>
                         </div>
 
-                        <div data-ng-if="card.heading.length > 140 && !card.more"
-                             data-ng-click="card.more = true"
-                             class="corner">
-                            <div class="more">+</div>
-                        </div>
-                        <div data-ng-if="card.more"
-                             data-ng-click="card.more = false"
-                             class="corner">
-                            <div class="less">-</div>
-                        </div>
+
            </div>
-                <div class="box box-plus hover-back-T" data-ng-click="toggleAdd()">
+                <div data-ng-if="add" class="box box-plus hover-back-T border-color-T" data-ng-click="toggleAdd()">
                  <div class="big-plus">+</div>
                 </div>
         </div>
@@ -79,8 +72,8 @@
                             <label>Выбери тип высказывания:</label>
 
 
-                                <button type="button" data-ng-repeat="type in types" data-ng-model="$parent.sayingType"
-                                        data-btn-radio="type" class="btn btn-sm btn-primary"> {{type}}
+                                <button type="button" data-ng-repeat="type in types()" data-ng-model="$parent.sayingType"
+                                        data-btn-radio="type" class="btn btn-sm btn-primary"> {{type.name}}
                                 </button>
 
                         </div>
@@ -110,7 +103,7 @@
             <form class="grid-form">
 
             <fieldset>
-                <legend>Добавляем: {{sayingType}}</legend>
+                <legend>Добавляем: {{sayingType.name}}</legend>
 
                 <div data-row-span="2">
                     <div data-field-span="1">
@@ -136,7 +129,7 @@
                     </div>
                 </div>
             </fieldset>
-                <button class="btn btn-success" data-ng-click="say(stem, pretaken, sayingType, picLink, heading, linkedText);">+</button>
+                <div class="say-button" data-ng-click="say(stem, pretaken, sayingType, picLink, heading, linkedText);hide=true;"><p>+</p></div>
             </form>
                 </div>
         </div>
@@ -145,31 +138,49 @@
 
     <script type="text/ng-template" id="nest.html">
 
-        <div data-ng-if="sel" class="child border-color-{{getColor(sel.order)}}">
+        <div data-ng-if="sel" class="nest border-color-{{getColor(sel.order)}}">
             <div class="left-strip color-{{getColor(sel.order)}}">
                 <span id="let{{num}}" class="strip-letter">{{sel.order}}</span>
                 <br><br><br>
-                <span data-ng-click="close()" class="close strip-letter">&times;</span>
+                <span data-ng-click="close()" class="strip-close">&times;</span>
 
             </div>
-            <div><small>{{date}}</small></div>
-            <div class="rating">
-                <div data-ng-click="rate.minus(sel)" class="minus">{{rate.getRating(sel)<0 ? rate.getRating(sel) : '-'}}</div><div data-ng-click="rate.zero(sel)" class="zero">{{rate.getTotal(sel) || 0}}</div><div data-ng-click="rate.plus(sel)" class="plus">+{{rate.getRating(sel)>0 ? rate.getRating(sel) : ''}}</div>
+            <div class="nest-header color-{{getColor(sel.order)}}">
+
+                <div class="rating">
+                    <div data-ng-click="rate.minus(sel)" class="minus">{{rate.getRating(sel)<0 ? rate.getRating(sel) : '-'}}</div><div data-ng-click="rate.zero(sel)" class="zero">{{rate.getTotal(sel) || 0}}</div><div data-ng-click="rate.plus(sel)" class="plus">+{{rate.getRating(sel)>0 ? rate.getRating(sel) : ''}}</div>
+                </div>
+                <div class="nest-date">{{sel.date}}</div>
+                <h3>{{sel.heading}}</h3>
             </div>
             <div class="full-view">
+
             <div class="saying-full">
-                <h3>{{sel.heading}}</h3>
+                <img class="full-pic" data-ng-if="sel.picLink" data-ng-src="{{sel.picLink}}">
                 <p>{{sel.text}}</p>
             </div>
-                <div class="full-pic" data-ng-if="sel.picLink"><img data-ng-src="{{sel.picLink}}"> </div>
+            <div style="clear:both"></div>
             </div>
-            <roll toggle-add="toggleAdd()"  parent="{{address + '|' + sel.order +'|'}}"  tape="sel.branches"  rate="rate" select="next"></roll>
-            <saypanel hide="hide" data-ng-if="add" stem="sel" types="types" proto="proto"></saypanel>
+            <roll add="types.getAll(sel.type).length>0" toggle-add="toggleAdd()"  parent="{{address + '|' + sel.order +'|'}}"  tape="sel.branches"  rate="rate" select="next"></roll>
+            <saypanel hide="hide" data-ng-if="add" stem="sel" types="types.getAll(sel.type)" proto="proto"></saypanel>
             <nest add="true" close="next=''" num="numb" address="address + '|' + sel.order +'|'" sel="next" rate="rate" types="types" proto="proto"></nest>
 
         </div>
 
     </script>
+
+    <script type="text/ng-template" id="icon.svg">
+        <svg viewBox="0 0 100 100" width="30px" height="30px" class="icon">
+            <use data-ng-if="type == 'design'" xlink:href="#design"></use>
+            <use data-ng-if="type == 'sandbox'" xlink:href="#sandbox"></use>
+            <use data-ng-if="type == 'task'" xlink:href="#task"></use>
+            <use data-ng-if="type == 'demand'" xlink:href="#demand"></use>
+            <use data-ng-if="type == 'tree'" xlink:href="#tree"></use>
+        </svg>
+    </script>
+
+
+
 
 </head>
 <body data-ng-cloak>
@@ -179,10 +190,16 @@
     <div data-ng-click="start=fruit.f" class="f">Ф <span data-ng-if="fruit.f.branches.length" class="label label-default">{{fruit.f.branches.length}}</span></div><div data-ng-click="start=fruit.r" class="r">Р <span data-ng-if="fruit.r.branches.length" class="label label-default">{{fruit.r.branches.length}}</span></div><div data-ng-click="start=fruit.u" class="u">У<span data-ng-if="fruit.u.branches.length" class="label label-default">{{fruit.u.branches.length}}</span></div><div data-ng-click="start=fruit.k" class="k">К <span data-ng-if="fruit.k.branches.length" class="label label-default">{{fruit.k.branches.length}}</span></div><div data-ng-click="start=fruit.t" class="t">Т<span data-ng-if="fruit.t.branches.length" class="label label-default">{{fruit.t.branches.length}}</span></div>
 </div>
 <div class="top-menu">
-    <div data-ng-click="start=fruit.sandbox" class="sandbox">Инкубатор затей <span data-ng-if="fruit.sandbox.branches.length" class="label label-default">{{fruit.sandbox.branches.length}}</span></div><div data-ng-click="start=fruit.designs" class="design">Затеи <span data-ng-if="fruit.designs.branches.length" class="label label-default">{{fruit.designs.branches.length}}</span></div><div data-ng-click="start=fruit.tree" class="tree">Фруктовое дерево <span data-ng-if="fruit.tree.branches.length" class="label label-default">{{fruit.tree.branches.length}}</span></div><div data-ng-click="start=fruit.tasks" class="task">Задачи <span data-ng-if="fruit.tasks.branches.length" class="label label-default">{{fruit.tasks.branches.length}}</span></div><div data-ng-click="start=fruit.demands" class="demand">Поставки <span data-ng-if="fruit.demands.branches.length" class="label label-default">{{fruit.demands.branches.length}}</span></div>
+    <div data-ng-click="start=fruit.sandbox" class="sandbox"><icon type="sandbox"></icon><br>Песочница <span data-ng-if="fruit.sandbox.branches.length" class="label label-default">{{fruit.sandbox.branches.length}}</span></div><div data-ng-click="start=fruit.designs" class="design"><icon type="design"></icon><br> Затеи <span data-ng-if="fruit.designs.branches.length" class="label label-default">{{fruit.designs.branches.length}}</span></div><div data-ng-click="start=fruit.tree" class="tree"><icon type="tree"></icon><br>Фруктовое дерево <span data-ng-if="fruit.tree.branches.length" class="label label-default">{{fruit.tree.branches.length}}</span></div><div data-ng-click="start=fruit.tasks" class="task"><icon type="task"></icon><br> Задачи <span data-ng-if="fruit.tasks.branches.length" class="label label-default">{{fruit.tasks.branches.length}}</span></div><div data-ng-click="start=fruit.demands" class="demand"><icon type="demand"></icon><br>Поставки <span data-ng-if="fruit.demands.branches.length" class="label label-default">{{fruit.demands.branches.length}}</span></div>
 </div>
 
         <nest add="true" num="1" address="" close="start=''" sel="start" rate="rate" types="types" proto="proto"></nest>
+<textarea data-ng-model="markdown"></textarea>
+    <div marked="markdown">
+    </div>
+
+
+
 
     <div class="">
         <div class="top-bttns">
@@ -202,5 +219,124 @@
 
 
 </div>
+
+
+<svg class="hidden-svg" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="100px"
+	 height="100px" viewBox="0 0 100 100" enable-background="new 0 0 100 100" xml:space="preserve">
+<defs>
+<g id="design">
+	<path fill="none" stroke="#FFFFFF" stroke-width="8" stroke-linecap="round" stroke-miterlimit="10" d="M79.271,13.093
+		c0,21.282-60.477,24.111-60.521,11.777c-0.046-12.334,62.5-8.914,62.5,12.63c0,21.875-62.5,24.834-62.5,12.5
+		c0-12.334,62.5-9.375,62.5,12.5c0,21.414-62.5,24.704-62.5,12.37c0-12.334,60.521-9.245,60.521,12.037"/>
+</g>
+<g id="sandbox">
+    <path fill="none" stroke="#FFFFFF" stroke-width="8" stroke-linecap="round" stroke-miterlimit="10" d="M79.271,13.093
+				c0,1.38-0.254,2.683-0.73,3.909"/>
+
+				<path fill="none" stroke="#FFFFFF" stroke-width="8" stroke-linecap="round" stroke-miterlimit="10" stroke-dasharray="8.0862,10.1077" d="
+				M71.905,24.413C55.78,34.888,18.785,34.516,18.75,24.87c-0.046-12.334,62.5-8.914,62.5,12.63c0,21.875-62.5,24.834-62.5,12.5
+				c0-12.334,62.5-9.375,62.5,12.5c0,21.414-62.5,24.704-62.5,12.37c0-10.542,44.216-9.817,57.062,3.906"/>
+			<path fill="none" stroke="#FFFFFF" stroke-width="8" stroke-linecap="round" stroke-miterlimit="10" d="M78.542,82.998
+				c0.475,1.228,0.729,2.53,0.729,3.909"/>
+</g>
+<g id="task">
+	<path fill="none" stroke="#FFFFFF" stroke-width="9" stroke-linecap="round" stroke-miterlimit="10" d="M15.625,21.875
+		c0,0,68.75-18.75,68.75,9.375c0,31.25-68.75,34.375-68.875,18.75s68.875-12.5,68.875,18.75c0,28.125-68.75,9.375-68.75,9.375"/>
+</g>
+<g id="demand">
+	<path fill="none" stroke="#FFFFFF" stroke-width="10" stroke-linecap="round" stroke-miterlimit="10" d="M16.077,17.205
+		c0,0,26.37,67.17,10.606,67.17c-15.764,0-9.9-67.17,28.281-67.17c45.959,0,17.676,67.17,17.676,67.17"/>
+</g>
+<g id="tree">
+		<path fill="#FFFFFF" d="M87.421,47.323C85.974,27.669,69.777,12.542,50.137,12.5c-19.814-0.042-36.006,14.978-37.549,34.83
+			c-1.498,19.263,12.415,36.627,31.806,39.7c0.488,0.326,1.04,0.156,1.565,0.199c0.902,0.125,1.857-0.278,2.716,0.271
+			c0.887,0,1.773,0,2.658,0c0.861-0.549,1.816-0.146,2.718-0.271c0.525-0.043,1.076,0.124,1.566-0.196
+			C74.941,84.042,88.847,66.681,87.421,47.323z M49.832,84.838c-19.141-0.033-34.684-15.791-34.646-35.125
+			c0.037-19.107,15.68-34.624,34.858-34.577c19.465,0.047,34.834,15.596,34.781,35.187C84.772,69.302,68.988,84.871,49.832,84.838z"
+			/>
+		<path fill="#FFFFFF" d="M72.118,26.414c0.673-0.535,1.304-0.79,1.932,0.103c0.376,0.535,1.186,0.962,0.157,1.61
+			c-0.21,0.051-0.357,0.173-0.436,0.377c-0.083,0.116-0.189,0.224-0.241,0.354c-0.02,0.05,0.077,0.147,0.119,0.224
+			c-0.032,0.092-0.064,0.184-0.094,0.277c-0.147,0.258-0.33,0.489-0.531,0.713c-0.139,0.166-0.29,0.314-0.442,0.462
+			c-0.217,0.218-0.414,0.448-0.597,0.682c-0.089,0.136-0.185,0.277-0.258,0.414c0.114,0.403,0.35,0.05,0.523,0.073
+			c0.512-0.185,1.013-0.367,1.519-0.548c0.228-0.083,0.458-0.141,0.697-0.187c0.984-0.23,1.966-0.367,2.945,0.007
+			c0.504,0.741,1.007,1.482,1.508,2.223c-0.478,0.692-1.249,0.842-1.98,1.069c-1.787-0.486-2.899,1.008-4.354,1.491
+			c-0.624,0.267-1.225,0.58-1.776,0.98c-0.356,0.25-0.705,0.513-1.043,0.787c-0.503,0.422-1.122,0.656-1.646,1.044
+			c-0.54,0.396-1.004,0.872-1.484,1.335c-0.162,0.167-0.338,0.318-0.518,0.464c-0.433,0.514-1.04,0.883-1.296,1.619
+			c1.749-0.268,3.377-0.815,5.038-1.21c0.409-0.131,0.832-0.224,1.212-0.433c0.348-0.21,0.653-0.473,0.931-0.771
+			c0.123-0.162,0.253-0.316,0.379-0.476c0.179-0.256,0.359-0.51,0.538-0.766c0.175-0.276,0.344-0.554,0.49-0.846
+			c0.243-0.724,0.135-1.558,0.611-2.195c0.8-1.072,1.693-1.384,2.658-0.175c0.191,0.063,0.384,0.125,0.582,0.165
+			c0.295,0.022,0.593,0.041,0.882,0.11c0.097,0.017,0.193,0.036,0.292,0.053c1.764-0.709,2.224,0.418,2.496,1.772
+			c-0.47,0.289-0.946,0.581-1.422,0.873c-0.672,0.867-1.736,1.184-2.671,1.965c1.003-0.061,1.928-0.114,2.698,0.485
+			c1.496,0.149,3.396-0.257,3.155,2.288c-1.454,1.026-3.22,0.504-4.786,0.974c-0.255,0.099-0.519,0.167-0.786,0.214
+			c-0.264,0.047-0.53,0.072-0.799,0.081c-0.646,0.023-1.295,0.015-1.942,0.03c-0.626-0.021-1.23,0.104-1.824,0.291
+			c-0.85,0.207-1.731,0.223-2.594,0.401c0.303,0.541,0.929,0.438,1.369,0.693c1.617,0.786,3.151-0.32,4.736-0.213
+			c0.362-0.013,0.726-0.011,1.086-0.006c0.905-0.037,1.894,0.219,2.531-0.741c0.236-0.302,0.495-0.576,0.8-0.807
+			c0.776-0.42,1.516-0.507,2.162,0.238c-0.435,0.603-0.872,1.205-1.41,1.95c0.735,0.595,2.626,0.505,2.212,2.481
+			c-0.281,1.335-1.047,0.378-1.589,0.471c0.115,0.101,0.23,0.2,0.346,0.3c-0.118-0.096-0.236-0.192-0.353-0.291
+			c-0.597-0.056-1.194-0.113-1.792-0.168c-0.1,0.068-0.2,0.138-0.298,0.207c-0.119,0.022-0.236,0.044-0.354,0.068
+			c-0.425-0.006-0.847-0.125-1.542,0.011c0.499,0.749,1.276,1.104,1.73,1.725c0.142,0.202,0.233,0.425,0.284,0.664
+			c1.009,1.775,4.075,2.347,2.955,5.42c-0.397,1.091-0.767,0.415-1.211,0.359c-0.113-0.013-0.228-0.027-0.343-0.038
+			c-0.551-0.187-0.975-0.58-1.451-0.891c-0.184-0.129-0.354-0.277-0.515-0.437c-0.372-0.408-0.66-0.887-1.06-1.276
+			c-0.163-0.151-0.314-0.311-0.469-0.472c-0.167-0.15-0.323-0.31-0.481-0.469c-0.842-0.954-1.969-1.526-3.001-2.224
+			c-0.962-0.66-1.998-1.225-2.769-2.129l-0.236-0.114l-0.259,0.042c-1.508,0.166-2.712-0.447-3.758-1.465
+			c-0.321-0.046-0.641-0.093-0.96-0.14c-2.018,0.145-4.036,0.232-6.054-0.008c-4.922,1.008-5.855,4.873-6.15,8.958
+			c-0.241,3.339-0.063,6.71-0.049,10.067c0.019,4.616,2.143,6.327,6.762,5.255c5.022-1.166,9.973-3.759,16.002-1.191
+			c-3.732,2.813-8.188,0.263-11.226,2.805c1.21,0.936,2.624,2.027,4.592,3.549c-3.936,2.052-5.781-2.576-8.698-1.796
+			c-0.216-0.082-0.387-0.36-0.671-0.16c-0.297-0.046-0.593-0.094-0.89-0.141c-0.189,0.044-0.263,0.11-0.22,0.197
+			c0.049,0.1,0.1,0.149,0.155,0.149c1.826,1.237,3.649,2.475,6.208,4.209c-2.482,1.155-3.086,1.437-3.744,1.742
+			c-2.008-1.656-3.422-4.026-6.161-4.892c0.476,2.101,0.916,4.04,1.392,6.137c-0.838,0.28-1.481,0.497-2.373,0.797
+			c-0.435-3.251-1.39-6.234-3.776-8.959c0,3.113,0,6.028,0,9.044c-1.059,0-1.792,0-2.712,0c0-3.029,0-5.911,0-9.194
+			c-2.56,2.631-3.774,5.397-3.916,8.822c-0.88-0.119-1.61-0.215-2.689-0.36c0.545-2.165,1.051-4.178,1.642-6.523
+			c-2.507,1.189-4.295,2.984-5.98,5.095c-0.725-0.314-1.413-0.613-2.508-1.087c1.711-1.82,3.23-3.436,4.614-4.909
+			c-3.525-1.443-5.851,3.49-9.813,2.168c0.997-2.241,2.846-2.718,4.146-3.827c-3.079-2.492-7.459-0.129-11.005-2.801
+			c3.526-1.921,6.603-1.187,9.656-0.502c2.574,0.576,5.105,1.369,7.696,1.849c3.046,0.564,4.887-0.958,4.99-3.954
+			c0.159-4.588,0.25-9.212-0.146-13.776c-0.288-3.314-2.063-5.985-5.745-6.703c-1.454-0.539-2.816,0.624-4.261,0.231
+			c-0.257,0.006-0.515,0.009-0.771,0.013c-0.515-0.013-0.99,0.184-1.477,0.31c-1.568,0.318-3.05,1.03-4.688,1.031
+			c-0.178-0.024-0.339,0.017-0.484,0.122c-2.693,2.303-5.447,4.523-8.558,6.256c-0.386,0.529-1.476,0.626-1.026,1.67l0.074-0.072
+			c-2.243-0.847-1.975-2.104-0.695-3.673c0.578-0.708,1.848-0.908,1.685-2.183c0.04-0.1,0.081-0.199,0.12-0.3
+			c0.169-0.282,0.386-0.524,0.625-0.747c0.234-0.216,0.497-0.394,0.773-0.545c0.281-0.191,0.691-0.229,0.76-0.651
+			c-0.358-0.269-0.75-0.082-1.117-0.125c-0.112-0.026-0.22-0.055-0.33-0.083c-0.075-0.086-0.147-0.173-0.22-0.26
+			c-1.08,0.105-2.16,0.209-3.243,0.314c-0.7-2.054,0.372-2.715,2.086-2.903c0.298-0.338,0.668-0.553,1.106-0.656
+			c0.843-0.134,1.695-0.089,2.543-0.104c1.859-0.316,3.646,0.77,5.512,0.283c0.664-0.218,1.354-0.346,2.16-0.582
+			c-0.914-0.422-1.832-0.289-2.662-0.531c-1.117-0.351-2.238-0.511-3.373-0.071c-0.326,0.151-0.659,0.269-1.012,0.332
+			c-0.245,0.014-0.481-0.02-0.71-0.105c-0.506-0.325-1.03-0.62-1.593-0.84c-1.169-0.374-2.576,0.175-3.559-0.916
+			c-0.178-1.972,1.031-2.351,2.626-2.287c0.692-0.558,1.581-0.497,2.477-0.63c-0.522-0.812-1.377-0.909-1.906-1.45
+			c-0.289-0.252-0.373-0.628-0.571-0.935c-1.749-0.043-0.619-1.086-0.409-1.513c0.607-1.234,1.464-0.774,2.262-0.121
+			c0.258-0.273,0.581-0.31,0.93-0.26c0.66,0.178,1.255,0.505,1.861,0.812c0.206,0.106,0.398,0.235,0.586,0.371
+			c0.193,0.135,0.37,0.287,0.545,0.444c0.088,0.078,0.171,0.161,0.26,0.239c0.859,0.806,1.571,1.744,2.356,2.615
+			c0.439,0.406,1.009,0.528,1.557,0.7c1.688,0.283,3.319,0.852,5.105,1.072c-0.31-0.602-0.783-0.856-1.171-1.193
+			c-0.28-0.219-0.529-0.469-0.758-0.738c-0.544-0.873-1.366-1.453-2.174-2.048c-0.512-0.425-1.045-0.818-1.649-1.11
+			c-0.714-0.374-1.449-0.703-2.183-1.033c-1.281-0.68-2.663-1.083-4.049-1.476c-0.683-0.281-1.461-0.399-1.911-1.088
+			c0.468-0.926,0.6-2.169,2.047-2.174c0.834-0.555,1.639-0.119,2.45,0.067c0.324,0.094,0.646,0.205,0.964,0.316
+			c0.393,0.084,0.782,0.194,1.161,0.278c0.154,0.033,0.267-0.028,0.304-0.2c-0.081-0.236-0.24-0.404-0.396-0.583
+			c-0.134-0.128-0.255-0.261-0.379-0.397c-0.066-0.068-0.125-0.139-0.191-0.208c-0.262-0.293-0.505-0.596-0.656-0.961
+			c-0.014-0.099-0.025-0.197-0.037-0.296c-1.148-1.175-1.453-2.257,0.53-3.152c0.496,0.421,1.078,0.915,1.66,1.408
+			c0.236-0.093,0.474-0.101,0.714-0.013c1.211,0.735,1.756,2.005,2.505,3.113c0.728,1.363,0.915,2.956,1.796,4.25
+			c0.214,0.236,0.408,0.49,0.6,0.738c0.249,0.231,0.422,0.622,0.88,0.402c0.516-1.509,0.799-3.079,1.474-4.521
+			c0.764-1.803-1.117-2.185-1.745-3.234c-0.237-0.23-0.462-0.476-0.688-0.717c-0.369-0.388-0.772-0.735-1.231-1.016
+			c-0.368-0.227-0.729-0.462-1.094-0.694c-0.754-0.599-1.92-0.746-2.141-1.934c1.105-2.265,2.614-1.552,4.16-0.563
+			c0.317-0.028,0.626,0.002,0.924,0.124c0.191,0.083,0.369,0.191,0.538,0.314c0.324,0.25,0.621,0.534,0.937,0.796
+			c0.324,0.248,0.665,0.475,1.006,0.702c0.267,0.173,0.517,0.367,0.763,0.567c0.505,0.416,1.014,0.823,1.573,1.161
+			c2.126-0.094,2.3-1.334,1.766-2.986c-0.22-0.516-0.548-0.962-0.905-1.39c-0.408-0.51-0.75-1.068-1.153-1.583
+			c-0.546-0.558-0.842-1.258-1.11-1.973c0.918-0.835,1.884-1.382,3.078-0.49c0.115,0.009,0.229,0.02,0.345,0.027
+			c0.22,0.082,0.421,0.194,0.609,0.333c0.273,0.218,0.514,0.467,0.737,0.735c0.556,0.692,1.012,1.455,1.5,2.184
+			c0.117,0.131,0.245,0.262,0.392,0.365c0.186,0.009,0.361-0.011,0.532-0.099c0.356-0.271,0.643-0.597,0.928-0.925
+			c0.595-0.789,0.938-1.672,1.041-2.65c0.205-0.753,0.668-1.25,1.443-1.43c1.39-1.1,2.39-1.072,2.707,0.936
+			c1.025,0.929,1.453,2.26,2.247,3.339c0.252,0.347,0.476,0.722,0.877,0.928c1.423-0.135,1.374-1.661,2.216-2.333
+			c0.135-0.179,0.287-0.347,0.439-0.511c0.217-0.25,0.446-0.49,0.704-0.7c0.097-0.05,0.195-0.099,0.294-0.147
+			c1.112-0.708,2.224-0.663,3.271,0.092c0.055,0.04-0.357,0.729-0.554,1.116c0.119,0.213,0.138,0.434,0.062,0.665
+			c-0.36,0.725-0.905,1.342-1.22,2.097c-0.182,0.312-0.404,0.591-0.659,0.845c-1.576,1.566-1.262,2.892,0.52,4.048
+			c0.814,0.097,1.195-0.575,1.71-1.005c0.243-0.247,0.501-0.48,0.755-0.713c0.41-0.381,0.814-0.77,1.225-1.15
+			c0.33-0.301,0.676-0.583,1.031-0.857c0.452-0.278,0.815-0.862,1.475-0.437c1.645-0.887,3.296-1.829,4.607,0.482
+			c-0.848,1.407-2.452,1.879-3.597,2.918c-0.267,0.224-0.551,0.426-0.835,0.626c-0.372,0.264-0.719,0.56-1.041,0.888
+			c-0.16,0.176-0.333,0.334-0.512,0.488c-0.627,0.465-1.221,0.96-1.637,1.671c0.153,1.403,1.2,2.488,1.371,3.869
+			c0.113,0.503,0.086,1.04,0.341,1.507c0.166,0.23,0.382,0.356,0.681,0.314c0.286-0.104,0.527-0.267,0.751-0.461
+			c0.31-0.317,0.543-0.671,0.63-1.11c0.218-0.874,0.452-1.743,0.774-2.586c0.167-0.425,0.371-0.834,0.583-1.239
+			c0.372-0.706,0.795-1.38,1.226-2.051c0.098-0.203,0.211-0.395,0.33-0.585c0.231-0.381,0.466-0.76,0.787-1.074
+			c0.178-0.134,0.378-0.224,0.594-0.28C71.284,26.426,71.72,26.736,72.118,26.414z"/>
+	</g>
+</defs>
+</svg>
+
 </body>
 </html>
