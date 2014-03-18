@@ -1,11 +1,13 @@
 /**
  * Created by starov on 26.12.13.
  */
-var fruitTree = angular.module('fruitTree', ['firebase', 'ui.bootstrap']);
+var fruitTree = angular.module('fruitTree', ['firebase', 'ui.bootstrap', 'videosharing-embed', 'hc.marked']);
 var controllers = {};
 fruitTree.controller(controllers);
 
-
+fruitTree.config(['marked', function(marked) {
+    marked.setOptions({gfm: true});
+}]);
 
 controllers.lettersCtrl = function ($scope, $firebase) {
     var baseLetters = ['A', 'B', 'C', 'E', 'H', 'K', 'M', 'O', 'P', 'T', 'X', 'Y'];
@@ -24,18 +26,10 @@ controllers.lettersCtrl = function ($scope, $firebase) {
         return arr;
     }
 
-    function getTypes (type) {
-
-        switch (type.type) {
-            case 'design': return [{name:'Название'}];
-            default: return [{name:'Высказывание'}];
-        }
-    }
-
     function Type(type, name, icon) {
         this.type=type;
         this.name=name;
-        this.icon=icon || '';
+        if (icon) {this.icon=icon}
         this.all = [];
     }
 
@@ -72,7 +66,7 @@ controllers.lettersCtrl = function ($scope, $firebase) {
         contact: new Type('contact','Контакт'),
         picture: new Type('picture','Картинка'),
         video: new Type('video','Видео'),
-        sandbox: new Type('sandbox', 'Инкубатор затей')
+        sandbox: new Type('sandbox', 'Песочница')
     };
     t.getAll = function (type) {
         var all = [];
@@ -82,7 +76,7 @@ controllers.lettersCtrl = function ($scope, $firebase) {
         return all;
     };
 
-    t.design.all=[t.title, t.status, t.step, t.rate, t.window, t.idea, t.aim, t.gist, t.place, t.time, t.face, t.theory, t.practice, t.question, t.answer, t.task, t.demand];
+    t.design.all=[t.title, t.status, t.step, t.rate, t.window, t.idea, t.aim, t.gist, t.place, t.time, t.face, t.theory, t.practice, t.question, t.task, t.demand];
     t.preDesign.all = t.design.all;
     t.step.all = t.design.all;
     t.sandbox.all=[t.preDesign];
@@ -143,7 +137,7 @@ controllers.lettersCtrl = function ($scope, $firebase) {
     };
     $scope.loaded = false;
     $scope.remote = {};
-    $scope.firebase = $firebase(new Firebase('https://frukt.firebaseio.com')); //creating a firebase object
+    $scope.firebase = $firebase(new Firebase('https://fruit-tree.firebaseio.com')); //creating a firebase object
     $scope.firebase.$bind($scope, "remote"); //bind a $scope.remote object for saving
 
     $scope.saveToFireBase = function () {
@@ -168,7 +162,7 @@ controllers.lettersCtrl = function ($scope, $firebase) {
             designs: new Order('O','designs','','Затеи','Затея — подробный план реализации общественно значимого инфраструктурного проекта'),
             tasks: new Order('X','tasks','','Задачи','Задача — описание необходимого к реализации действия с приложением всей имеющейся информации'),
             demands: new Order('A','demands','','Поставки','Поставка - описание необходимых для реализации затей предметов с приложением всей имеющейся информации'),
-            sandbox: new Order('E',$scope.types.sandbox,'','Инкубатор затей','- место коллективной разработки затей.')
+            sandbox: new Order('E',$scope.types.sandbox,'','Песочница','Песочница —  место коллективной разработки и анализа будущих затей.')
         };
         $scope.fruit.tasks.add = false;
         $scope.fruit.demands.add = false;

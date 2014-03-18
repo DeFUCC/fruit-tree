@@ -47,27 +47,6 @@ fruitTree.directive("icon", function() {
 });
 
 
-// The stripLetter must fix the order to the viewport while scrolling... Now it doesn't
-/*
-fruitTree.directive("stripLetter", function($compile) {
-    return {
-        restrict: "C",
-        link: function (scope, element, attrs, controller) {
-            var elem=element[0];
-            console.log(elem.offsetParent.offsetParent.offsetTop);
-            while (elem.hasOwnProperty('offsetParent')) {
-                scope.offset += elem.offsetParent.offsetParent.offsetTop;
-                elem=elem.offsetParent;
-            }
-            console.log(scope.offset);
-            scope.$watch(window.scrollY, function(value) {
-                if (value>scope.offset ) {element.marginTop=value+10}
-                });
-            }
-        }
-    });
-*/
-
 fruitTree.directive("saypanel", function($compile) {
     return {
         restrict: "E",

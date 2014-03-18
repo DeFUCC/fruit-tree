@@ -248,7 +248,9 @@ body {
     opacity: .40;
 }
 .box {
-    flex: 1 1 12em;
+    flex: 1 1 180px;
+    min-width: 120px;
+    max-width: 480px;
     border: solid 6px #333;
     background-color: #4a4d51;
     margin:5px;
@@ -296,8 +298,8 @@ body {
     opacity: .5;
 }
 .nest-date {
-    margin:6px 0 0 6px;
-    font-size:8px;
+    margin:6px;
+    font-size:10px;
     clear: right;
     float:right;
     max-width:16em;
@@ -397,8 +399,9 @@ body {
     float:left;
     padding: 2px 5px 2px 5px;
     margin:0;
-    font-weight: bold;
-    font-size: 10px;
+    font-weight: normal;
+    font-size: 9px;
+    letter-spacing: 2px;
     color: #fff;
     box-sizing: border-box;
     transition: all 600ms linear;
